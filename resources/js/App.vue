@@ -1,12 +1,10 @@
 <template>
-  <h1>Hola desde Vue 3 en Laravel 🚀</h1>
+    <LoginForm />
 </template>
 
-<script setup>
+<script setup lang="ts">
+import LoginForm from './components/LoginForm.vue';
 </script>
 
 <style scoped>
-h1 {
-  color: #42b883;
-}
 </style>
