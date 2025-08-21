@@ -19,7 +19,7 @@
                     <input class="block text-white border-1 border-gray-400 w-full rounded-sm p-1.5" type="password" placeholder="Contraseña">
                 </div>
                 <div class="m-3">
-                    <button class="text-center font-bold w-full bg-white rounded-md p-1.5 mt-3 transition delay-10 duration-400 ease-in-out hover:-translate-y-1 hover:scale-100 hover:bg-gray-200">Ingresar</button>
+                    <button @click="toDashboard" class="text-center font-bold w-full bg-white rounded-md p-1.5 mt-3 transition delay-10 duration-400 ease-in-out hover:-translate-y-1 hover:scale-100 hover:bg-gray-200">Ingresar</button>
                 </div>
                 <div class="m-2">
                     <p class="text-white pt-1"><a href="#">¿Has olvidado tú contraseña?</a></p>
@@ -32,7 +32,9 @@
 </template>
 
 <script setup lang="ts">
+import { useAuth } from '@/composables/Auth/useAuth';
 
+const { toDashboard } = useAuth();
 </script>
 
 <style scoped>
