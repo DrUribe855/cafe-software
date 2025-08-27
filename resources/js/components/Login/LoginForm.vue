@@ -12,14 +12,14 @@
             <div class="">
                 <div class="block m-3">
                     <label class="block text-white pb-1" for="document">DNI</label>
-                    <input class="block text-white border-1 border-gray-400 w-full rounded-sm p-1.5" type="number" placeholder="Ingrese su DNI">
+                    <input v-model="document" class="block text-white border-1 border-gray-400 w-full rounded-sm p-1.5" type="number" placeholder="Ingrese su DNI">
                 </div>
                 <div class="block m-3">
                     <label class="block text-white pb-1" for="password">Contraseña</label>
-                    <input class="block text-white border-1 border-gray-400 w-full rounded-sm p-1.5" type="password" placeholder="Contraseña">
+                    <input v-model="password" class="block text-white border-1 border-gray-400 w-full rounded-sm p-1.5" type="password" placeholder="Contraseña">
                 </div>
                 <div class="m-3">
-                    <button @click="toDashboard" class="text-center font-bold w-full bg-white rounded-md p-1.5 mt-3 transition delay-10 duration-400 ease-in-out hover:-translate-y-1 hover:scale-100 hover:bg-gray-200">Ingresar</button>
+                    <button @click="loginExecute()" class="text-center font-bold w-full bg-white rounded-md p-1.5 mt-3 transition delay-10 duration-400 ease-in-out hover:-translate-y-1 hover:scale-100 hover:bg-gray-200">Ingresar</button>
                 </div>
                 <div class="m-2">
                     <p class="text-white pt-1"><a href="#">¿Has olvidado tú contraseña?</a></p>
@@ -28,15 +28,24 @@
         </div>
     </div>
 
-
 </template>
 
 <script setup lang="ts">
 import { useAuth } from '@/composables/Auth/useAuth';
+import { ref } from 'vue';
 
-const { toDashboard } = useAuth();
+const { login } = useAuth();
+const document = ref<number | null>(null);
+const password = ref<string>('');
+
+const loginExecute = () => {
+    if( document.value == null  || password.value.trim() === ''){
+        console.log('Todos los campos son obligatorios');
+    }else{
+        login(document.value, password.value);
+    }
+}
+
+
 </script>
 
-<style scoped>
-
-</style>

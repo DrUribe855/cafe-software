@@ -3,7 +3,7 @@ import { BookOpen, Calendar1, NotebookPen, Coffee, MonitorX } from "lucide-vue-n
 export const dashboardCards = [
     {
         title: 'Vacaciones',
-        description: 'Gestiona tus vacaciones, solicita días y revisa su estado.',
+        description: 'Gestiona tus vacaciones y solicita días libres.',
         icon: BookOpen
     },
     {
