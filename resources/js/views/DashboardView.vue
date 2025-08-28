@@ -6,17 +6,17 @@ import { useUserStore } from '@/stores/userStore';
 import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
-const { user } = storeToRefs(userStore);
-const { fetchUser } = userStore;
+const { fetchUser, setUser } = userStore;
 
 fetchUser();
+
 
 
 </script>
 
 <template>
     <div class="bg-[#edf2fa] h-screen">
-        <NavBar :name="user.name" />
+        <NavBar/>
         <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4 px-6 mx-auto">
             <a v-for="card in dashboardCards" href="">
                 <Card

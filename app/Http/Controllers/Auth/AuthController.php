@@ -3,34 +3,48 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
+
+    /* Función para autenticación de usuarios */
+
     public function login(Request $request){
+
         $credentials = $request->validate([
             'document' => 'required',
             'password' => 'required',
         ]);
 
-        if(auth()->attempt($credentials)){
-            $request->session()->regenerate();
+        $user = User::where('document', $credentials['document'])->with('roles')->first();
 
+        if(!$user){
             return response()->json([
-                'message' => 'Ingreso satisfactorio',
-                'code' => 200,
-                'user' => auth()->user(),
-            ]);
+                'message' => 'Usuario no encontrado',
+            ], 404);
+        }
 
-        }else{
+        if($user->status != 'Activo'){
+            return response()->json([
+                'message' => 'Usuario inactivo, contacte al administrador',
+            ], 403);
+        }
+
+        if(!Auth()->attempt($credentials)){
             return response()->json([
                 'message' => 'Credenciales incorrectas',
-                'code' => 401,
-            ]);
+            ], 401);
         }
-    }
 
-    public function user(Request $request){
-        return $request->user();
+        $request->session()->regenerate();
+
+        return response()->json([
+            'message' => 'Ingreso satisfactorio',
+            'user' => $user,
+        ], 200);
+
     }
 }
+

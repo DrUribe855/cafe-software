@@ -1,12 +1,8 @@
 <script setup lang="ts">
+import { useUserStore } from '@/stores/userStore';
 
-const props = defineProps({
-    name: {
-        type: String,
-        required: true
-    }
-})
-
+const userStore = useUserStore();
+console.log("store", userStore.user);
 
 </script>
 
@@ -15,7 +11,7 @@ const props = defineProps({
   <nav class="flex items-center h-15 px-4 bg-white shadow-xs mb-5">
     <!-- Primer item a la izquierda -->
     <div class="flex-shrink-0">
-      <p class="font-semibold text-1xl">¡Bienvenido {{ props.name }}!</p>
+      <p class="font-semibold text-1xl">¡Bienvenido {{ userStore.user.name }}!</p>
     </div>
 
     <!-- Espaciador para empujar lo demás a la derecha -->
@@ -23,7 +19,7 @@ const props = defineProps({
 
     <!-- Items a la derecha -->
     <div class="flex items-center gap-4">
-      <select class="border rounded px-2 py-1" name="" id="">
+      <select v-if="userStore.user.role == 'admin'" class="border rounded px-2 py-1" name="" id="">
         <option value="">Tienda 1</option>
         <option value="">Tienda 2</option>
       </select>
