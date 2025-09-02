@@ -1,29 +1,41 @@
-import { BookOpen, Calendar1, NotebookPen, Coffee, MonitorX } from "lucide-vue-next";
+import { BookOpen, Calendar1, NotebookPen, Coffee, MonitorX, Users } from "lucide-vue-next";
+import type { DashboardCard } from '../../interfaces/DashboardCard';
 
-export const dashboardCards = [
+export const dashboardCards: DashboardCard[] = [
+    {
+        title: 'Empleados',
+        description: 'Gestiona los empleados de la empresa.',
+        icon: Users,
+        route: '/dashboard/users'
+    },
     {
         title: 'Vacaciones',
         description: 'Gestiona tus vacaciones y solicita días libres.',
-        icon: BookOpen
+        icon: BookOpen,
+        route: 'vacaciones'
     },
     {
         title: 'Horarios',
         description: 'Revisa tus turnos, horas de entrada y salida.',
-        icon: Calendar1
+        icon: Calendar1,
+        route: 'horarios'
     },
     {
         title: 'Actividades',
         description: 'Revisa y gestiona actividades asignadas.',
-        icon: NotebookPen
+        icon: NotebookPen,
+        route: 'actividades'
     },
     {
         title: 'Bolleria',
         description: 'Estado de la bolleria en apertura, mediodía y cierre.',
-        icon: Coffee
+        icon: Coffee,
+        route: 'bolleria'
     },
     {
         title: 'Cierre',
         description: 'Temperaturas, actividades, lista de cierre.',
-        icon: MonitorX
+        icon: MonitorX,
+        route: 'cierre'
     }
 ];

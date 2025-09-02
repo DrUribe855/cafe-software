@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -45,6 +46,17 @@ class AuthController extends Controller
             'user' => $user,
         ], 200);
 
+    }
+
+    public function logout(Request $request){
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->json([
+            'message' => 'Sesión cerrada con éxito',
+            'status' => 'true'
+        ], 200);
     }
 }
 

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\User\UserController;
 
 /* -------------------------------- Rutas para inicio de sesión -------------------------------- */
 
@@ -14,5 +15,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         'roles' => $user->roles // Asumiendo que tienes una relación 'roles' en tu modelo User
     ];
 });
+Route::post('/logout', [AuthController::class, 'logout']);
 
+
+/* -------------------------------- Rutas de usuarios -------------------------------- */
+
+Route::get('/users', [UserController::class, 'fetchUsers']);
 

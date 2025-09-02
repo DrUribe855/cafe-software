@@ -9,7 +9,7 @@ export function useAuth(){
 
     /* Importamos los store para almacenar datos de forma global */
     const { setCode } = useEstablishmentStore();
-    const { setUser } = useUserStore();
+    const { setUser, clearUser } = useUserStore();
 
     const login = async ( document : number, password : string ) => {
 
@@ -32,13 +32,21 @@ export function useAuth(){
 
     }
 
-    const toDashboard = () => {
-        router.push('/dashboard');
+    const logout = async () =>{
+
+        try{
+            const { data } = await axios.post('/api/logout');
+            clearUser();
+            console.log('sesion cerrada', data);
+            router.push('/');
+        }catch(error: any){
+            console.log('error', error.response?.data)
+        }
+
     }
 
-
     return{
-        toDashboard,
-        login
+        login,
+        logout
     }
 }

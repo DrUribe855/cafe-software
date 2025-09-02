@@ -20,5 +20,9 @@ export const useEstablishmentStore = defineStore("establishment", {
         setAvailableStores(stores: string[]){
             this.availableStores = stores;
         },
+
+        getCode(){
+            return this.code;
+        }
     },
 });

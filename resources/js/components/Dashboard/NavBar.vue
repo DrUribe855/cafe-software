@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/userStore';
+import { useAuth } from '@/composables/Auth/useAuth';
 
 const userStore = useUserStore();
-console.log("store", userStore.user);
+const authComposable = useAuth();
 
 </script>
 
@@ -23,7 +24,7 @@ console.log("store", userStore.user);
         <option value="">Tienda 1</option>
         <option value="">Tienda 2</option>
       </select>
-      <button class="bg-red-500 text-white px-3 py-1 rounded">Cerrar sesión</button>
+      <button @click="authComposable.logout()" class="bg-red-500 text-white px-3 py-1 rounded">Cerrar sesión</button>
     </div>
   </nav>
 </template>
