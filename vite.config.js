@@ -15,7 +15,13 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-        '@': path.resolve(__dirname, 'resources/js'),
+            '@': path.resolve(__dirname, 'resources/js'),
+        },
+    },
+    server: {
+        proxy: {
+            '/api': 'http://127.0.0.1:8001',
+            '/sanctum': 'http://127.0.0.1:8001',
         },
     },
 });
