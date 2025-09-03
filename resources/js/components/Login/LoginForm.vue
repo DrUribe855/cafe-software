@@ -35,8 +35,8 @@ import { useAuth } from '@/composables/Auth/useAuth';
 import { ref } from 'vue';
 
 const { login } = useAuth();
-const document = ref<number | null>(null);
-const password = ref<string>('');
+const document = ref(null);
+const password = ref('');
 
 const loginExecute = () => {
     if( document.value == null  || password.value.trim() === ''){
