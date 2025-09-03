@@ -1,16 +1,14 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
-import type { User } from '../interfaces/User';
-import { useEstablishmentStore } from './establishmentStore';
 
 export const useUserStore = defineStore('user', {
     state: ()=>({
-        user: <User> {
+        user:  {
             id: null,
             name: '',
             role: null,
         },
-        isFetched: <boolean> false,
+        isFetched: false,
     }),
     actions: {
         async fetchUser(){
@@ -37,7 +35,7 @@ export const useUserStore = defineStore('user', {
             return this.user;
         },
 
-        setUser(user: User){
+        setUser(user){
             this.user = user;
             console.log('entro en seteo de usuario', JSON.stringify(this.user));
             localStorage.setItem('user', JSON.stringify(this.user));

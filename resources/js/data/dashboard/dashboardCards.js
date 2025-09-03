@@ -1,7 +1,6 @@
 import { BookOpen, Calendar1, NotebookPen, Coffee, MonitorX, Users } from "lucide-vue-next";
-import type { DashboardCard } from '../../interfaces/DashboardCard';
 
-export const dashboardCards: DashboardCard[] = [
+export const dashboardCards = [
     {
         title: 'Empleados',
         description: 'Gestiona los empleados de la empresa.',

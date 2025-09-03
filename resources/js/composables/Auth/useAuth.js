@@ -11,7 +11,7 @@ export function useAuth(){
     const { setCode } = useEstablishmentStore();
     const { setUser, clearUser } = useUserStore();
 
-    const login = async ( document : number, password : string ) => {
+    const login = async ( document, password) => {
 
         /* Se hace petición a sanctum para generación de token CSRF */
         await axios.get('/sanctum/csrf-cookie');
@@ -39,7 +39,7 @@ export function useAuth(){
             clearUser();
             console.log('sesion cerrada', data);
             router.push('/');
-        }catch(error: any){
+        }catch(error){
             console.log('error', error.response?.data)
         }
 

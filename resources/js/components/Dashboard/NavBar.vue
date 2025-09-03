@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { useUserStore } from '@/stores/userStore';
 import { useAuth } from '@/composables/Auth/useAuth';
 

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import Card from '@/components/Dashboard/OptionsCard.vue';
 import { dashboardCards } from '../../data/dashboard/dashboardCards';
 import { RouterLink } from 'vue-router';

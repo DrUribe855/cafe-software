@@ -30,7 +30,7 @@
 
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { useAuth } from '@/composables/Auth/useAuth';
 import { ref } from 'vue';
 

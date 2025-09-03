@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 
 import { onMounted } from 'vue';
 import NavBar from '@/components/Dashboard/NavBar.vue';

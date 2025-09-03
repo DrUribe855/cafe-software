@@ -1,6 +1,6 @@
 <!-- Vista de inicio de sesión -->
 
-<script setup lang="ts">
+<script setup>
 import LoginForm from '@/components/Login/LoginForm.vue';
 
 </script>

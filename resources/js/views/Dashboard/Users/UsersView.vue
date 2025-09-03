@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 
 import UserTable  from '../../../components/Dashboard/Users/UsersTable.vue';
 

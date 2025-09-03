@@ -1,17 +1,13 @@
-<script setup lang="ts">
-import type { Component } from 'vue';
+<script setup>
 
 const props = defineProps({
     icon: {
-        type: Object as () => Component,
         required: true
     },
     title: {
-        type: String,
         required: true
     },
     description: {
-        type: String,
         required: true
     }
 });
