@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,12 +13,9 @@ class AuthController extends Controller
 
     /* Función para autenticación de usuarios */
 
-    public function login(Request $request){
+    public function login(LoginRequest $request){
 
-        $credentials = $request->validate([
-            'document' => 'required',
-            'password' => 'required',
-        ]);
+        $credentials = $request->only('document', 'password');
 
         $user = User::where('document', $credentials['document'])->with('roles')->first();
 
