@@ -21,4 +21,5 @@ Route::post('/logout', [AuthController::class, 'logout']);
 /* -------------------------------- Rutas de usuarios -------------------------------- */
 
 Route::get('/users', [UserController::class, 'fetchUsers']);
+Route::post('/users', [UserController::class, 'createUser']);
 

@@ -4,15 +4,24 @@ import { ref, watch, onMounted } from 'vue';
 import { useUsers } from '../../../composables/Users/useUsers';
 import { useEstablishmentStore } from '@/stores/establishmentStore';
 import { UserPlus } from "lucide-vue-next";
+import UserModal from './FormModal.vue';
 
 const establishmentStore = useEstablishmentStore();
 const userComposable = useUsers();
 const { fetchUsers } = userComposable;
 const users = ref([]);
+const modalStatus = ref(false);
 
+const closeModal = () =>{
+    modalStatus.value = false;
+}
+
+const addUser = async (newUser) => {
+    users.value.push(newUser);
+}
 
 onMounted(()=>{
-    fetchUsers(Number(establishmentStore.code));
+    fetchUsers(establishmentStore.code);
 })
 
 watch(userComposable.users, (newValue) => {
@@ -39,12 +48,12 @@ watch(userComposable.users, (newValue) => {
                         placeholder="Buscar..."
                     />
                         <button
-                        class="absolute h-8 w-8 right-1 top-1 my-auto px-2 flex items-center bg-white rounded "
-                        type="button"
+                            class="absolute h-8 w-8 right-1 top-1 my-auto px-2 flex items-center bg-white rounded "
+                            type="button"
                         >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-8 h-8 text-slate-600">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                    </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-8 h-8 text-slate-600">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                        </svg>
                     </button>
                 </div>
             </div>
@@ -87,7 +96,7 @@ watch(userComposable.users, (newValue) => {
                 </tr>
             </thead>
             <tbody>
-                <tr class="hover:bg-slate-50" v-for="user in users" :key="user.id">
+                <tr class="hover:bg-slate-50" v-for="user in users" :key="user?.id">
                     <td class="p-4 border-b border-slate-200 py-5">
                         <p class="block font-semibold text-sm text-slate-800">{{ user.document }}</p>
                     </td>
@@ -107,4 +116,20 @@ watch(userComposable.users, (newValue) => {
             </tbody>
         </table>
     </div>
+
+    <transition
+        enter-active-class="transition duration-300 ease-out"
+        enter-from-class="opacity-0 scale-95"
+        enter-to-class="opacity-100 scale-100"
+        leave-active-class="transition duration-200 ease-in"
+        leave-from-class="opacity-100 scale-100"
+        leave-to-class="opacity-0 scale-95"
+    >
+        <UserModal
+            :status="modalStatus"
+            @close="closeModal"
+            @addUser="addUser"
+        />
+    </transition>
+
 </template>

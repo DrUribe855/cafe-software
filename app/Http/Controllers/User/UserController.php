@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+
 
 class UserController
 {
@@ -37,5 +39,47 @@ class UserController
         return response()->json([
             'users' => $users,
         ], 200);
+    }
+
+    // Función para creación de usuarios
+
+    public function createUser(Request $request){
+
+        $data = $request->validate([
+            'document' => 'required | integer',
+            'name'     => 'required | string',
+            'email'    => 'required | email',
+            'role'     => 'required',
+            'status'   => 'required',
+            'password' => 'required',
+            'establishmentId' => 'required | integer'
+        ]);
+
+        if(!$data){
+
+            return response()->json([
+                'message' => 'Información de usuario incompleta',
+                'status' => false
+            ], 422);
+        }
+
+        $user = User::create([
+            'document' => $data['document'],
+            'name'     => $data['name'],
+            'email'    => $data['email'],
+            'password' => Hash::make($data['password']),
+            'establishment_id' => $data['establishmentId'],
+            'status'   => $data['status'],
+        ]);
+
+
+        $user->assignRole($data['role']);
+
+        return response()->json([
+            'message' => 'Usuario creado exitosamente',
+            'status' => true,
+            'user' => $user->load('roles')
+        ], 200);
+
     }
 }
