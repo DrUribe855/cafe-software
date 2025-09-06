@@ -22,7 +22,7 @@
                 </div>
                 <div class="m-3">
                     <button @click="loginExecute()" class="text-center font-bold w-full bg-white rounded-md p-1.5 mt-3 transition delay-10 duration-400 ease-in-out hover:-translate-y-1 hover:scale-100 hover:bg-gray-200">Ingresar</button>
-                    <p v-if="errors.login" class="text-red-400 text-sm mt-1">{{errors.login}}</p>
+                    <p v-if="errors.loginExecute" class="text-red-400 text-sm mt-1">{{errors.loginExecute}}</p>
                 </div>
                 <div class="m-2">
                     <p class="text-white text-center pt-1"><a href="#">¿Has olvidado tú contraseña?</a></p>
@@ -42,22 +42,9 @@ const document = ref(null);
 const password = ref('');
 const errors = ref({document: '', password: '', login: ''});
 
-const loginExecute = () => {
-    errors.value = {document: '', password: '', login: ''};
-    if( document.value == null  || password.value.trim() === ''){
-        console.log('Todos los campos son obligatorios'); 
-    }else{
-        login(document.value, password.value);
-    }
-
-    if (!document.value) {
-        errors.value.document = "Debes diligenciar el DNI";
-    }
-    if (!password.value) {
-        errors.value.password = "Debes diligenciar la contraseña";
-    }
-}
-
+const loginExecute = async () => {
+  errors.value = { document: '', password: '', login: '' };
+};
 
 </script>
 
