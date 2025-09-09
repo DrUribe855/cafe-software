@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'tester@example.com',
             'establishment_id' => 1,
             'document' => '987654321',
+            'status' => 'Inactivo',
         ]);
         $employee->assignRole('employee');
     }

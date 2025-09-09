@@ -11,7 +11,9 @@
         <div class="bg-[#1a1a1a] p-4 rounded-lg shadow-lg w-[22em] ">
             <form @submit.prevent="login(document, password)">
                 <div class="">
-                    <p v-if="errors.userNotFound">Usuario no encontrado</p>
+                    <p class="pt-2 text-red-500 text-center" v-if="errors.userNotFound">¡{{ errors.userNotFound }}!</p>
+                    <p class="pt-2 text-red-500 text-center" v-if="errors.incorrectUser">¡{{ errors.incorrectUser }}!</p>
+                    <p class="pt-2 text-red-500 text-center" v-if="errors.inactiveUser">¡{{ errors.inactiveUser }}!</p>
                     <div class="block m-3">
                         <label class="block text-white pb-1" for="document">DNI</label>
                         <input v-model="document" maxlength="20" class="block text-white border-1 border-gray-400 w-full rounded-sm p-1.5" type="number" placeholder="Ingrese su DNI">
@@ -43,24 +45,6 @@ import { ref } from 'vue';
 const { login, errors } = useAuth();
 const document = ref(null);
 const password = ref('');
-const errors = ref({document: '', password: '', login: ''});
-
-const loginExecute = () => {
-    errors.value = {document: '', password: '', login: ''};
-    if( document.value == null  || password.value.trim() === ''){
-        console.log('Todos los campos son obligatorios'); 
-    }else{
-        login(document.value, password.value);
-    }
-
-    if (!document.value) {
-        errors.value.document = "Debes diligenciar el DNI";
-    }
-    if (!password.value) {
-        errors.value.password = "Debes diligenciar la contraseña";
-    }
-}
-
 
 </script>
 

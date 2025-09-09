@@ -1,8 +1,9 @@
 import { useRouter } from 'vue-router';
-import axios from 'axios';
+import { ref } from 'vue';
 import { useEstablishmentStore } from '@/stores/establishmentStore';
 import { useUserStore } from '@/stores/userStore';
-import { ref } from 'vue';
+import axios from 'axios';
+
 
 export function useAuth(){
 
@@ -15,9 +16,17 @@ export function useAuth(){
 
     const login = async ( document, password) => {
 
+        /* Se reiniciar objeto de errores en cada ejecución */
         errors.value = {};
-        console.log('ejecutado');
 
+        if(document == null){
+            return errors.value.document = ['El DNI es obligatorio'];
+        }
+
+        if(password.trim() === ''){
+            return errors.value.password = ['La contraseña es obligatoria'];
+        }
+        
         try{
             /* Se hace petición a sanctum para generación de token CSRF */
             await axios.get('/sanctum/csrf-cookie');
@@ -40,13 +49,20 @@ export function useAuth(){
 
         }catch(error){
 
-            if(error.response.status = 422){
-                errors.value =  error.response.data.errors;
-                console.log(errors.value);
+            if(error.response.status === 422){
+                return errors.value =  error.response.data.errors;
             }
 
-            if(error.response.status = 404){
-                errors.value.userNotFound = 'Usuario no encontrado';
+            if(error.response.status === 404){
+                return errors.value.userNotFound = error.response.data.message;  
+            }
+
+            if(error.response.status === 401){
+                return errors.value.incorrectUser = error.response.data.message;
+            }
+
+            if(error.response.status === 403){
+                return errors.value.inactiveUser = error.response.data.message;
             }
         }
 
