@@ -3,21 +3,44 @@
 import { ref, watch, onMounted } from 'vue';
 import { useUsers } from '../../../composables/Users/useUsers';
 import { useEstablishmentStore } from '@/stores/establishmentStore';
-import { UserPlus } from "lucide-vue-next";
+import { UserPlus, SquarePen } from "lucide-vue-next";
 import UserModal from './FormModal.vue';
 
 const establishmentStore = useEstablishmentStore();
 const userComposable = useUsers();
 const { fetchUsers } = userComposable;
 const users = ref([]);
+const selectedUser = ref(null);
 const modalStatus = ref(false);
+
+
+const openModal = ( user ) => {
+    selectedUser.value = user;
+    modalStatus.value = true;
+}
 
 const closeModal = () =>{
     modalStatus.value = false;
+    selectedUser.value = null;
 }
 
+
 const addUser = async (newUser) => {
-    users.value.push(newUser);
+
+    if(newUser){
+
+        const index = users.value.findIndex((user) => user.id == newUser.id);
+
+        if(index !== -1){
+            users.value[index] = newUser;
+            console.log("Usuario modificado: ", users.value[index]);
+        }else{
+            users.value.push(newUser);
+        }
+    }
+
+
+
 }
 
 onMounted(()=>{
@@ -46,6 +69,7 @@ watch(userComposable.users, (newValue) => {
                     <input
                         class="w-full h-10 pr-11 pl-3 py-2 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded transition duration-300 ease focus:outline-none focus:border-slate-400 hover-border-slate-400 shadow-sm focus:shadow-md"
                         placeholder="Buscar..."
+                        name="search-user"
                     />
                         <button
                             class="absolute h-8 w-8 right-1 top-1 my-auto px-2 flex items-center bg-white rounded "
@@ -60,7 +84,7 @@ watch(userComposable.users, (newValue) => {
         </div>
         <!-- Boton de crear usuario-->
         <div class="w-full md:w-auto flex justify-righ">
-        <button class="flex items-center gap-2 bg-sky-400 text-white px-4 py-2 rounded-lg shadow hover:bg-sky-300 transition"><UserPlus class="w-5 h-5" /><span>Crear usuario</span></button> 
+            <button @click="modalStatus = !modalStatus" class="flex items-center gap-2 bg-sky-400 text-white px-4 py-2 rounded-lg shadow hover:bg-sky-300 transition"><UserPlus class="w-5 h-5" /><span>Crear usuario</span></button>
         </div>
     </div>
 
@@ -72,7 +96,7 @@ watch(userComposable.users, (newValue) => {
                         <p class="block text-sm font-normal leading-none text-slate-500">
                             DNI
                         </p>
-                    </th>   
+                    </th>
                     <th class="p-4 border-b border-slate-300 bg-slate-50">
                         <p class="block text-sm font-normal leading-none text-slate-500">
                             Nombre
@@ -91,6 +115,11 @@ watch(userComposable.users, (newValue) => {
                     <th class="p-4 border-b border-slate-300 bg-slate-50">
                         <p class="block text-sm font-normal leading-none text-slate-500">
                             Estado
+                        </p>
+                    </th>
+                    <th class="p-4 border-b border-slate-300 bg-slate-50">
+                        <p class="block text-sm font-normal leading-none text-slate-500">
+                            Modificar
                         </p>
                     </th>
                 </tr>
@@ -112,6 +141,9 @@ watch(userComposable.users, (newValue) => {
                     <td class="p-4 border-b border-slate-200 py-5">
                         <p class="text-sm text-slate-500"> {{ user.status }}</p>
                     </td>
+                    <td class="p-4 border-b border-slate-200 py-5">
+                        <button @click="openModal(user)" class="pl-5"><SquarePen/></button>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -126,6 +158,8 @@ watch(userComposable.users, (newValue) => {
         leave-to-class="opacity-0 scale-95"
     >
         <UserModal
+            v-if="modalStatus"
+            :user="selectedUser"
             :status="modalStatus"
             @close="closeModal"
             @addUser="addUser"

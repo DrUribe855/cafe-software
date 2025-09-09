@@ -24,6 +24,10 @@ class User extends Authenticatable
         'status'
     ];
 
+    protected $hidden = [
+        'password',
+    ];
+
 
     /*  Relación del usuario con el establecimiento
         indicando que la tabla de usuarios es la que tiene

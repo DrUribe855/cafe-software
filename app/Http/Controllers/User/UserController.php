@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
@@ -43,17 +44,7 @@ class UserController
 
     // Función para creación de usuarios
 
-    public function createUser(Request $request){
-
-        $data = $request->validate([
-            'document' => 'required | integer',
-            'name'     => 'required | string',
-            'email'    => 'required | email',
-            'role'     => 'required',
-            'status'   => 'required',
-            'password' => 'required',
-            'establishmentId' => 'required | integer'
-        ]);
+    public function createUser(UserRequest $request){
 
         if(!$data){
 
@@ -81,5 +72,29 @@ class UserController
             'user' => $user->load('roles')
         ], 200);
 
+    }
+
+    public function editUser(UserRequest $request, $id){
+        $user = User::find($id);
+
+        if($user){
+            $user->document = $request->document;
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->syncRoles($request->role);
+            $user->status = $request->status;
+
+            if($request->password){
+                $user->password = Hash::make($request->password);
+            }
+
+            $user->save();
+
+            return response()->json([
+                'message' => 'Usuario modificado con éxito',
+                'user' => $user->load('roles'),
+            ], 200);
+
+        }
     }
 }

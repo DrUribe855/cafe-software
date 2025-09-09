@@ -26,15 +26,13 @@ export function useAuth(){
         if(password.trim() === ''){
             return errors.value.password = ['La contraseña es obligatoria'];
         }
-        
+
         try{
             /* Se hace petición a sanctum para generación de token CSRF */
             await axios.get('/sanctum/csrf-cookie');
 
             /* Asignación y desestructuración de objetos */
             const { data } = await axios.post('/api/login', { document, password});
-            console.log('ejecutado 2');
-            console.log(data);
             const { establishment_id } = data.user;
             const user = {
                 id: data.user.id,
@@ -54,7 +52,7 @@ export function useAuth(){
             }
 
             if(error.response.status === 404){
-                return errors.value.userNotFound = error.response.data.message;  
+                return errors.value.userNotFound = error.response.data.message;
             }
 
             if(error.response.status === 401){

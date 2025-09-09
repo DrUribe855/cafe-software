@@ -8,41 +8,46 @@ const props = defineProps({
     status: {
         required: true
     },
-})
+    user: {
+        type: Object,
+        required: false,
+    }
+});
 
 const emits = defineEmits(['close','addUser']);
 const establishmentStore = useEstablishmentStore();
-
 const user = ref({
-    id: '',
-    document: '',
-    name: '',
-    email: '',
+    id: props.user?.id ?? '',
+    document: props.user?.document ?? '',
+    name: props.user?.name ?? '',
+    email: props.user?.email ?? '',
     password: '',
-    role: null,
-    status: '',
+    role:  props.user?.roles[0].name,
+    status: props.user?.status ?? '',
     establishmentId: establishmentStore.getCode(),
 });
 
 const userComposable = useUsers();
+const { errors } = userComposable;
 
 const save = async () => {
-    console.log('ejecuto');
-    const newUser = await userComposable.createUser(user.value);
-    console.log('usuario retornado: ', newUser);
-    emits('addUser',newUser);
-    emits('close');
+    const newUser = await userComposable.saveUser(user.value);
+    console.log('Valor de newUser: ', newUser);
+
+    if(newUser){
+        emits('addUser', newUser);
+        emits('close');
+    }
+
 }
 
 
-console.log('valor de modalstatus: ', props.status);
 </script>
 
 
 
 <template>
     <div
-        v-if="props.status"
         class="fixed inset-0 flex items-center justify-center z-50"
     >
         <!-- Fondo -->
@@ -50,8 +55,7 @@ console.log('valor de modalstatus: ', props.status);
 
         <!-- Contenedor modal -->
         <div
-            class="relative bg-white rounded-2xl shadow-md w-full max-w-lg p-6 transform transition-all duration-300 scale-95 opacity-0"
-            :class="props.status ? 'opacity-100 scale-100' : 'opacity-0 scale-95'"
+            class="relative bg-white rounded-2xl shadow-md w-full max-w-lg p-6 transform transition-all duration-300 opacity-100 scale-100"
         >
             <!-- Botón cerrar -->
             <button
@@ -64,7 +68,7 @@ console.log('valor de modalstatus: ', props.status);
 
             <!-- Título -->
             <h2 class="text-xl font-semibold mb-4">
-                Titulo
+                {{ user.id ? 'Modificar usuario' : 'Registrar usuario' }}
             </h2>
 
             <!-- Formulario -->
@@ -78,15 +82,18 @@ console.log('valor de modalstatus: ', props.status);
                             class="mt-2 block w-full p-[5px] border-1 rounded-md border-gray-300 focus:outline-blue-500"
                             required
                         />
+                        <p class="pt-2 text-red-500 text-center text-xs" v-if="errors.document">¡{{ errors.document[0] }}!</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium">Nombre</label>
+                        <label class="block text-sm font-medium" name="name">Nombre</label>
                         <input
                             type="text"
                             v-model="user.name"
+                            name="name"
                             class="mt-2 block w-full p-[5px] border-1 rounded-md border-gray-300 focus:outline-blue-500"
                             required
                         />
+                        <p class="pt-2 text-red-500 text-center text-xs" v-if="errors.name">¡{{ errors.name[0] }}!</p>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
@@ -98,6 +105,7 @@ console.log('valor de modalstatus: ', props.status);
                             class="mt-2 block w-full p-[5px] border-1 rounded-md border-gray-300 focus:outline-blue-500"
                             required
                         />
+                        <p class="pt-2 text-red-500 text-center text-xs" v-if="errors.email">¡{{ errors.email[0] }}!</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium">Rol</label>
@@ -107,9 +115,10 @@ console.log('valor de modalstatus: ', props.status);
                             id="role"
                             class="mt-2 block w-full p-[5px] border-1 rounded-md border-gray-300 focus:outline-blue-500"
                         >
-                            <option value="admin" selected >Empleado</option>
-                            <option value="employee">Administrador</option>
+                            <option value="employee" selected >Empleado</option>
+                            <option value="admin">Administrador</option>
                         </select>
+                        <p class="pt-2 text-red-500 text-center text-xs" v-if="errors.role">¡{{ errors.role[0] }}!</p>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
@@ -124,6 +133,7 @@ console.log('valor de modalstatus: ', props.status);
                             <option value="Activo" selected >Activo</option>
                             <option value="Inactivo">Inactivo</option>
                         </select>
+                        <p class="pt-2 text-red-500 text-center text-xs" v-if="errors.status">¡{{ errors.status[0] }}!</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium">Contraseña</label>
@@ -133,6 +143,7 @@ console.log('valor de modalstatus: ', props.status);
                             class="mt-2 block w-full p-[5px] border-1 rounded-md border-gray-300 focus:outline-blue-500"
                             required
                         />
+                        <p class="pt-2 text-red-500 text-center text-xs" v-if="errors.password">¡{{ errors.password[0] }}!</p>
                     </div>
                 </div>
 
@@ -141,7 +152,7 @@ console.log('valor de modalstatus: ', props.status);
                     type="submit"
                     class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition"
                 >
-                    {{ true ? "Actualizar" : "Registrar" }}
+                    {{ user.id ? "Actualizar" : "Registrar" }}
                 </button>
             </form>
         </div>
