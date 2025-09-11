@@ -4,6 +4,8 @@ import { useUsers } from '../../../composables/Users/useUsers';
 import { useEstablishmentStore } from '../../../stores/establishmentStore';
 import { ref } from 'vue';
 
+/* Cargado de props */
+
 const props = defineProps({
     status: {
         required: true
@@ -14,8 +16,12 @@ const props = defineProps({
     }
 });
 
+/* Definición de variables */
+
 const emits = defineEmits(['close','addUser']);
 const establishmentStore = useEstablishmentStore();
+const userComposable = useUsers();
+const { errors } = userComposable;
 const user = ref({
     id: props.user?.id ?? '',
     document: props.user?.document ?? '',
@@ -27,9 +33,7 @@ const user = ref({
     establishmentId: establishmentStore.getCode(),
 });
 
-const userComposable = useUsers();
-const { errors } = userComposable;
-
+/* Función para guardado de información */
 const save = async () => {
     const newUser = await userComposable.saveUser(user.value);
     console.log('Valor de newUser: ', newUser);
@@ -41,10 +45,7 @@ const save = async () => {
 
 }
 
-
 </script>
-
-
 
 <template>
     <div

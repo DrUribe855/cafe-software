@@ -23,10 +23,23 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
 
-        $userId = $this->route('id') ?? $this->route('user');
+        /* Recuperamos el ID del usuario enviado por la ruta */
+
+        $userId = $this->route('id'); 
+
+
+        /* Validamos los campos del formulario, a su vez, validamos el tipo de petición para
+        los campos de documento, email y password, para asi saber que hacer dependiendo
+        el tipo de petición */
 
         return [
-            'document' => 'required | numeric',
+            'document' => [
+                            'required', 
+                            'numeric',
+                            $this->isMethod('post')
+                                    ? Rule::unique('users', 'document')
+                                    : Rule::unique('users', 'document')->ignore($userId)
+                        ],
             'name'     => 'required | max:60',
             'email'    => [
                             'required',
@@ -42,10 +55,13 @@ class UserRequest extends FormRequest
         ];
     }
 
+    /* Mensajes retornados */
+
     public function messages(){
         return [
             'document.required' => 'El DNI es obligatorio',
             'document.numeric'  => 'Los datos ingresados no corresponden a un DNI',
+            'document.unique'   => 'El DNI ya se encuentra registrado',
             'name.required'     => 'El nombre es obligatorio',
             'name.max'          => 'El nombre no puede ser mayor a 60 caracteres',
             'email.required'    => 'El email es obligatorio',

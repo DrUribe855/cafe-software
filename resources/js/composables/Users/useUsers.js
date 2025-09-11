@@ -3,6 +3,8 @@ import axios from 'axios';
 
 export function useUsers(){
 
+    /* Definición de variables */
+
     const users = ref([]);
     const errors = ref({});
 
@@ -14,7 +16,6 @@ export function useUsers(){
         });
 
         users.value = data.users;
-        console.log("lista de usuarios", users.value);
 
     }
 
@@ -22,41 +23,40 @@ export function useUsers(){
 
     const saveUser = async ( user ) => {
 
-        /* Si el id está vacio o indefinido se hace creación de usuario. */
-
-        let errores = formValidations(user);
-        console.log('Errores en la validación: ', errores);
+        /* Validamos que los campos estén diligenciados */
 
         if(formValidations(user)) return null
 
+        /* Si el id está vacio o indefinido se hace creación de usuario. */
 
         if(!user.id){
             try{
                 const { data } = await axios.post('/api/users/', user);
                 return data.user;
+
             }catch(error){
-                console.log('Error en creación: ', error);
 
                 if(error.response.status === 422){
                     errors.value = error.response.data.errors;
                     console.log(errors.value);
                 }
             }
-
         }else{
             try{
                 const { data } = await axios.put(`/api/users/${user.id}`, user);
                 return data.user;
+
             }catch(error){
 
                 if(error.response.status === 422){
                     errors.value = error.response.data.errors;
                     console.log(errors.value);
                 }
-                console.log('Error en modificación: ', error);
             }
         }
     }
+
+    /* Función para validación de campos de formulario */
 
     const formValidations = ( user ) => {
 

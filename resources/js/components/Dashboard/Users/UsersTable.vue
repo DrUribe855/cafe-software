@@ -1,10 +1,11 @@
 <script setup>
-
 import { ref, watch, onMounted } from 'vue';
 import { useUsers } from '../../../composables/Users/useUsers';
 import { useEstablishmentStore } from '@/stores/establishmentStore';
 import { UserPlus, SquarePen } from "lucide-vue-next";
 import UserModal from './FormModal.vue';
+
+/* Declaracion de variables */
 
 const establishmentStore = useEstablishmentStore();
 const userComposable = useUsers();
@@ -13,22 +14,27 @@ const users = ref([]);
 const selectedUser = ref(null);
 const modalStatus = ref(false);
 
+/* Función para apertura de modal y cargado de usuario enviado */
 
 const openModal = ( user ) => {
     selectedUser.value = user;
     modalStatus.value = true;
 }
 
+/* Función para cierre de modal y limpieza de usuario seleccionado */
+
 const closeModal = () =>{
     modalStatus.value = false;
     selectedUser.value = null;
 }
 
+/* Función para añadir usuario al arreglo de usuarios */
 
 const addUser = async (newUser) => {
 
     if(newUser){
 
+        /* Si el usuario que llega existe en el arreglo, este se reemplaza, sino, se añade */
         const index = users.value.findIndex((user) => user.id == newUser.id);
 
         if(index !== -1){
@@ -42,6 +48,8 @@ const addUser = async (newUser) => {
 
 
 }
+
+/* Cargado de variables al cargar la página */
 
 onMounted(()=>{
     fetchUsers(establishmentStore.code);
