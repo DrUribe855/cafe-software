@@ -1,7 +1,9 @@
 import { useRouter } from 'vue-router';
-import axios from 'axios';
+import { ref } from 'vue';
 import { useEstablishmentStore } from '@/stores/establishmentStore';
 import { useUserStore } from '@/stores/userStore';
+import axios from 'axios';
+
 
 export function useAuth(){
 
@@ -10,25 +12,57 @@ export function useAuth(){
     /* Importamos los store para almacenar datos de forma global */
     const { setCode } = useEstablishmentStore();
     const { setUser, clearUser } = useUserStore();
+    const errors = ref({});
 
     const login = async ( document, password) => {
 
-        /* Se hace petición a sanctum para generación de token CSRF */
-        await axios.get('/sanctum/csrf-cookie');
+        /* Se reiniciar objeto de errores en cada ejecución */
+        errors.value = {};
 
-        /* Asignación y desestructuración de objetos */
-        const { data } = await axios.post('/api/login', { document, password});
-        const { establishment_id } = data.user;
-        const user = {
-            id: data.user.id,
-            name: data.user.name,
-            role: data.user.roles[0].name,
+        if(document == null){
+            return errors.value.document = ['El DNI es obligatorio'];
         }
 
-        /* Cargado de variables globales y redireccionamiento */
-        setCode(establishment_id);
-        setUser(user);
-        router.push('/dashboard');
+        if(password.trim() === ''){
+            return errors.value.password = ['La contraseña es obligatoria'];
+        }
+
+        try{
+            /* Se hace petición a sanctum para generación de token CSRF */
+            await axios.get('/sanctum/csrf-cookie');
+
+            /* Asignación y desestructuración de objetos */
+            const { data } = await axios.post('/api/login', { document, password});
+            const { establishment_id } = data.user;
+            const user = {
+                id: data.user.id,
+                name: data.user.name,
+                role: data.user.roles[0].name,
+            }
+
+            /* Cargado de variables globales y redireccionamiento */
+            setCode(establishment_id);
+            setUser(user);
+            router.push('/dashboard');
+
+        }catch(error){
+
+            if(error.response.status === 422){
+                return errors.value =  error.response.data.errors;
+            }
+
+            if(error.response.status === 404){
+                return errors.value.userNotFound = error.response.data.message;
+            }
+
+            if(error.response.status === 401){
+                return errors.value.incorrectUser = error.response.data.message;
+            }
+
+            if(error.response.status === 403){
+                return errors.value.inactiveUser = error.response.data.message;
+            }
+        }
 
     }
 
@@ -47,7 +81,7 @@ export function useAuth(){
 
     return{
         login,
-        logout
+        logout,
+        errors,
     }
 }
-
