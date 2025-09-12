@@ -1,10 +1,10 @@
 import { ref } from 'vue';
 import axios from 'axios';
-import { useEstablishmentStore }  from '../../stores/establishmentStore';
 
 export function useUsers(){
 
-    const establishment = useEstablishmentStore();
+    /* Definición de variables */
+
     const users = ref([]);
     const errors = ref({});
 
@@ -19,17 +19,39 @@ export function useUsers(){
 
     }
 
-    const createUser = async ( user ) => {
+    /* Función para guardado de información de usuarios */
 
-        const store = establishment.getCode();
+    const saveUser = async ( user ) => {
 
-        // Si el id está vacio o indefinido se hace creación de usuario.
+        /* Validamos que los campos estén diligenciados */
+
+        if(formValidations(user)) return null
+
+        /* Si el id está vacio o indefinido se hace creación de usuario. */
+
         if(!user.id){
             try{
                 const { data } = await axios.post('/api/users/', user);
                 return data.user;
+
             }catch(error){
-                console.log('Error en creación: ', error);
+
+                if(error.response.status === 422){
+                    errors.value = error.response.data.errors;
+                    console.log(errors.value);
+                }
+            }
+        }else{
+            try{
+                const { data } = await axios.put(`/api/users/${user.id}`, user);
+                return data.user;
+
+            }catch(error){
+
+                if(error.response.status === 422){
+                    errors.value = error.response.data.errors;
+                    console.log(errors.value);
+                }
             }
         }
     }
