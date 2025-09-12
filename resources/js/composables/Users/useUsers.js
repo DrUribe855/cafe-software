@@ -6,8 +6,9 @@ export function useUsers(){
 
     const establishment = useEstablishmentStore();
     const users = ref([]);
+    const errors = ref({});
 
-    // Función para cargado de usuarios
+    /* Función para cargado de usuarios */
     const fetchUsers = async ( establishmentId ) => {
 
         const { data } = await axios.get('/api/users', {
@@ -15,7 +16,6 @@ export function useUsers(){
         });
 
         users.value = data.users;
-        console.log("lista de usuarios", users.value);
 
     }
 
@@ -34,10 +34,40 @@ export function useUsers(){
         }
     }
 
+    /* Función para validación de campos de formulario */
+
+    const formValidations = ( user ) => {
+
+        errors.value = {};
+
+        if(user.document === '' || user.document == null){
+            errors.value.document = ['El DNI es obligatorio'];
+        }
+
+        if(user.name.trim() === ''){
+            errors.value.name = ['El nombre es obligatorio'];
+        }
+
+        if(user.email.trim() === ''){
+            errors.value.email = ['El email es obligatorio'];
+        }
+
+        if(user.role === '' || user.role === null || user.role == undefined){
+            errors.value.role = ['Debe indicar el rol del usuario'];
+        }
+
+        if(user.status === '' || user.role == null){
+            errors.value.status = ['Debe indicar el estado del usuario'];
+        }
+
+        return Object.keys(errors.value).length > 0 ? true : false;
+    }
+
     return{
         fetchUsers,
         users,
-        createUser,
+        saveUser,
+        errors,
     }
 
 }
