@@ -47,4 +47,3 @@ const document = ref(null);
 const password = ref('');
 
 </script>
-
