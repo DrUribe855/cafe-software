@@ -13,10 +13,10 @@ export const useUserStore = defineStore('user', {
     actions: {
         async fetchUser(){
 
-            if(this.isFetched) return this.user;
+            // if(this.isFetched) return this.user;
 
             try{
-                const { data } = await axios.get('api/user');
+                const { data } = await axios.get('/api/user');
                 console.log('Información traida por data: ', data);
                 const user = {
                    id: data.user.id,
@@ -45,8 +45,10 @@ export const useUserStore = defineStore('user', {
             const storedUser = localStorage.getItem('user');
             if(storedUser){
                 this.user = JSON.parse(storedUser);
-                this.isFetched = true;
+                // this.isFetched = true;
             }
+
+            this.fetchUser();
         },
 
         clearUser(){

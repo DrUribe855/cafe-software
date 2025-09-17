@@ -5,7 +5,7 @@ import LoginView from '../views/LoginView.vue';
 import DashboardView from '../views/Dashboard/DashboardView.vue';
 import DashboardMenu from '../views/Dashboard/DashboardMenu.vue';
 import UsersView from '../views/Dashboard/Users/UsersView.vue';
-import BakeryView from '../views/Dashboard/Bakery/BakeryView.vue';
+import BakeryView from '../views/Dashboard/Pastrie/PastriesView.vue';
 
 import { useUserStore } from '@/stores/userStore';
 
