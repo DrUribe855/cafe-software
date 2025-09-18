@@ -11,6 +11,7 @@ class PastrieLog extends Model
     protected $fillable = [
         'establishment_id',
         'user_id',
+        'schedule',
         'image_url'
     ];
 

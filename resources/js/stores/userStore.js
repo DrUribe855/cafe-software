@@ -8,16 +8,16 @@ export const useUserStore = defineStore('user', {
             name: '',
             role: null,
         },
+        isLoading: false,
         isFetched: false,
     }),
     actions: {
         async fetchUser(){
 
-            // if(this.isFetched) return this.user;
+            this.isLoading = true;
 
             try{
                 const { data } = await axios.get('/api/user');
-                console.log('Información traida por data: ', data);
                 const user = {
                    id: data.user.id,
                    name: data.user.name,
@@ -28,8 +28,9 @@ export const useUserStore = defineStore('user', {
 
             }catch (error){
                 console.error('Error fetching user: ', error);
+                this.clearUser();
             }finally{
-                this.isFetched = true;
+                this.isLoading = false;
             }
 
             return this.user;
@@ -37,7 +38,6 @@ export const useUserStore = defineStore('user', {
 
         setUser(user){
             this.user = user;
-            console.log('entro en seteo de usuario', JSON.stringify(this.user));
             localStorage.setItem('user', JSON.stringify(this.user));
         },
 

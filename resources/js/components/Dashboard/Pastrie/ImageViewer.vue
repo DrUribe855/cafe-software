@@ -1,13 +1,39 @@
+<script setup>
+import { watch } from 'vue';
+import { useUploadImage } from '../../../composables/Pastrie/useUploadImage';
+import ImageContainer from './ImageContainer.vue';
+
+const { date } = defineProps({
+    date: {
+        String,
+        required: true,
+    }
+});
+
+const { fetchImage, imageData } = useUploadImage();
+console.log("Image data in ImageViewer: ", imageData);
+
+watch( () => date, (newDate) => {
+        if(newDate){
+            fetchImage(newDate);
+        }
+    },
+    { immediate: true }
+);
+
+</script>
+
+
+
 <template>
-  <div class="flex flex-col items-center justify-center p-4">
-    <div v-if="loading" class="text-gray-500">Cargando imagen...</div>
-    <div v-else-if="error" class="text-red-500">{{ error }}</div>
-    <div v-else>
-      <img
-        :src="imageSrc"
-        alt="Imagen subida"
-        class="max-w-md rounded-xl shadow-lg border"
-      />
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+        <article v-for="image in imageData.images" v-if="imageData.images" class="w-full">
+            <ImageContainer
+                :schedule="image.schedule"
+                :date="image.created_at"
+                :imageUrl="image.imageUrl"
+                :username="image.username"
+            />
+        </article>
     </div>
-  </div>
 </template>

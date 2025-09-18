@@ -30,9 +30,9 @@ console.log("Role en information bar: ", props.role);
                     @change="e => emit('update:schedule', e.target.value)"
                 >
                     <option value="" selected >Seleccione un horario</option>
-                    <option value="0">Apertura</option>
-                    <option value="1">Cambio de turno</option>
-                    <option value="2">Cierre</option>
+                    <option value="apertura">Apertura</option>
+                    <option value="cambio de turno">Cambio de turno</option>
+                    <option value="cierre">Cierre</option>
                 </select>
             </div>
             <div v-if="role === 'admin'">

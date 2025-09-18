@@ -7,20 +7,21 @@ export function useUploadImage(){
 
     const store = useUserStore();
     const establishmentStore = useEstablishmentStore();
-    const imageUrl = ref(null);
+    const imageData = ref([]);
 
-    const fetchImage = async (schedule, date) => {
+    const fetchImage = async (date) => {
+        console.log("Fetching image for date: ", date);
         try{
             const { data } = await axios.get('/api/get-image', {
                 params: {
-                    schedule: schedule,
                     date: date,
                     establishment_id: parseInt(establishmentStore.getCode())
                 }
             });
 
-            imageUrl.value = data.image_url;
-            console.log("Imagen obtenida: ", imageUrl.value);
+            imageData.value = data;
+            console.log("Imagen obtenida: ", imageData.value);
+
 
         }catch(error){
             console.error("Error al obtener la imagen: ", error);
@@ -29,8 +30,6 @@ export function useUploadImage(){
 
     const uploadImage = async (file, schedule) => {
 
-        console.log("Tipo: ", file, file instanceof File);
-
         const formData = new FormData();
         formData.append('establishment_id', parseInt(establishmentStore.getCode()));
         formData.append('user_id', store.user.id);
@@ -38,11 +37,7 @@ export function useUploadImage(){
         formData.append('file', file);
 
         try{
-            const { data } = await axios.post('/api/upload-image', formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
-            });
+            const { data } = await axios.post('/api/upload-image', formData);
             console.log("Respuesta de subida de image: ", data);
         }catch(error){
             console.error("Error al subir la imagen: ", error);
@@ -50,5 +45,5 @@ export function useUploadImage(){
     }
 
 
-    return { uploadImage, fetchImage, imageUrl };
+    return { uploadImage, fetchImage, imageData };
 }

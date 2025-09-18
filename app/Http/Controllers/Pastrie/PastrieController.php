@@ -13,14 +13,29 @@ class PastrieController extends Controller
 {
 
 
-    public function getPastrieImage(Request $request){
+    public function getImage(Request $request){
         $request->validate([
-            'schedule' => 'required|string',
             'date' => 'required|date',
             'establishment_id' => 'required|integer',
         ]);
 
-        // $image = PastrieLog::where('schedule', )
+        $images = PastrieLog::with('user')
+                            ->where('establishment_id', $request->establishment_id)
+                            ->whereDate('created_at', $request->date)
+                            ->get();
+
+        $images = $images->map(function($img){
+            return [
+                'imageUrl' => asset('storage/' . $img->image_url),
+                'schedule' => $img->schedule,
+                'username' => $img->user->name,
+                'created_at' => $img->created_at->toDateTimeString(),
+            ];
+        });
+
+        return response()->json([
+            'images' => $images,
+        ]);
     }
 
     public function uploadPhoto(PastrieRequest $request){
@@ -39,6 +54,7 @@ class PastrieController extends Controller
         }
 
         $path = $request->file('file')->store('pastrie_logs', 'public');
+
 
         PastrieLog::create([
             'establishment_id' => $request->establishment_id,
