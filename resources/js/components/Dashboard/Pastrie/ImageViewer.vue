@@ -11,7 +11,6 @@ const { date } = defineProps({
 });
 
 const { fetchImage, imageData } = useUploadImage();
-console.log("Image data in ImageViewer: ", imageData);
 
 watch( () => date, (newDate) => {
         if(newDate){

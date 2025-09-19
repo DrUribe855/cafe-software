@@ -21,11 +21,12 @@ Route::post('/logout', [AuthController::class, 'logout']);
 
 /* -------------------------------- Rutas de usuarios -------------------------------- */
 
-Route::get('/users', [UserController::class, 'fetchUsers']);
-Route::post('/users', [UserController::class, 'createUser']);
-Route::put('/users/{id}', [UserController::class, 'editUser']);
-
+Route::middleware(['role:admin'])->group(function () {
+    Route::get('/users', [UserController::class, 'fetchUsers']);
+    Route::post('/users', [UserController::class, 'createUser']);
+    Route::put('/users/{id}', [UserController::class, 'editUser']);
+});
 /* -------------------------------- Rutas de bolleria -------------------------------- */
-Route::post('/upload-image', [PastrieController::class, 'uploadPhoto']);
-Route::get('/get-image', [PastrieController::class, 'getImage']);
+Route::middleware(['role:admin|employee'])->post('/upload-image', [PastrieController::class, 'uploadPhoto']);
+Route::middleware(['role:admin'])->get('/get-image', [PastrieController::class, 'getImage']);
 
