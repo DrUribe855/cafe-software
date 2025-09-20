@@ -7,15 +7,29 @@ export function useUsers(){
 
     const users = ref([]);
     const errors = ref({});
+    const pagination = ref({
+        current_page: 1,
+        last_page: 1,
+        per_page: 10,
+        total: 0
+    });
 
     /* Función para cargado de usuarios */
-    const fetchUsers = async ( establishmentId ) => {
+    const fetchUsers = async ( establishmentId, page = 1 ) => {
 
         const { data } = await axios.get('/api/users', {
-            params: { establishmentId }
+            params: { establishmentId, page }
         });
 
-        users.value = data.users;
+        console.log(data);
+
+        users.value = data.users.data;
+        pagination.value = {
+            current_page: data.users.current_page,
+            last_page: data.users.last_page,
+            per_page: data.users.per_page,
+            total: data.users.total,
+        }
 
     }
 
@@ -90,6 +104,7 @@ export function useUsers(){
         users,
         saveUser,
         errors,
+        pagination,
     }
 
 }

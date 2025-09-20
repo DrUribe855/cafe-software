@@ -10,8 +10,7 @@ import UserModal from './FormModal.vue';
 /* Declaracion de variables */
 const establishmentStore = useEstablishmentStore();
 const userComposable = useUsers();
-const { fetchUsers } = userComposable;
-const users = ref([]);
+const { fetchUsers, users, pagination } = userComposable;
 const selectedUser = ref(null);
 const modalStatus = ref(false);
 const searchUser = ref('');
@@ -91,7 +90,7 @@ watch(userComposable.users, (newValue) => {
         <!-- Barra de búsqueda -->
         <div class="w-full sm:w-80 md:w-95 lg:w-[25rem]">
             <div class="flex items-center">
-                <!-- Input -->
+                <!-- Input -->  
                 <input v-model="searchUser"
                     class="w-full h-10 px-3 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-l-md transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md"
                     placeholder="Buscar..."
@@ -157,6 +156,30 @@ watch(userComposable.users, (newValue) => {
                 </tr>
             </tbody>
         </table>
+
+         <!-- Paginador de tabla usuarios -->
+             <div class="flex justify-between items-center mt-6 px-4">
+             <button :disabled="pagination.current_page === 1" @click="fetchUsers(establishmentStore.code, pagination.current_page - 1)"
+             class="flex items-center gap-2 px-4 py-2 rounded-lg shadow-sm border border-gray-300 bg-white text-gray-700 hover:bg-sky-100 hover:border-sky-300 hover:text-sky-600
+             disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition duration-200 ease-in-out"> 
+             
+             <span class="text-lg">◀</span>
+             <span class="hidden sm:inline">Anterior</span>
+             </button>
+
+             <span class="text-sm text-gray-600">
+                Página {{ pagination.current_page }} de {{ pagination.last_page }}
+            </span>
+
+            <button :disabled="pagination.current_page === pagination.last_page" @click="fetchUsers(establishmentStore.code, pagination.current_page + 1)"
+            class="flex items-center gap-2 px-4 py-2 rounded-lg shadow-sm border border-gray-300 bg-sky text-gray-700 hover:bg-sky-100 hover:border-sky-300 hover:text-sky-600
+             disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-sky transition duration-200 ease-in-out"> 
+
+             <span class="text-lg">▶</span>
+             <span class="hidden sm:inline">Siguiente</span>
+
+             </button>
+            </div>
     </div>
 
     <transition
