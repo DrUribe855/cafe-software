@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('establishment_id');
             $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('refrigerator_id')->constrained('refrigerators');
             $table->enum('schedule', ['Mañana','Mediodía','Noche']);
             $table->string('image_url');
             $table->timestamps();

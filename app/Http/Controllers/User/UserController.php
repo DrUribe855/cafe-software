@@ -30,11 +30,12 @@ class UserController
 
         $users = User::where('establishment_id', $establishmentId['establishmentId'])
             ->with('roles')
-            ->get();
+            ->paginate(6);
 
-        if($users->isEmpty()){
+        if($users->total() === 0){
             return response()->json([
             'message' => 'No hay empleados asignados a esta tienda',
+            'users' => $users,
             ], 404);
         }
 

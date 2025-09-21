@@ -29,4 +29,3 @@ Route::middleware(['role:admin'])->group(function () {
 /* -------------------------------- Rutas de bolleria -------------------------------- */
 Route::middleware(['role:admin|employee'])->post('/upload-image', [PastrieController::class, 'uploadPhoto']);
 Route::middleware(['role:admin'])->get('/get-image', [PastrieController::class, 'getImage']);
-

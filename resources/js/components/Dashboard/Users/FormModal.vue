@@ -49,14 +49,14 @@ const save = async () => {
 
 <template>
     <div
-        class="fixed inset-0 flex items-center justify-center z-50"
+        class="fixed inset-0 flex items-center justify-center z-50 px-3 sm:px-0"
     >
         <!-- Fondo -->
         <div class="absolute inset-0 bg-black/10 backdrop-blur-[1px] transition-opacity duration-300"></div>
 
         <!-- Contenedor modal -->
         <div
-            class="relative bg-white rounded-2xl shadow-md w-full max-w-lg p-6 transform transition-all duration-300 opacity-100 scale-100"
+            class="relative bg-white rounded-2xl shadow-md w-full sm:max-w-sm md:max-w-md lg:max-w-lg p-4 sm:p-4 md:p-6 transform transition-all duration-300 opacity-100 scale-100"
         >
             <!-- Botón cerrar -->
             <button
@@ -68,19 +68,19 @@ const save = async () => {
             </button>
 
             <!-- Título -->
-            <h2 class="text-xl font-semibold mb-4">
+            <h2 class="text-xl font-semibold mb-4 text-center">
                 {{ user.id ? 'Modificar usuario' : 'Registrar usuario' }}
             </h2>
 
             <!-- Formulario -->
             <form @submit.prevent="" class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium">DNI</label>
                         <input
                             type="number"
                             v-model="user.document"
-                            class="mt-2 block w-full p-[5px] border-1 rounded-md border-gray-300 focus:outline-blue-500"
+                            class="mt-2 block w-full p-[5px] border rounded-md border-gray-300 focus:outline-blue-500"
                             required
                         />
                         <p class="pt-2 text-red-500 text-center text-xs" v-if="errors.document">¡{{ errors.document[0] }}!</p>
@@ -97,7 +97,7 @@ const save = async () => {
                         <p class="pt-2 text-red-500 text-center text-xs" v-if="errors.name">¡{{ errors.name[0] }}!</p>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium">Email</label>
                         <input
@@ -122,7 +122,7 @@ const save = async () => {
                         <p class="pt-2 text-red-500 text-center text-xs" v-if="errors.role">¡{{ errors.role[0] }}!</p>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium">Estado</label>
                         <select
@@ -151,7 +151,7 @@ const save = async () => {
                 <button
                     @click="save()"
                     type="submit"
-                    class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition"
+                    class="w-full bg-sky-500 text-white py-2 px-4 rounded-lg hover:bg-sky-600 transition"
                 >
                     {{ user.id ? "Actualizar" : "Registrar" }}
                 </button>
