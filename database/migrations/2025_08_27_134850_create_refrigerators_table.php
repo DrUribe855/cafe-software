@@ -14,12 +14,8 @@ return new class extends Migration
         Schema::create('refrigerators', function (Blueprint $table) {
             $table->id(); 
             $table->string('name');
-            $table->unsignedBigInteger('establishment_id'); 
+            $table->foreignId('establishment_id')->constrained('establishments'); 
             $table->timestamps();
-            $table->foreign('establishment_id')
-                  ->references('id')
-                  ->on('establishments')
-                  ->onDelete('cascade');
         });
     }
 
