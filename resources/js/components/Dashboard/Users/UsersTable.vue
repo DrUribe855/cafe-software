@@ -9,16 +9,11 @@ import UserModal from './FormModal.vue';
 /* Declaracion de variables */
 const establishmentStore = useEstablishmentStore();
 const userComposable = useUsers();
-<<<<<<< HEAD
 const { fetchUsers, users, pagination } = userComposable;
-=======
-const router = useRouter();
-const { fetchUsers } = userComposable;
-const users = ref([]);
->>>>>>> origin/dev1
 const selectedUser = ref(null);
 const modalStatus = ref(false);
 const searchUser = ref('');
+const router = useRouter();
 
 /* Función para apertura de modal y cargado de usuario enviado */
 const openModal = ( user ) => {

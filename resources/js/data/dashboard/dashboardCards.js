@@ -35,6 +35,6 @@ export const dashboardCards = [
         title: 'Cierre',
         description: 'Temperaturas, actividades, lista de cierre.',
         icon: MonitorX,
-        route: 'cierre'
+        route: '/dashboard/close'
     }
 ];

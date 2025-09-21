@@ -3,36 +3,26 @@ import { ref } from 'vue';
 import { useUploadImage } from '../../../composables/Pastrie/useUploadImage';
 
 const props = defineProps({
-    schedule: { type: String, required: true },
-    establishmentId: { type: Number, required: true },
-    userId: { type: Number, required: true },
+    schedule: {
+        type: String,
+        required: true
+    }
 });
 
-const file = ref(null);
+const file = ref('');
 const isSelected = ref(false);
 const { uploadImage } = useUploadImage();
 
-const fileSelected = (event) => {
+const fileSelected = ( event ) =>{
     file.value = event.target.files[0];
-    isSelected.value = !!file.value;
-    console.log("Archivo seleccionado:", file.value);
-};
-
-const submitForm = () => {
-    if (!file.value) {
-        alert("Selecciona un archivo");
-        return;
-    }
-    if (!props.schedule) {
-        alert("No hay horario definido");
-        return;
-    }
-    uploadImage(file.value, props.schedule, props.establishmentId, props.userId);
-};
+    isSelected.value = true;
+    console.log("Archivo seleccionado: ", file.value);
+}
 </script>
 
+
 <template>
-    <form @submit.prevent="submitForm">
+    <form @submit.prevent="uploadImage(file, props.schedule)">
         <div class="flex items-center justify-center w-full mt-5">
             <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white hover:bg-gray-50 hover:border-blue-400">
                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
@@ -42,8 +32,8 @@ const submitForm = () => {
                     <p class="mb-2 text-sm text-gray-500"><span class="font-semibold text-blue-500">Selecciona para subir la imagen</span></p>
                     <p class="text-xs text-gray-400">SVG, PNG o JPG</p>
                 </div>
-                <input id="dropzone-file" type="file" class="hidden" @change="fileSelected($event)" />
-                <p v-if="isSelected"><span class="font-semibold text-green-500">Archivo seleccionado con éxito</span></p>
+                <input id="dropzone-file" type="file" class="hidden" @change="fileSelected($event)"/>
+                <p v-if="isSelected" >Archivo seleccionado con éxito</p>
             </label>
         </div>
         <div class="text-center mt-4 bg">
