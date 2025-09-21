@@ -34,7 +34,7 @@ const goBack = () => {
     <h1
       class="text-lg md:text-xl font-bold text-slate-800 border-l-4 border-sky-400 pl-3"
     >
-      Cierre de turno
+      Gestión de cierre
     </h1>
 
     <!-- Columna derecha -->
