@@ -6,6 +6,7 @@ import DashboardView from '../views/Dashboard/DashboardView.vue';
 import DashboardMenu from '../views/Dashboard/DashboardMenu.vue';
 import UsersView from '../views/Dashboard/Users/UsersView.vue';
 import BakeryView from '../views/Dashboard/Pastrie/PastriesView.vue';
+import CloseView from '../views/Dashboard/Close/PastriesCloseView.vue';   
 
 import { useUserStore } from '@/stores/userStore';
 
@@ -23,7 +24,8 @@ const routes = [
         children: [
             { path: '', name: 'dashboard-home', component: DashboardMenu },
             { path: 'users', name: 'users', component: UsersView },
-            { path: 'bakery', name: 'bakery', component: BakeryView }
+            { path: 'bakery', name: 'bakery', component: BakeryView }, 
+            { path: 'close', name: 'close', component: CloseView },
         ],
         meta: { requiresAuth: true }
     }

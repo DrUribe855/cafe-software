@@ -36,6 +36,13 @@ export function useUploadImage(){
         formData.append('schedule', schedule);
         formData.append('file', file);
 
+            console.log({
+                file,
+                schedule,
+                establishment_id: parseInt(establishmentStore.getCode()),
+                user_id: store.user.id
+    });
+
         try{
             const { data } = await axios.post('/api/upload-image', formData);
             console.log("Respuesta de subida de image: ", data);
