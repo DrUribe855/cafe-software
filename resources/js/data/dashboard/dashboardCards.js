@@ -29,7 +29,7 @@ export const dashboardCards = [
         title: 'Bolleria',
         description: 'Estado de la bolleria en apertura, mediodía y cierre.',
         icon: Coffee,
-        route: 'bolleria'
+        route: '/dashboard/bakery'
     },
     {
         title: 'Cierre',

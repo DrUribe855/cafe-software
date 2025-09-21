@@ -1,5 +1,6 @@
 <script setup>
-import { ref, watch, onMounted, computed} from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { useUsers } from '../../../composables/Users/useUsers';
 import { useEstablishmentStore } from '@/stores/establishmentStore';
 import { UserPlus } from "lucide-vue-next";
@@ -8,6 +9,7 @@ import UserModal from './FormModal.vue';
 /* Declaracion de variables */
 const establishmentStore = useEstablishmentStore();
 const userComposable = useUsers();
+const router = useRouter();
 const { fetchUsers } = userComposable;
 const users = ref([]);
 const selectedUser = ref(null);
@@ -24,7 +26,13 @@ const openModal = ( user ) => {
 const closeModal = () =>{
     modalStatus.value = false;
     selectedUser.value = null;
-}   
+}
+
+/* Función para volver al componente anterior */
+
+const goBack = () => {
+    router.back();
+}
 
 /* Función para añadir usuario al arreglo de usuarios */
 const addUser = async (newUser) => {
@@ -52,7 +60,7 @@ const filteredUsers = computed(() => {
         user.email.toLowerCase().includes(searchUser.value.toLowerCase()) ||
         user.roles[0].name.toLowerCase().includes(searchUser.value.toLowerCase()) ||
         user.status.toLowerCase().includes(searchUser.value.toLowerCase())
-        ); 
+        );
     });
 });
 
@@ -69,24 +77,24 @@ watch(userComposable.users, (newValue) => {
 
 <template>
        <!-- Boton volver -->
-        <div>
-            <button @click="" class="flex items-center gap-2 bg-sky-400 text-white px-4 py-3 rounded-lg shadow hover:bg-sky-300 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                </svg>
-                <!-- Icono para dispositivos móviles -->
-                <span class="hidden md:inline text-sm font-medium">Volver</span>
-            </button>
-            <br>
-        </div>
+    <div>
+        <button @click="goBack" class="flex items-center gap-2 bg-sky-400 text-white px-4 py-3 rounded-lg shadow hover:bg-sky-300 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+            <!-- Icono para dispositivos móviles -->
+            <span class="hidden md:inline text-sm font-medium">Volver</span>
+        </button>
+        <br>
+    </div>
     <div class="w-full flex flex-col gap-3 md:flex-row md:justify-between md:items-center mb-3 mt-1 pl-3 pr-3">
-        <!-- Título -->
+    <!-- Título -->
         <div>
             <h3 class="text-lg font-semibold text-slate-800">Lista de empleados</h3>
             <p class="text-slate-500 text-sm">Gestiona tu personal</p>
         </div>
 
-        <!-- Barra de búsqueda -->
+    <!-- Barra de búsqueda -->
         <div class="w-full sm:w-80 md:w-95 lg:w-[25rem]">
             <div class="flex items-center">
                 <!-- Input -->
@@ -109,13 +117,13 @@ watch(userComposable.users, (newValue) => {
 
         <!-- Botón de crear usuario -->
         <div class="w-full md:w-auto flex">
-            <button 
-                @click="modalStatus = !modalStatus" 
+            <button
+                @click="modalStatus = !modalStatus"
                 class="flex items-center gap-2 bg-sky-400 text-white px-4 py-2 rounded-lg shadow hover:bg-sky-300 transition"
             >
                 <UserPlus class="w-5 h-5" />
                 <span>Crear usuario</span>
-            </button> 
+            </button>
         </div>
     </div>
 
@@ -157,7 +165,6 @@ watch(userComposable.users, (newValue) => {
         </table>
     </div>
 
-    <!-- Modal -->
     <transition
         enter-active-class="transition duration-300 ease-out"
         enter-from-class="opacity-0 scale-95"
