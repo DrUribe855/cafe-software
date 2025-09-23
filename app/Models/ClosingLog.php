@@ -23,8 +23,7 @@ class ClosingLog extends Model
         return $this->belongsTo(User::class);
     }
 
-   // public function refrigerator()
-    //{
-   //     return $this->belongsTo(Refrigerator::class);
-   // }
+    public function refrigerator() : BelongsTo {
+        return $this->BelongsTo(Refrigerator::class);
+    }
 }

@@ -3,7 +3,7 @@ import { ref, watch, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUsers } from '../../../composables/Users/useUsers';
 import { useEstablishmentStore } from '@/stores/establishmentStore';
-import { UserPlus, SquarePen } from "lucide-vue-next";
+import { UserPlus } from "lucide-vue-next";
 import UserModal from './FormModal.vue';
 
 /* Declaracion de variables */
