@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue';
 import { useDate } from '../../../composables/useDate';
 import { useUserStore } from '../../../stores/userStore';
 import CloseBar from './CloseBar.vue'; 
-import CloseUploaderFile from './CloseUploaderImage.vue'; 
+import CloseUploaderImage from './CloseUploaderImage.vue'; 
 import CloseImageViewer from './CloseImageViewer.vue'; 
 
 const store = useUserStore();
@@ -12,36 +12,39 @@ const { getActualDate } = useDate();
 const isReady = ref(false);
 const role = ref(null);
 const closeDate = ref('');
-const observations = ref(''); 
+const selectedFridge = ref(null); // nevera seleccionada
 
 onMounted(async () => {
   await store.fetchUser();
   role.value = store.user.role;   
-  isReady.value = true;
   closeDate.value = getActualDate();
+  isReady.value = true;
 });
 </script>
 
 <template>
   <p v-if="!isReady">Cargando información...</p>
+
   <template v-else>
-    <!-- Barra superior -->
+    <!-- Barra superio-->
     <CloseBar
       v-model:date="closeDate"
-      v-model:observations="observations"
+      v-model:fridge="selectedFridge"
       :role="role"
     />
     
-    <!-- Roles -->
-    <CloseUploaderFile
-      v-if="role === 'employee'"
+    <!-- Empleado -->
+    <CloseUploaderImage
+      v-if="role === 'employee' && selectedFridge"
       :date="closeDate"
-      :observations="observations"
+      :refrigerator-id="selectedFridge"
     />
-    
+
+    <!-- Admin -->
     <CloseImageViewer
-      v-if="role === 'admin'"
+      v-if="role === 'admin' && selectedFridge"
       :date="closeDate"
+      :refrigerator-id="selectedFridge"
     />
   </template>
 </template>

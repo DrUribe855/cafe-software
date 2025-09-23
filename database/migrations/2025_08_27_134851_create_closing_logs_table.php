@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('closing_logs', function (Blueprint $table) {
+        Schema::table('closing_logs', function (Blueprint $table) {
             $table->id();
             $table->integer('establishment_id');
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('refrigerator_id')->constrained('refrigerators');
-            $table->enum('schedule', ['Mañana','Mediodía','Noche']);
             $table->string('image_url');
             $table->timestamps();
         });

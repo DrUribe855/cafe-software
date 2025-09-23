@@ -27,3 +27,5 @@ return new class extends Migration
         Schema::dropIfExists('refrigerators');
     }
 };
+
+// 2025_09_21_003054_create_refrigerators_table

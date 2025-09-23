@@ -17,17 +17,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(30)->create();
-
         Establishment::factory()->create();
 
         $this->call(RolesAndPermissionsSeeder::class);
+
+        // User::factory(10)->create();php artisan migrate:fresh --seed
 
         $admin = User::factory()->create([
             'name' => 'Joaquin',
             'email' => 'test@example.com',
             'establishment_id' => 1,
             'document' => '123456789',
+            'status' => 'Activo',
+            "password" => bcrypt('password'),
         ]);
         $admin->assignRole('admin');
 
@@ -37,6 +39,7 @@ class DatabaseSeeder extends Seeder
             'establishment_id' => 1,
             'document' => '987654321',
             'status' => 'Inactivo',
+            "password" => bcrypt('password'),
         ]);
         $employee->assignRole('employee');
     }

@@ -3,8 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\CloseController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Pastrie\PastrieController;
+use App\Http\Controllers\ClosingLogController;
 
 /* -------------------------------- Rutas para inicio de sesión -------------------------------- */
 
@@ -29,3 +31,10 @@ Route::middleware(['role:admin'])->group(function () {
 /* -------------------------------- Rutas de bolleria -------------------------------- */
 Route::middleware(['role:admin|employee'])->post('/upload-image', [PastrieController::class, 'uploadPhoto']);
 Route::middleware(['role:admin'])->get('/get-image', [PastrieController::class, 'getImage']);
+
+/* -------------------------------- Rutas de cierre -------------------------------- */
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/closing-logs', [CloseController::class, 'index']);
+    Route::post('/closing-logs', [CloseController::class, 'store']);
+    Route::delete('/closing-logs/{id}', [CloseController::class, 'destroy']);
+});
