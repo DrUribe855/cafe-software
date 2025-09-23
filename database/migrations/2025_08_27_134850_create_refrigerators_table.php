@@ -12,9 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('refrigerators', function (Blueprint $table) {
-            $table->id(); 
+            $table->id();
             $table->string('name');
-            $table->foreignId('establishment_id')->constrained('establishments'); 
+            $table->foreignId('establishment_id')->constrained('establishments');
+            $table->float('temperature');
             $table->timestamps();
         });
     }

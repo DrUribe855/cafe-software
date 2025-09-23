@@ -10,4 +10,8 @@ class ClosingLog extends Model
     public function user() : BelongsTo {
         return $this->BelongsTo(User::class);
     }
+
+    public function refrigerator() : BelongsTo {
+        return $this->BelongsTo(Refrigerator::class);
+    }
 }

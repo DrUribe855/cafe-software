@@ -15,4 +15,9 @@ class Refrigerator extends Model
     public function establishment() : BelongsTo {
         return $this->BelongsTo(Establishment::class);
     }
+
+    public function closingLogs() : HasMany {
+        return $this->HasMany(ClosingLog::class);
+    }
+
 }
