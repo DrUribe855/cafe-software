@@ -1,6 +1,7 @@
 <script setup>
 import { watch } from 'vue';
 import { useUploadImage } from '../../../composables/Pastrie/useUploadImage';
+import { useEstablishmentStore } from '@/stores/establishmentStore';
 import ImageContainer from './ImageContainer.vue';
 
 const { date } = defineProps({
@@ -11,9 +12,13 @@ const { date } = defineProps({
 });
 
 const { fetchImage, imageData } = useUploadImage();
+const establishmentStore = useEstablishmentStore();
 
-watch( () => date, (newDate) => {
-        if(newDate){
+/* Vigila cambios en el código del establecimiento y la fecha seleccionada para cargar las imágenes */
+
+watch( [() => establishmentStore.code, () => date], 
+    ([newCode, newDate]) => {
+        if(newCode && newDate){
             fetchImage(newDate);
         }
     },

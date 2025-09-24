@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Pastrie\PastrieController;
+use App\Http\Controllers\EstablishmentController;
 
 /* -------------------------------- Rutas para inicio de sesión -------------------------------- */
 
@@ -26,6 +27,10 @@ Route::middleware(['role:admin'])->group(function () {
     Route::post('/users', [UserController::class, 'createUser']);
     Route::put('/users/{id}', [UserController::class, 'editUser']);
 });
+
+
 /* -------------------------------- Rutas de bolleria -------------------------------- */
 Route::middleware(['role:admin|employee'])->post('/upload-image', [PastrieController::class, 'uploadPhoto']);
 Route::middleware(['role:admin'])->get('/get-image', [PastrieController::class, 'getImage']);
+
+Route::get('/establishments', [EstablishmentController::class, 'fetchStores']);

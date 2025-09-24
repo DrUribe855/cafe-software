@@ -3,7 +3,7 @@ import { ref, watch, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUsers } from '../../../composables/Users/useUsers';
 import { useEstablishmentStore } from '@/stores/establishmentStore';
-import { UserPlus } from "lucide-vue-next";
+import { UserPlus, SquarePen } from "lucide-vue-next";
 import UserModal from './FormModal.vue';
 
 /* Declaracion de variables */
@@ -25,12 +25,6 @@ const openModal = ( user ) => {
 const closeModal = () =>{
     modalStatus.value = false;
     selectedUser.value = null;
-}
-
-/* Función para volver al componente anterior */
-
-const goBack = () => {
-    router.back();
 }
 
 /* Función para añadir usuario al arreglo de usuarios */
@@ -66,18 +60,27 @@ const filteredUsers = computed(() => {
 /* Cargado de variables al cargar la página */
 onMounted(()=>{
     fetchUsers(establishmentStore.code);
-})
+});
+
+/* Watcher para actualizar tabla al modificar usuarios */
 
 watch(userComposable.users, (newValue) => {
   users.value = newValue;
 }, { immediate: true });
+
+/* Watcher para actualizar tabla al cambiar de tienda */
+watch( () => establishmentStore.code, (newStore) => {
+    if(newStore){
+        users.value = fetchUsers(newStore);
+    }
+})
 </script>
 
 
 <template>
        <!-- Boton volver -->
     <div>
-        <button @click="goBack" class="flex items-center gap-2 bg-sky-400 text-white px-4 py-3 rounded-lg shadow hover:bg-sky-300 transition">
+        <button @click="router.back()" class="flex items-center gap-2 bg-sky-400 text-white px-4 py-3 rounded-lg shadow hover:bg-sky-300 transition">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
             </svg>
