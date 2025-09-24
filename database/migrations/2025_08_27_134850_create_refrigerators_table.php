@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('establishment_id')->constrained('establishments');
-            $table->float('temperature');
+            $table->float('temperature')->default(0);
             $table->timestamps();
         });
     }
@@ -28,8 +28,3 @@ return new class extends Migration
         Schema::dropIfExists('refrigerators');
     }
 };
-<<<<<<< HEAD
-
-// 2025_09_21_003054_create_refrigerators_table
-=======
->>>>>>> origin/development

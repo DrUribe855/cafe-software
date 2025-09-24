@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Refrigerator extends Model
 {
@@ -12,12 +13,13 @@ class Refrigerator extends Model
         'establishment_id',
     ];
 
-    public function establishment() : BelongsTo {
-        return $this->BelongsTo(Establishment::class);
+    public function establishment(): BelongsTo
+    {
+        return $this->belongsTo(Establishment::class);
     }
 
-    public function closingLogs() : HasMany {
-        return $this->HasMany(ClosingLog::class);
+    public function closingLogs(): HasMany
+    {
+        return $this->hasMany(ClosingLog::class);
     }
-
 }

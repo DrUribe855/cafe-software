@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Refrigerator; 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\User;
+use App\Models\Refrigerator;
 
 class ClosingLog extends Model
 {
@@ -14,16 +16,14 @@ class ClosingLog extends Model
         'establishment_id',
         'user_id',
         'refrigerator_id',
-        'schedule',   
-        'image_url',
+        'image_url', 
     ];
-
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
-
-    public function refrigerator() : BelongsTo {
-        return $this->BelongsTo(Refrigerator::class);
-    }
+    public function refrigerator(): BelongsTo
+    {
+        return $this->belongsTo(Refrigerator::class);
+    }   
 }

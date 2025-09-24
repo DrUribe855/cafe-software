@@ -1,5 +1,5 @@
 <script setup>
-import CloseSection from '../../../components/Dashboard/Pastrie/CloseSection.vue';
+import CloseSection from '../../../components/Dashboard/Close/CloseSection.vue';
 
 </script>
 <template>

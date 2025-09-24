@@ -6,13 +6,15 @@ import CloseBar from './CloseBar.vue';
 import CloseUploaderImage from './CloseUploaderImage.vue'; 
 import CloseImageViewer from './CloseImageViewer.vue'; 
 
+
 const store = useUserStore();
 const { getActualDate } = useDate();
 
 const isReady = ref(false);
 const role = ref(null);
 const closeDate = ref('');
-const selectedFridge = ref(null); // nevera seleccionada
+const selectedFridge = ref(null); 
+const finalTemperature = ref('');
 
 onMounted(async () => {
   await store.fetchUser();
@@ -30,6 +32,7 @@ onMounted(async () => {
     <CloseBar
       v-model:date="closeDate"
       v-model:fridge="selectedFridge"
+      v-model:temperature="finalTemperature"
       :role="role"
     />
     
@@ -38,6 +41,7 @@ onMounted(async () => {
       v-if="role === 'employee' && selectedFridge"
       :date="closeDate"
       :refrigerator-id="selectedFridge"
+      :temperature="finalTemperature"
     />
 
     <!-- Admin -->

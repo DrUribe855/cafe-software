@@ -6,24 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::table('closing_logs', function (Blueprint $table) {
-            $table->id();
-            $table->integer('establishment_id');
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('refrigerator_id')->constrained('refrigerators');
+        Schema::create('closing_logs', function (Blueprint $table) {
+            $table->id(); 
+            $table->unsignedBigInteger('establishment_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('refrigerator_id');
+            $table->string('schedule')->nullable();
             $table->string('image_url');
             $table->timestamps();
+            $table->foreign('establishment_id')->references('id')->on('establishments')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('refrigerator_id')->references('id')->on('refrigerators')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('closing_logs');

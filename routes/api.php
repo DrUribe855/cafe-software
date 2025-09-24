@@ -3,10 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\CloseController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Pastrie\PastrieController;
-use App\Http\Controllers\ClosingLogController;
+use App\Http\Controllers\Close\CloseController;
+
 
 /* -------------------------------- Rutas para inicio de sesión -------------------------------- */
 
