@@ -10,7 +10,7 @@ export function useAuth(){
     const router = useRouter();
 
     /* Importamos los store para almacenar datos de forma global */
-    const { setCode } = useEstablishmentStore();
+    const { setCode, clearCode } = useEstablishmentStore();
     const { setUser, clearUser } = useUserStore();
     const errors = ref({});
 
@@ -71,6 +71,7 @@ export function useAuth(){
         try{
             const { data } = await axios.post('/api/logout');
             clearUser();
+            clearCode();
             console.log('sesion cerrada', data);
             router.push('/');
         }catch(error){

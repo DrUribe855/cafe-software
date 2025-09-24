@@ -4,8 +4,8 @@ import { useUploadImage } from '../../../composables/Pastrie/useUploadImage';
 
 const props = defineProps({
     schedule: { type: String, required: true },
-    establishmentId: { type: Number, required: true },
-    userId: { type: Number, required: true },
+    // establishmentId: { type: Number, required: true },
+    // userId: { type: Number, required: true },
 });
 
 const file = ref(null);

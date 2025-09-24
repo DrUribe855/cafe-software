@@ -3,11 +3,10 @@ import { defineStore } from 'pinia';
 export const useEstablishmentStore = defineStore("establishment", {
     state: ()=> ({
         code: localStorage.getItem("establishmentCode") || null,
-        availableStores: [] ,
     }),
 
     actions: {
-        setCode( code){
+        setCode(code){
             this.code = code;
             localStorage.setItem("establishmentCode", code);
         },

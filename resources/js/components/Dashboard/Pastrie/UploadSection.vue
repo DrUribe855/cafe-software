@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useDate } from '../../../composables/useDate';
 import { useUserStore } from '../../../stores/userStore';
 import InformationBar from './InformationBar.vue';

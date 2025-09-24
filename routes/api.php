@@ -7,6 +7,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Pastrie\PastrieController;
 use App\Http\Controllers\Close\CloseController;
 
+use App\Http\Controllers\EstablishmentController;
 
 /* -------------------------------- Rutas para inicio de sesión -------------------------------- */
 
@@ -28,6 +29,8 @@ Route::middleware(['role:admin'])->group(function () {
     Route::post('/users', [UserController::class, 'createUser']);
     Route::put('/users/{id}', [UserController::class, 'editUser']);
 });
+
+
 /* -------------------------------- Rutas de bolleria -------------------------------- */
 Route::middleware(['role:admin|employee'])->post('/upload-image', [PastrieController::class, 'uploadPhoto']);
 Route::middleware(['role:admin'])->get('/get-image', [PastrieController::class, 'getImage']);
@@ -38,3 +41,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/closing-logs', [CloseController::class, 'store']);
     Route::delete('/closing-logs/{id}', [CloseController::class, 'destroy']);
 });
+Route::get('/establishments', [EstablishmentController::class, 'fetchStores']);
