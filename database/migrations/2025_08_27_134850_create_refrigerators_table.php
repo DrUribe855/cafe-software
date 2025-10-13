@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('establishment_id')->constrained('establishments');
-            $table->float('temperature');
+            $table->float('temperature')->default(0);
             $table->timestamps();
         });
     }

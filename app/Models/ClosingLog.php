@@ -2,16 +2,28 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\User;
+use App\Models\Refrigerator;
 
 class ClosingLog extends Model
 {
-    /* Relación al modelo de usuario */
-    public function user() : BelongsTo {
-        return $this->BelongsTo(User::class);
-    }
+    use HasFactory;
 
-    public function refrigerator() : BelongsTo {
-        return $this->BelongsTo(Refrigerator::class);
+    protected $fillable = [
+        'establishment_id',
+        'user_id',
+        'refrigerator_id',
+        'image_url', 
+    ];
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
+    public function refrigerator(): BelongsTo
+    {
+        return $this->belongsTo(Refrigerator::class);
+    }   
 }

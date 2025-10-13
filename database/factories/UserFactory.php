@@ -24,12 +24,12 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'document' => fake()->unique()->numerify('#########'),  
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'password' => static::$password ??= Hash::make('password'),
-            'establishment_id' => 1,
-            'status' => 'Activo', 
+                'name' => fake()->name(),
+                'email' => fake()->unique()->safeEmail(),
+                'password' => static::$password ??= Hash::make('password'),
+                'document' => fake()->unique()->numberBetween(10000000, 99999999),
+                'establishment_id' => 1,
+                'status' => 'Activo',
         ];
     }
 

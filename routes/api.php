@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Pastrie\PastrieController;
-use App\Http\Controllers\EstablishmentController;
+use App\Http\Controllers\Close\CloseController;
+
 
 /* -------------------------------- Rutas para inicio de sesión -------------------------------- */
 
@@ -34,3 +35,9 @@ Route::middleware(['role:admin|employee'])->post('/upload-image', [PastrieContro
 Route::middleware(['role:admin'])->get('/get-image', [PastrieController::class, 'getImage']);
 
 Route::get('/establishments', [EstablishmentController::class, 'fetchStores']);
+/* -------------------------------- Rutas de cierre -------------------------------- */
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/closing-logs', [CloseController::class, 'index']);
+    Route::post('/closing-logs', [CloseController::class, 'store']);
+    Route::delete('/closing-logs/{id}', [CloseController::class, 'destroy']);
+});

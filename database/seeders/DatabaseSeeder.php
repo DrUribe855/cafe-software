@@ -4,11 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Establishment;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Refrigerator;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,8 +16,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(30)->create();
-
         Establishment::factory()->create();
 
         $this->call(RolesAndPermissionsSeeder::class);
@@ -28,6 +25,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
             'establishment_id' => 1,
             'document' => '123456789',
+            'status' => 'Activo',
+            "password" => bcrypt('password'),
         ]);
         $admin->assignRole('admin');
 
@@ -37,7 +36,28 @@ class DatabaseSeeder extends Seeder
             'establishment_id' => 1,
             'document' => '987654321',
             'status' => 'Inactivo',
+            "password" => bcrypt('password'),
         ]);
         $employee->assignRole('employee');
+
+        $fridges = [
+            'Nevera 1',
+            'Nevera 2',
+            'Nevera 3',
+            'Nevera 4',
+            'Nevera 5',
+            'Nevera 6',
+            'Nevera 7',
+        ];
+
+        $id = 1;
+        foreach ($fridges as $name) {
+            Refrigerator::create([
+                'id' => $id,
+                'name' => $name,
+                'establishment_id' => 1,
+            ]);
+            $id++;
+        }
     }
 }
