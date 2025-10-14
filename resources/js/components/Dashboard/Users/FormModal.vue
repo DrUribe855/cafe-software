@@ -78,7 +78,7 @@ const save = async () => {
                     <div>
                         <label class="block text-sm font-medium">DNI</label>
                         <input
-                            type="number"
+                            type="text"
                             v-model="user.document"
                             class="mt-2 block w-full p-[5px] border rounded-md border-gray-300 focus:outline-blue-500"
                             required

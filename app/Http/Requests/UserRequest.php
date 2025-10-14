@@ -35,7 +35,6 @@ class UserRequest extends FormRequest
         return [
             'document' => [
                             'required', 
-                            'numeric',
                             $this->isMethod('post')
                                     ? Rule::unique('users', 'document')
                                     : Rule::unique('users', 'document')->ignore($userId)
@@ -60,7 +59,6 @@ class UserRequest extends FormRequest
     public function messages(){
         return [
             'document.required' => 'El DNI es obligatorio',
-            'document.numeric'  => 'Los datos ingresados no corresponden a un DNI',
             'document.unique'   => 'El DNI ya se encuentra registrado',
             'name.required'     => 'El nombre es obligatorio',
             'name.max'          => 'El nombre no puede ser mayor a 60 caracteres',
