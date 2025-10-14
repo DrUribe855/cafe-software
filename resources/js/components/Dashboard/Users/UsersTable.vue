@@ -5,7 +5,6 @@ import { useUsers } from '../../../composables/Users/useUsers';
 import { useEstablishmentStore } from '@/stores/establishmentStore';
 import { UserPlus, SquarePen } from "lucide-vue-next";
 import UserModal from './FormModal.vue';
-import { SquarePen } from "lucide-vue-next";
 
 /* Declaracion de variables */
 const establishmentStore = useEstablishmentStore();
