@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
         ]);
         $employee->assignRole('employee');
 
-        $fridges = [
+       /* ...  $fridges = [
             'Nevera 1',
             'Nevera 2',
             'Nevera 3',
@@ -48,9 +48,9 @@ class DatabaseSeeder extends Seeder
             'Nevera 5',
             'Nevera 6',
             'Nevera 7',
-        ];
+        ]; */
 
-        $id = 1;
+        /* ... $id = 1;
         foreach ($fridges as $name) {
             Refrigerator::create([
                 'id' => $id,
@@ -58,6 +58,6 @@ class DatabaseSeeder extends Seeder
                 'establishment_id' => 1,
             ]);
             $id++;
-        }
+        } */
     }
 }

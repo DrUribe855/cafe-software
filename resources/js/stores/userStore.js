@@ -7,6 +7,7 @@ export const useUserStore = defineStore('user', {
             id: null,
             name: '',
             role: null,
+            establishment_id: null,
         },
         isLoading: false,
         isFetched: false,
@@ -22,6 +23,7 @@ export const useUserStore = defineStore('user', {
                    id: data.user.id,
                    name: data.user.name,
                    role: data.user.roles[0].name,
+                   establishment_id: data.user.establishment_id, 
                 };
                 console.log('página recargada, el usuario es: ', user);
                 this.setUser(user);

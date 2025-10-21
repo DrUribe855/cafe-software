@@ -15,6 +15,7 @@ return new class extends Migration
             $table->unsignedBigInteger('refrigerator_id');
             $table->string('schedule')->nullable();
             $table->string('image_url');
+            $table->decimal('temperature', 5, 2)->nullable();
             $table->timestamps();
             $table->foreign('establishment_id')->references('id')->on('establishments')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
