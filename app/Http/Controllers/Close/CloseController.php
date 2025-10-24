@@ -89,4 +89,11 @@ class CloseController extends Controller
 
         return response()->json(['message' => 'Cierre eliminado correctamente']);
     }
+
+    public function getByEstablishment($id)
+    {
+    $refrigerators = Refrigerator::where('establishment_id', $id)->get(['id as value', 'name as label']);
+    return response()->json($refrigerators);
+    }
+
 }
