@@ -2,14 +2,15 @@
 import { ref, watch, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUsers } from '../../../composables/Users/useUsers';
+import { alert } from '../../../composables/Pastrie/alert';
 import { useEstablishmentStore } from '@/stores/establishmentStore';
-import { UserPlus, SquarePen } from "lucide-vue-next";
+import { UserPlus, SquarePen, Trash } from "lucide-vue-next";
 import UserModal from './FormModal.vue';
 
 /* Declaracion de variables */
 const establishmentStore = useEstablishmentStore();
 const userComposable = useUsers();
-const { fetchUsers, users, pagination } = userComposable;
+const { fetchUsers, users, pagination, deleteUser } = userComposable;
 const selectedUser = ref(null);
 const modalStatus = ref(false);
 const searchUser = ref('');
@@ -35,9 +36,21 @@ const addUser = async (newUser) => {
         if(index !== -1){
             users.value[index] = newUser;
             console.log("Usuario modificado: ", users.value[index]);
+            alert('Validado','Usuario modificado correctamente', 'success');
         }else{
             users.value.push(newUser);
+            alert('Validado','Usuario creado correctamente', 'success');
         }
+    }
+}
+
+/* Función para hacer eliminado lógico de usuario */
+
+const removeUser = async (user) => {
+    if(user){
+        await deleteUser(user);
+        users.value = users.value.filter(u => u.id !== user.id);
+        alert('Validado','Usuario eliminado correctamente', 'success');
     }
 }
 
@@ -140,6 +153,7 @@ watch( () => establishmentStore.code, (newStore) => {
                     <th class="p-4 border-b border-slate-300 bg-slate-50">Rol</th>
                     <th class="p-4 border-b border-slate-300 bg-slate-50">Estado</th>
                     <th class="p-4 border-b border-slate-300 bg-slate-50">Modificar</th>
+                    <th class="p-4 border-b border-slate-300 bg-slate-50">Eliminar</th>
                 </tr>
             </thead>
             <tbody>
@@ -161,6 +175,9 @@ watch( () => establishmentStore.code, (newStore) => {
                     </td>
                     <td class="p-4 border-b border-slate-200 py-5">
                         <button @click="openModal(user)" class="pl-5"><SquarePen/></button>
+                    </td>
+                    <td class="p-4 border-b border-slate-200 py-5">
+                        <button @click="removeUser(user)" class="pl-5"><Trash/></button>
                     </td>
                 </tr>
             </tbody>

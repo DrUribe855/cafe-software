@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useUploadImage } from '../../../composables/Pastrie/useUploadImage';
+import { alert } from '../../../composables/Pastrie/alert.js';
 
 const props = defineProps({
     schedule: { type: String, required: true },
@@ -27,7 +28,14 @@ const submitForm = () => {
         alert("No hay horario definido");
         return;
     }
-    uploadImage(file.value, props.schedule, props.establishmentId, props.userId);
+
+    let response = uploadImage(file.value, props.schedule, props.establishmentId, props.userId)
+
+    if(response){
+        console.log('entro en condicion de imagen')
+        file.value = null;
+        isSelected.value = false;
+    };
 };
 </script>
 

@@ -11,7 +11,7 @@ const props = defineProps({
 
 const displayTemperature = computed(() => {
     if (props.temperature === null || props.temperature === undefined || props.temperature === '') {
-        return 'No registrada';
+        return 'No se ha indicado temperatura';
     }
     return props.temperature;
 });
