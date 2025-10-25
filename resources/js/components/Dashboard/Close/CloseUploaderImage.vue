@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import { useUploadClose } from '../../../composables/Pastrie/useUploadClose';
+import { alert } from '../../../composables/Pastrie/alert';
+import Swal from 'sweetalert2';
 
 const props = defineProps({
   refrigeratorId: {
@@ -29,13 +31,13 @@ const fileSelected = (event) => {
 
 const submitFile = async () => {
   if (!file.value) {
-    alert("⚠️ Debes seleccionar una imagen.");
+    alert("Debes seleccionar un archivo antes de subir", "", "warning");
     return;
   }
 
   const temp = Number(props.temperature);
   if (isNaN(temp) || props.temperature === '') {
-    alert("⚠️ Debes ingresar la temperatura final.");
+      alert("Debes ingresar la temperatura final antes de subir", "", "warning");
     return;
   }
 

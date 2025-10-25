@@ -2,6 +2,8 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useUserStore } from '../../stores/userStore';
 import { useEstablishmentStore } from '../../stores/establishmentStore';
+import { alert } from './alert';
+import Swal from 'sweetalert2';
 
 export function useUploadClose() {
   const store = useUserStore();
@@ -26,7 +28,6 @@ export function useUploadClose() {
       return closeData.value;
     } catch (error) {
       console.error('Error al obtener archivos de cierre:', error);
-      throw error;
     }
   };
 
@@ -56,7 +57,8 @@ export function useUploadClose() {
           temperature: item.temperature ?? parsedTemp
         }))];
       }
-
+      alert('Cierre subido exitosamente', 'La imagen y temperatura han sido subidas correctamente.', 'success');
+      
       return data;
     } catch (error) {
       console.error('Error al subir archivos de cierre:', error.response?.data || error);

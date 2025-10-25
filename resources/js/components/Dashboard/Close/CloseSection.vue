@@ -34,6 +34,7 @@ onMounted(async () => {
       v-model:fridge="selectedFridge"
       v-model:temperature="finalTemperature"
       :role="role"
+      :establishment-id="store.user.establishment_id"
     />
     
     <!-- Empleado -->
