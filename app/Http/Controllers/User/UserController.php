@@ -60,6 +60,7 @@ class UserController
     public function createUser(UserRequest $request){
 
         try{
+
             $user = User::create([
                 'document' => $request->document,
                 'name'     => $request->name,

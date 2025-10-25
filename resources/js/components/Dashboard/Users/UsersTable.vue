@@ -2,6 +2,7 @@
 import { ref, watch, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUsers } from '../../../composables/Users/useUsers';
+import { alert } from '../../../composables/Pastrie/alert';
 import { useEstablishmentStore } from '@/stores/establishmentStore';
 import { UserPlus, SquarePen, Trash } from "lucide-vue-next";
 import UserModal from './FormModal.vue';
@@ -35,15 +36,22 @@ const addUser = async (newUser) => {
         if(index !== -1){
             users.value[index] = newUser;
             console.log("Usuario modificado: ", users.value[index]);
+            alert('Validado','Usuario modificado correctamente', 'success');
         }else{
             users.value.push(newUser);
+            alert('Validado','Usuario creado correctamente', 'success');
         }
     }
 }
 
+/* Función para hacer eliminado lógico de usuario */
+
 const removeUser = async (user) => {
-    await deleteUser(user);
-    users.value = users.value.filter(u => u.id !== user.id);
+    if(user){
+        await deleteUser(user);
+        users.value = users.value.filter(u => u.id !== user.id);
+        alert('Validado','Usuario eliminado correctamente', 'success');
+    }
 }
 
 /* Función para buscar usuarios en la barra de busqueda */

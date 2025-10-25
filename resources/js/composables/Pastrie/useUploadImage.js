@@ -2,6 +2,7 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useUserStore } from '../../stores/userStore';
 import { useEstablishmentStore } from '../../stores/establishmentStore';
+import { alert } from './alert.js';
 
 export function useUploadImage(){
 
@@ -36,18 +37,14 @@ export function useUploadImage(){
         formData.append('schedule', schedule);
         formData.append('file', file);
 
-            console.log({
-                file,
-                schedule,
-                establishment_id: parseInt(establishmentStore.getCode()),
-                user_id: store.user.id
-    });
-
         try{
             const { data } = await axios.post('/api/upload-image', formData);
             console.log("Respuesta de subida de image: ", data);
+            alert('Validado', 'Imagen subida correctamente', 'success');
+            return true;
         }catch(error){
             console.error("Error al subir la imagen: ", error);
+            alert('Error', 'No se pudo subir la imagen', 'error');
         }
     }
 

@@ -25,7 +25,7 @@ class PastrieRequest extends FormRequest
             'establishment_id' => 'required|integer',
             'user_id' => 'required|integer',
             'schedule' => 'required|string',
-            'file' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+            // 'file' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ];
     }
 
@@ -40,7 +40,7 @@ class PastrieRequest extends FormRequest
             'file.required' => 'La imagen es obligatoria',
             'file.image' => 'El archivo debe ser una imagen',
             'file.mimes' => 'La imagen debe ser un archivo de tipo: jpeg, png, jpg',
-            'file.max' => 'La imagen no debe superar los 2MB',
+            // 'file.max' => 'La imagen no debe superar los 2MB',
         ];
     }
 }
