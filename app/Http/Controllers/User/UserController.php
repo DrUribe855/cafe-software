@@ -39,6 +39,7 @@ class UserController
         /* Consultamos los usuarios correspondientes a ese establecimiento */
 
         $users = User::where('establishment_id', $establishmentId['establishmentId'])
+            ->where('isDeleted', 0)
             ->with('roles')
             ->paginate(6);
 
@@ -127,6 +128,33 @@ class UserController
                'status'  => false,
                'error'   => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    /* Función para eliminar usuario */
+
+    public function deleteUser(Request $request, $id){
+
+        try{
+            $user = User::find($id);
+    
+            if($user){
+                $user->isDeleted = 1;
+                $user->save();
+            }
+
+            return response()->json([
+                'message' => 'Usuario eliminado con éxito',
+            ], 200);
+
+        }catch(Exception $e){
+            Log::error('Error eliminando usuario: ' . $e->getMessage());
+
+            return response()->json([
+                'message' => 'Error al eliminar el usuario',
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 }

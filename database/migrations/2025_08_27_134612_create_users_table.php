@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password', 250);
             $table->foreignId('establishment_id')->constrained('establishments');
             $table->enum('status', ['Activo', 'Inactivo'])->default('Activo');
+            $table->integer('isDeleted')->default(0); // 0 = No eliminado, 1 = Eliminado
             $table->timestamps();
         });
 

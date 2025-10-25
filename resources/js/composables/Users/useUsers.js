@@ -99,12 +99,28 @@ export function useUsers(){
         return Object.keys(errors.value).length > 0 ? true : false;
     }
 
+    const deleteUser = async ( user ) => {
+        if(!user.id){
+            return console.log('El usuario no tiene un ID válido');
+        }
+
+        try{
+            const { data } = await axios.put(`/api/users/${user.id}/status`);
+            console.log(data);
+        }catch(error){
+            console.log(error);
+        }
+
+
+    }
+
     return{
         fetchUsers,
         users,
         saveUser,
         errors,
         pagination,
+        deleteUser,
     }
 
 }

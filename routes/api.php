@@ -27,6 +27,7 @@ Route::middleware(['role:admin'])->group(function () {
     Route::get('/users', [UserController::class, 'fetchUsers']);
     Route::post('/users', [UserController::class, 'createUser']);
     Route::put('/users/{id}', [UserController::class, 'editUser']);
+    Route::put('/users/{id}/status',[UserController::class, 'deleteUser']);
 });
 
 
