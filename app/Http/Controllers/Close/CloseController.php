@@ -26,7 +26,6 @@ class CloseController extends Controller
 
         $logs->transform(function ($log) {
             $log->image_url = Storage::url(str_replace('/storage/', '', $log->image_url));
-            $log->temperature = $log->refrigerator?->temperature ?? null;
             return $log;
         });
 
@@ -45,13 +44,6 @@ class CloseController extends Controller
 
         $logs = [];
 
-        // Tempertarua nevera 
-        if ($request->filled('temperature')) {
-            $refrigerator = Refrigerator::findOrFail($request->refrigerator_id);
-            $refrigerator->temperature = $request->temperature;
-            $refrigerator->save();
-        }
-
         // Guardar archivo
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
@@ -61,6 +53,7 @@ class CloseController extends Controller
                     'establishment_id' => Auth::user()->establishment_id,
                     'user_id' => Auth::id(),
                     'refrigerator_id' => $request->refrigerator_id,
+                    'temperature' => $request->temperature,
                     'image_url' => Storage::url($path),
                 ]);
             }

@@ -16,6 +16,7 @@ class ClosingLog extends Model
         'establishment_id',
         'user_id',
         'refrigerator_id',
+        'temperature',
         'image_url', 
     ];
     public function user(): BelongsTo
