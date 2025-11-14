@@ -11,7 +11,7 @@ const props = defineProps({
 
 const displayTemperature = computed(() => {
     if (props.temperature === null || props.temperature === undefined || props.temperature === '') {
-        return 'No se ha indicado temperatura';
+        return false;
     }
     return props.temperature;
 });
@@ -26,7 +26,7 @@ const displayTemperature = computed(() => {
     <div class="px-4 py-3">
       <p class="text-slate-900 font-semibold">{{ username }}</p>
       <p class="text-gray-500 text-sm">{{ date }}</p>
-      <p class="text-gray-500 text-sm">Temperatura: {{ displayTemperature }} °C</p>
+      <p v-if="displayTemperature" class="text-gray-500 text-sm">Temperatura: {{ displayTemperature }} °C</p>
     </div>
 
     <div class="w-full flex justify-center p-4">
