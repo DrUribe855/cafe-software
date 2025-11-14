@@ -2,18 +2,25 @@
 import { watch } from 'vue';
 import { useUploadClose } from '../../../composables/Pastrie/useUploadClose';
 import ImageContainer from '../Pastrie/ImageContainer.vue';
+import { useEstablishmentStore } from '../../../stores/establishmentStore';
 
 const props = defineProps({
   date: { type: String, required: true },
   refrigeratorId: { type: [String, Number], required: true }
 });
 
+const establishmentStore = useEstablishmentStore();
 const { fetchCloseFiles, closeData } = useUploadClose();
 
+const loadCloseFiles = () => {
+  if (props.date && props.refrigeratorId) {
+    fetchCloseFiles(props.date, props.refrigeratorId);
+  }
+}
 watch(
-  () => [props.date, props.refrigeratorId],
-  ([newDate, newFridge]) => {
-    if (newDate && newFridge) fetchCloseFiles(newDate, newFridge);
+  () => [props.date, props.refrigeratorId, establishmentStore.getCode()],
+  () => {
+    loadCloseFiles();
   },
   { immediate: true }
 );

@@ -8,8 +8,10 @@ export function alert(title, text, icon = 'info') {
     confirmButtonColor: '#2563eb', 
     background: '#f9fafb',
     color: '#111827',
-    timer: 1150,
+    timer: 3500,
     timerProgressBar: true,
     showConfirmButton: false
   });
 }
+
+

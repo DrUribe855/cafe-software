@@ -44,8 +44,8 @@ Route::middleware(['role:admin'])->get('/get-image', [PastrieController::class, 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/closing-logs', [CloseController::class, 'index']);
     Route::post('/closing-logs', [CloseController::class, 'store']);
-    Route::get('/refrigerators/establishment/{id}', [RefrigeratorController::class, 'getById']);
-    Route::middleware(['auth:sanctum', 'role:admin'])->put('/refrigerators/{id}/note', [RefrigeratorController::class, 'updateNote']);
-    // Route::delete('/closing-logs/{id}', [CloseController::class, 'destroy']);
+    Route::get('/refrigerators/establishment/{id}', [CloseController::class, 'getByEstablishment']);
+    Route::middleware(['role:admin'])->delete('/closing-logs/{id}', [CloseController::class, 'destroy']);
+    Route::middleware(['role:admin'])->put('/refrigerators/{id}/note', [RefrigeratorController::class, 'updateNote']);
 });
 Route::get('/establishments', [EstablishmentController::class, 'fetchStores']);
