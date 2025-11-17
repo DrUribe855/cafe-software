@@ -31,7 +31,7 @@ export const useUserStore = defineStore('user', {
                 this.setUser(user);
 
                 const establishmentStore = useEstablishmentStore();
-                if (user.establishment_id) {
+                if (user.establishment_id && user.role !== 'admin') {
                     establishmentStore.setCode(user.establishment_id);
                     console.log('Establecimiento sincronizado con el usuario:', user.establishment_id);
                 }
