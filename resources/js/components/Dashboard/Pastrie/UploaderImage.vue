@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useUploadImage } from '../../../composables/Pastrie/useUploadImage';
 import { alert } from '../../../composables/Pastrie/alert.js';
+import { isHeic, heicTo } from "heic-to";
 
 const props = defineProps({
     schedule: { type: String, required: true },
@@ -16,10 +17,11 @@ const { uploadImage } = useUploadImage();
 const fileSelected = (event) => {
     file.value = event.target.files[0];
     isSelected.value = !!file.value;
+
     console.log("Archivo seleccionado:", file.value);
 };
 
-const submitForm = () => {
+const submitForm = async () => {
     if (!file.value) {
         alert("Selecciona un archivo");
         return;
@@ -29,13 +31,30 @@ const submitForm = () => {
         return;
     }
 
-    let response = uploadImage(file.value, props.schedule, props.establishmentId, props.userId)
+    let processedFile = file.value;
 
-    if(response){
-        console.log('entro en condicion de imagen')
-        file.value = null;
-        isSelected.value = false;
-    };
+    if(await isHeic(processedFile)){
+        const convertedBlob = await heicTo({
+            blob: file.value,
+            type: "image/jpeg",
+            quality: 0.8
+        });
+
+        processedFile = new File([convertedBlob], processedFile.name.replace(/\.[^.]+$/, '') + ".jpg", { type: "image/jpeg" });
+
+        let response = uploadImage(processedFile, props.schedule, props.establishmentId, props.userId);
+        console.log('respuesta de la conversion', response);
+    }else{
+
+        let response = uploadImage(file.value, props.schedule, props.establishmentId, props.userId)
+
+        if(response){
+            console.log('entro en condicion de imagen')
+            file.value = null;
+            isSelected.value = false;
+        };
+    }
+
 };
 </script>
 

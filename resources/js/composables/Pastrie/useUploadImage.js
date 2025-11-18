@@ -43,8 +43,15 @@ export function useUploadImage(){
             alert('Validado', 'Imagen subida correctamente', 'success');
             return true;
         }catch(error){
-            console.error("Error al subir la imagen: ", error);
-            alert('Error', 'No se pudo subir la imagen', 'error');
+            console.error("Error al subir la imagen: ", error.response);
+
+            if(error.status === 409){
+                alert('Error', error.response.data.message, 'error');
+            }else{
+                alert('Error', 'No se pudo subir la imagen', 'error');
+            }
+
+
         }
     }
 
