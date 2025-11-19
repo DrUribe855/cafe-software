@@ -41,16 +41,26 @@ export function useUploadImage(){
             const { data } = await axios.post('/api/upload-image', formData, {
                 headers: {
                     'Authorization': `Bearer ${store.token}`,
-                    'Content-Type': 'multipart/form-data',
+                    // 'Content-Type': 'multipart/form-data',
                 },
             });
 
             if(data.status){
                 alert('Validado','La imagen se ha subido correctamente', 'success');
+            }else{
+                alert('¡Ups!', 'No insertó pero tampoco lanzó error', data);
+                window.alert("Error de try: " + error.message);
             }
+
+            return data.message;
         }catch(error){
             console.error("Error al subir la imagen: ", error.response);
-
+            if(error.status === 409){
+                alert('¡Ups!', 'Ya existe una imagen para este horario', 'info');
+            }else{
+              alert('Depuracion', 'Error fuera de condiciones controladas', error.response);
+              window.alert("Error de catch: " + error.message);
+            }
         }
 
     }
