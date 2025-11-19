@@ -31,28 +31,28 @@ export function useUploadImage(){
 
     const uploadImage = async (file, schedule) => {
 
-        const formData = new FormData();
-        formData.append('establishment_id', parseInt(establishmentStore.getCode()));
-        formData.append('user_id', store.user.id);
-        formData.append('schedule', schedule);
-        formData.append('file', file);
-
         try{
-            const { data } = await axios.post('/api/upload-image', formData);
-            console.log("Respuesta de subida de image: ", data);
-            alert('Validado', 'Imagen subida correctamente', 'success');
-            return true;
+            const formData = new FormData();
+            formData.append('establishment_id', parseInt(establishmentStore.getCode()));
+            formData.append('user_id', store.user.id);
+            formData.append('schedule', schedule);
+            formData.append('file', file);
+
+            const { data } = await axios.post('/api/upload-image', formData, {
+                headers: {
+                    'Authorization': `Bearer ${store.token}`,
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            if(data.status){
+                alert('Validado','La imagen se ha subido correctamente', 'success');
+            }
         }catch(error){
             console.error("Error al subir la imagen: ", error.response);
 
-            if(error.status === 409){
-                alert('Error', error.response.data.message, 'error');
-            }else{
-                alert('Error', 'No se pudo subir la imagen', 'error');
-            }
-
-
         }
+
     }
 
 

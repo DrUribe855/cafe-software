@@ -17,7 +17,6 @@ const { uploadImage } = useUploadImage();
 const fileSelected = (event) => {
     file.value = event.target.files[0];
     isSelected.value = !!file.value;
-
     console.log("Archivo seleccionado:", file.value);
 };
 
@@ -31,28 +30,14 @@ const submitForm = async () => {
         return;
     }
 
-    let processedFile = file.value;
-
-    if(await isHeic(processedFile)){
-        const convertedBlob = await heicTo({
-            blob: file.value,
-            type: "image/jpeg",
-            quality: 0.8
-        });
-
-        processedFile = new File([convertedBlob], processedFile.name.replace(/\.[^.]+$/, '') + ".jpg", { type: "image/jpeg" });
-
-        let response = uploadImage(processedFile, props.schedule, props.establishmentId, props.userId);
-        console.log('respuesta de la conversion', response);
-    }else{
-
-        let response = uploadImage(file.value, props.schedule, props.establishmentId, props.userId)
-
-        if(response){
-            console.log('entro en condicion de imagen')
-            file.value = null;
-            isSelected.value = false;
-        };
+    try{
+        const response = await uploadImage(file.value, props.schedule);
+        console.log('Respuesta de la subida en archivo UploaderImage.vue: ', response);
+        file.value = null;
+        isSelected.value = false;
+    }catch(err){
+        console.error("Error al subir la imagen en bollería: ", err.response.data);
+        alert("Ocurrió un error al subir la imagen. Inténtalo nuevamente.");
     }
 
 };
