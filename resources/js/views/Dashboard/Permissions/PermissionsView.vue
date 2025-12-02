@@ -5,11 +5,11 @@ import PermissionsList from '../../../components/Dashboard/Permissions/Employee/
 </script>
 
 <template>
-    <div class="flex">
-        <div class="w-1/2 h-full bg-white m-[1.5em] rounded-lg pb-[2em] shadow-lg">
+    <div class="flex items-start">
+        <div class="w-1/2 bg-white m-[1.5em]  rounded-lg shadow-lg">
             <PermissionForm/>
         </div>
-        <div class="w-1/2 h-full bg-white m-[1.5em] rounded-lg pb-[2em]">
+        <div class="w-1/2 bg-white m-[1.5em] rounded-lg shadow-lg">
             <PermissionsList/>
         </div>
     </div>
