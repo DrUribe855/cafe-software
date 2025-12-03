@@ -1,58 +1,8 @@
 <script setup>
 import { Send } from "lucide-vue-next";
-import { ref, computed }  from 'vue';
-import axios from 'axios';
+import { useLeaveRequests } from '../../../../composables/Leave/useLeaveRequests';
 
-const permission = ref({
-    type: '',
-    startDate: '',
-    endDate: '',
-    reason: '',
-});
-
-const touched = ref({
-    type: false,
-    startDate: false,
-    endDate: false,
-    reason: false,
-});
-
-const errors = computed(() => {
-    return {
-      type: permission.value.type === '',
-      startDate: permission.value.startDate === '' ,
-      endDate: permission.value.endDate === '',
-      reason: permission.value.reason === '' && permission.value.type !== 'Vacaciones',
-    };
-});
-
-const hasErrors = computed(() =>
-  Object.values(errors.value).some(error => error === true)
-);
-
-
-const sendPermissionRequest = async () => {
-
-    console.log('Enviando solicitud de permiso...', permission.value);
-
-    Object.keys(touched.value).forEach(key => touched.value[key] = true);
-
-    if (hasErrors.value) {
-        return;
-    }
-
-    try{
-        const { data } = await axios.post('/api/permissions', {
-            type: permission.value.type,
-            start_date: permission.value.startDate,
-            end_date: permission.value.endDate,
-            reason: permission.value.reason,
-        });
-        console.log('Solicitud enviada con éxito:', data);
-    }catch(error){
-        console.error('Error al enviar la solicitud:', error);
-    }
-}
+const { permission, errors, touched, sendPermissionRequest } = useLeaveRequests();
 
 
 </script>
@@ -86,7 +36,7 @@ const sendPermissionRequest = async () => {
                         <option value="Permiso">Permiso</option>
                         <option value="Vacaciones">Vacaciones</option>
                     </select>
-                    <span v-if="touched.type && errors.type" class="text-red-500 mt-2 font-sm">¡Debes seleccionar el tipo de solicitud!</span>
+                    <span v-if="touched.type && errors.type" class="text-red-500 mt-2 font-sm">{{ errors.type }}</span>
                 </div>
                 <div class="flex mt-4">
                     <div class="flex flex-col w-1/2 p-2 pl-0">

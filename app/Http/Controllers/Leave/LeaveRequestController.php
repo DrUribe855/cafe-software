@@ -23,7 +23,8 @@ class LeaveRequestController extends Controller
 
             return response()->json([
                 'message' => 'Solicitud creada con éxito',
-                'status' => true
+                'status' => true,
+                'record' => $permissionData
             ], 201);
 
         }catch (\Exception $e) {

@@ -6,7 +6,7 @@ import PermissionsList from '../../../components/Dashboard/Permissions/Employee/
 
 <template>
     <div class="flex items-start">
-        <div class="w-1/2 bg-white m-[1.5em]  rounded-lg shadow-lg">
+        <div class="w-1/2 bg-white m-[1.5em] rounded-lg shadow-lg">
             <PermissionForm/>
         </div>
         <div class="w-1/2 bg-white m-[1.5em] rounded-lg shadow-lg">
