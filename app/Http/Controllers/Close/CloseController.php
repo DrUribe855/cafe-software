@@ -15,6 +15,7 @@ class CloseController extends Controller
     public function index(Request $request)
     {
         try {
+            // VALIDACIONES
             $validated = $request->validate([
                 'establishment_id' => 'required|integer|exists:establishments,id',
                 'date' => 'required|date',
@@ -23,6 +24,7 @@ class CloseController extends Controller
 
             $authUser = Auth::user();
 
+            // CONTROL DE PERMISOS
             if (
                 !$authUser->hasRole('admin') &&
                 $authUser->establishment_id != $validated['establishment_id']
@@ -32,22 +34,27 @@ class CloseController extends Controller
                 ], 403);
             }
 
+            // CONSULTA BASE
             $query = ClosingLog::with(['user', 'refrigerator'])
                 ->where('establishment_id', $validated['establishment_id'])
                 ->whereDate('created_at', $validated['date']);
 
+            // SOLO FILTRA POR NEVERA SI SE ENVÍA EL REFRIGERATOR_ID
             if (!empty($validated['refrigerator_id'])) {
                 $query->where('refrigerator_id', $validated['refrigerator_id']);
             }
 
-            $logs = $query->get();
+            // EJECUTAR CONSULTA
+            $logs = $query->orderBy('created_at', 'desc')->get();
 
+            // FORMATEAR RUTA DE IMAGEN
             $logs->transform(function ($log) {
                 $log->image_url = Storage::url(str_replace('/storage/', '', $log->image_url));
                 return $log;
             });
 
             return response()->json($logs, 200);
+
         } catch (\Exception $e) {
             Log::error('Error en index de CloseController: ' . $e->getMessage());
             return response()->json([
@@ -99,6 +106,7 @@ class CloseController extends Controller
                 'message' => 'Cierre(s) guardado(s) exitosamente',
                 'data' => $logs,
             ], 201);
+
         } catch (\Exception $e) {
             Log::error('Error en store de CloseController: ' . $e->getMessage());
             return response()->json([
@@ -129,6 +137,7 @@ class CloseController extends Controller
             $closingLog->delete();
 
             return response()->json(['message' => 'Cierre eliminado correctamente']);
+
         } catch (\Exception $e) {
             Log::error('Error al eliminar cierre: ' . $e->getMessage());
             return response()->json([
@@ -142,9 +151,10 @@ class CloseController extends Controller
     {
         try {
             $refrigerators = Refrigerator::where('establishment_id', $id)
-                ->get(['id as value', 'name as label', 'temperature', 'note']);
+                ->get(['id as value', 'name as label', 'note']);
 
             return response()->json($refrigerators);
+
         } catch (\Exception $e) {
             Log::error('Error al obtener neveras del establecimiento: ' . $e->getMessage());
             return response()->json([

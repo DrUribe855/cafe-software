@@ -3,6 +3,8 @@ import { ref } from 'vue';
 import { useUploadClose } from '../../../composables/Pastrie/useUploadClose';
 import { alert } from '../../../composables/Pastrie/alert';
 import Swal from 'sweetalert2';
+import heic2any from "heic2any"
+
 
 const props = defineProps({
   refrigeratorId: {
@@ -23,9 +25,33 @@ const file = ref(null);
 const isSelected = ref(false);
 const { uploadCloseFiles } = useUploadClose();
 
-const fileSelected = (event) => {
-  file.value = event.target.files[0];
+async function handleFileUpload(file) {
+  if (!file) return null; 
+
+  if (file.type === "image/heic" || file.type === "image/heif") {
+    const convertedBlob = await heic2any({
+      blob: file,
+      toType: "image/jpeg"
+    });
+
+    const convertedFile = new File(
+      [convertedBlob],
+      file.name.replace(/\.[^/.]+$/, "") + ".jpg",
+      { type: "image/jpeg" }
+    );
+
+    return convertedFile;
+  }
+
+  return file;
+}
+
+const fileSelected = async (event) => {
+  let selected = event.target.files[0];
+  if (!selected) return;
+  file.value = await handleFileUpload(selected);
   isSelected.value = true;
+  
   console.log("Archivo seleccionado:", file.value);
 };
 
@@ -55,6 +81,9 @@ const submitFile = async () => {
     alert("Ocurrió un error al subir el cierre. Inténtalo nuevamente.");
   }
 };
+
+
+
 </script>
 
 <template>

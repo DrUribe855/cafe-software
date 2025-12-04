@@ -1,10 +1,9 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue'
+import { h, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { useEstablishmentStore } from '../../../stores/establishmentStore'
 import { alert } from '../../../composables/Pastrie/alert'
-
 const props = defineProps({
   date: String,
   role: String,
@@ -27,16 +26,12 @@ const fetchFridges = async () => {
     let establishmentId = establishmentStore.getCode() || props.establishmentId
 
     if (!establishmentId) {
-      console.warn('No hay establecimiento seleccionado o recibido en props.')
       fridges.value = []
       return
     }
 
-    console.log('Cargando neveras del establecimiento:', establishmentId)
     const { data } = await axios.get(`/api/refrigerators/establishment/${establishmentId}`)
-    console.log('Respuesta de la API:', data)
 
-    // Ajustamos los nombres y valores a lo que devuelve el backend
     fridges.value = (data || []).map(f => ({
       id: f.value,
       name: f.label,
@@ -53,7 +48,6 @@ watch(
   () => establishmentStore.code,
   (newCode, oldCode) => {
     if (newCode && newCode !== oldCode) {
-      console.log('Cambio detectado en establecimiento:', newCode)
       selectedFridge.value = ''
       note.value = ''
       fetchFridges()
@@ -87,12 +81,13 @@ const updateNote = async () => {
     if (fridge) fridge.note = note.value
     alert('La nota ha sido actualizada con éxito', '', 'success')
   } catch (error) {
-    console.error('Error al actualizar nota:', error)
     alert('Error al actualizar la nota', '', 'error')
   }
 }
 
 const goBack = () => router.back()
+
+
 </script>
 
 <template>
@@ -106,26 +101,33 @@ const goBack = () => router.back()
     <span class="hidden md:inline text-sm font-medium">Volver</span>
   </button>
 
-  <section class="flex flex-col md:flex-row md:justify-between gap-4 p-4 mt-3 bg-white shadow-sm rounded-lg mb-4">
-    <h1 class="text-lg md:text-xl font-bold text-slate-800 border-l-4 border-sky-400 pl-3">
-      Gestión de cierre
-    </h1>
+  <section class="flex flex-col gap-4 p-4 mt-3 bg-white shadow-sm rounded-lg mb-4">
 
-    <div class="flex flex-col gap-4 items-start md:items-end w-full md:w-auto">
-      <div v-if="role === 'admin'" class="flex flex-col sm:flex-row sm:items-center gap-2">
-        <label class="text-base font-semibold text-slate-700">Fecha:</label>
-        <input
-          type="date"
-          class="w-full sm:w-auto p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 hover:border-blue-400 transition"
-          :value="date"
-          @change="e => emit('update:date', e.target.value)"
-        />
+    <div class="flex flex-col md:flex-row md:justify-between w-full">
+      <h1 class="text-lg md:text-xl font-bold text-slate-800 border-l-4 border-sky-400 pl-3">
+        Gestión de cierre
+      </h1>
+
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 mt-3 md:mt-0">
+        <div v-if="role === 'admin'">
+          <label class="text-base font-semibold text-slate-700">Fecha:</label>
+          <input
+            type="date"
+            class="w-full sm:w-auto p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 hover:border-blue-400 transition"
+            :value="date"
+            @change="e => emit('update:date', e.target.value)"
+          />
+        </div>
       </div>
+    </div>
 
-      <div class="flex flex-col gap-2 w-full sm:w-48">
-        <label class="text-sm font-semibold text-slate-700 text-left md:text-right">
+    <div class="flex flex-col md:flex-row md:items-start md:gap-6 w-full">
+
+      <div class="flex flex-col gap-2 w-full md:w-1/2">
+        <label class="text-sm font-semibold text-slate-700">
           Seleccionar nevera:
         </label>
+
         <select
           v-model="selectedFridge"
           class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 hover:border-sky-400 transition"
@@ -141,18 +143,24 @@ const goBack = () => router.back()
           </option>
         </select>
 
-        <div v-if="selectedFridge" class="mt-2 w-full">
-          <div v-if="role === 'admin'" class="flex flex-col gap-2 bg-white-50 border-l-4 border-sky-400 p-3 rounded">
+        <div v-if="selectedFridge" class="w-full">
+
+          <div
+            v-if="role === 'admin'"
+            class="flex flex-col gap-2 bg-white border-l-4 border-sky-400 p-3 rounded w-full"
+          >
             <label class="text-sm font-semibold text-gray-700">Nota para esta nevera:</label>
+
             <textarea
               v-model="note"
               rows="3"
               class="p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
               placeholder="Indicaciones sobre esta nevera..."
             ></textarea>
+
             <button
               @click="updateNote"
-              class="self-center bg-sky-500 hover:bg-sky-400 text-white font-medium px-3 py-1 rounded transition"
+              class="self-start bg-sky-500 hover:bg-sky-400 text-white font-medium px-3 py-1 rounded transition"
             >
               Guardar nota
             </button>
@@ -160,26 +168,28 @@ const goBack = () => router.back()
 
           <p
             v-else
-            class="text-sm text-gray-700 bg-sky-50 border-l-4 border-sky-400 p-2 rounded mt-1"
+            class="text-sm text-gray-700 bg-sky-50 border-l-4 border-sky-400 p-2 rounded mt-1 w-full text-left"
           >
             <strong>Nota: </strong>
             {{ fridges.find(f => f.id === selectedFridge)?.note || 'No hay nota disponible' }}
           </p>
         </div>
 
-        <div v-if="role === 'employee'" class="flex flex-col gap-2 w-full">
-          <label class="text-sm font-semibold text-slate-700 text-left md:text-right">
+        <div v-if="role === 'employee'" class="flex flex-col gap-2 w-full sm:w-52 mt-2">
+          <label class="text-sm font-semibold text-slate-700">
             Temperatura final (°C):
           </label>
+
           <input
             type="number"
             v-model="localTemp"
             placeholder="Temperatura en °C"
-            class="w-full p-2 border border-gray-300 rounded-lg shadow-sm
-                   focus:outline-none focus:ring-2 focus:ring-sky-500 hover:border-sky-400 transition"
+            class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 hover:border-sky-400 transition"
           />
         </div>
       </div>
+
     </div>
+
   </section>
 </template>
