@@ -14,8 +14,8 @@ const props = defineProps({
 });
 
 const displayTemperature = computed(() => {
-    if (!props.temperature) {
-        return 'No se ha indicado temperatura';
+    if (props.temperature === null || props.temperature === undefined || props.temperature === '') {
+        return false;
     }
     return props.temperature;
 });
@@ -39,16 +39,8 @@ const formattedDate = computed(() => {
 
     <div class="px-4 py-3 space-y-1">
       <p class="text-slate-900 font-semibold">{{ username }}</p>
-
-      <p v-if="type === 'cierre'" class="text-gray-500 text-sm">
-        Nevera: <span class="font-normal">{{ fridgeName }}</span>
-      </p>
-
-      <p class="text-gray-500 text-sm">{{ formattedDate }}</p>
-
-      <p v-if="type === 'cierre'" class="text-gray-500 text-sm">
-        Temperatura: {{ displayTemperature }} °C
-      </p>
+      <p class="text-gray-500 text-sm">{{ date }}</p>
+      <p v-if="displayTemperature" class="text-gray-500 text-sm">Temperatura: {{ displayTemperature }} °C</p>
     </div>
 
     <!-- IMAGEN -->

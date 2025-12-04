@@ -71,7 +71,6 @@ class CloseController extends Controller
                 'refrigerator_id' => 'required|exists:refrigerators,id',
                 'temperature' => 'nullable|numeric',
                 'images' => 'required',
-                'images.*' => 'image|mimes:jpg,jpeg,png|max:2048',
                 'establishment_id' => 'required|integer|exists:establishments,id',
             ]);
 
