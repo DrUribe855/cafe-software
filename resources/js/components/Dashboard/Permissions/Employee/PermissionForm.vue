@@ -42,18 +42,18 @@ const { permission, errors, touched, sendPermissionRequest } = useLeaveRequests(
                     <div class="flex flex-col w-1/2 p-2 pl-0">
                         <label for="start-date" class="text-lg md:text-[1em]">Fecha de inicio</label>
                         <input type="date" name="start-date" id="start-date" class="mt-2 border border-gray-300 rounded-lg p-2" v-model="permission.startDate" @blur="touched.startDate = true">
-                        <span v-if="touched.startDate && errors.startDate" class="text-red-500 mt-2 font-sm">¡Debes seleccionar la fecha de inicio!</span>
+                        <span v-if="touched.startDate && errors.startDate" class="text-red-500 mt-2 font-sm"> {{ errors.startDate }}</span>
                     </div>
                     <div class="flex flex-col w-1/2 p-2 pl-0">
                         <label for="end-date" class="text-lg md:text-[1em]">Fecha de fin</label>
                         <input type="date" name="end-date" id="end-date" class="mt-2 border border-gray-300 rounded-lg p-2" v-model="permission.endDate" @blur="touched.endDate = true">
-                        <span v-if="touched.endDate && errors.endDate" class="text-red-500 mt-2 font-sm">¡Debes seleccionar la fecha de fin!</span>
+                        <span v-if="touched.endDate && errors.endDate" class="text-red-500 mt-2 font-sm"> {{ errors.endDate }}</span>
                     </div>
                 </div>
                 <div class="flex flex-col mt-4" v-if="permission.type !== 'Vacaciones'">
                     <label for="reason" class="text-lg md:text-[1em]" >Motivo de la solicitud</label>
                     <textarea rows="5" name="reason" id="reason" placeholder="Describe brevemente el motivo de la solicitud..." class="mt-2 border border-gray-300 rounded-lg p-2" v-model="permission.reason" @blur="touched.reason = true"></textarea>
-                    <span v-if="touched.reason && errors.reason" class="text-red-500 mt-2 font-sm">¡Debes diligenciar la razón!</span>
+                    <span v-if="touched.reason && errors.reason" class="text-red-500 mt-2 font-sm">{{ errors.reason }}</span>
                 </div>
                 <div class="flex items-center mt-4">
                     <button type="submit" class="w-full rounded-lg p-3 flex justify-center bg-sky-500 hover:bg-sky-600 text-white"><Send class="mr-2"/> <span class="text-lg md:text-[1em]">Enviar solicitud</span></button>

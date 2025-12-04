@@ -24,7 +24,7 @@ class LeaveRequest extends FormRequest
         return [
             'type'       => 'required|string|in:Vacaciones,Permiso',
             'start_date' => 'required|date|after_or_equal:today',
-            'end_date'   => 'required|date|after_or_equal:startDate',
+            'end_date'   => 'required|date|after_or_equal:start_date',
             'reason'     => 'nullable|string|max:500'
         ];
     }
@@ -40,7 +40,7 @@ class LeaveRequest extends FormRequest
             'start_date.after_or_equal' => 'La fecha de inicio no puede ser anterior a hoy.',
             'end_date.required'         => 'La fecha de fin es obligatoria.',
             'end_date.date'             => 'La fecha de fin debe ser una fecha válida.',
-            'end_date.after_or_equal'    => 'La fecha de fin no puede ser anterior a la fecha de inicio.',
+            'end_date.after_or_equal'   => 'La fecha de fin no puede ser anterior a la fecha de inicio.',
             'reason.max'                => 'La razón no puede exceder los 500 cáracteres.',
         ];
     }
