@@ -4,10 +4,11 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { useEstablishmentStore } from '../../../stores/establishmentStore'
 import { alert } from '../../../composables/Pastrie/alert'
+
 const props = defineProps({
   date: String,
   role: String,
-  fridge: Number,
+  fridge: [Number, String],   // ← FIX AQUÍ
   temperature: [String, Number],
   establishmentId: Number
 })
@@ -64,30 +65,7 @@ watch(selectedFridge, val => {
 
 watch(localTemp, val => emit('update:temperature', val))
 
-const updateNote = async () => {
-  if (!selectedFridge.value) {
-    alert('Debes seleccionar una nevera antes de agregar una nota', '', 'warning')
-    return
-  }
-
-  if (!note.value.trim()) {
-    alert('La nota está vacía', '', 'warning')
-    return
-  }
-
-  try {
-    await axios.put(`/api/refrigerators/${selectedFridge.value}/note`, { note: note.value })
-    const fridge = fridges.value.find(f => f.id === selectedFridge.value)
-    if (fridge) fridge.note = note.value
-    alert('La nota ha sido actualizada con éxito', '', 'success')
-  } catch (error) {
-    alert('Error al actualizar la nota', '', 'error')
-  }
-}
-
 const goBack = () => router.back()
-
-
 </script>
 
 <template>
@@ -132,7 +110,12 @@ const goBack = () => router.back()
           v-model="selectedFridge"
           class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 hover:border-sky-400 transition"
         >
-          <option disabled value="">Seleccionar nevera</option>
+
+          <!-- 🔥 OPCIÓN CORRECTA PARA "TODAS LAS NEVERAS" -->
+          <option value="">Todas las neveras</option>
+
+          <option disabled value="none">Seleccionar nevera</option>
+
           <option
             v-for="fridge in fridges"
             :key="fridge.id"
@@ -155,7 +138,6 @@ const goBack = () => router.back()
               v-model="note"
               rows="3"
               class="p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
-              placeholder="Indicaciones sobre esta nevera..."
             ></textarea>
 
             <button

@@ -53,7 +53,7 @@ export function useUploadClose() {
       const establishmentId = establishmentStore.getCode();
 
       if (!establishmentId) {
-        console.warn('No hay establecimiento seleccionado');
+        console.log('No hay establecimiento seleccionado');
         return;
       }
 

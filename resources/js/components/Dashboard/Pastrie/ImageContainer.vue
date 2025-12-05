@@ -7,10 +7,7 @@ const props = defineProps({
     imageUrl: { type: String, required: true },
     username: { type: String, required: true },
     temperature: { type: [String, Number], required: false, default: null },
-    fridgeName: { type: String, required: false, default: 'Desconocida' },
-    // evitar temperatura y nevera en bolleria 
-    type: { type: String, default: "cierre" },
-    type: { type: String, default: "bolleria" } 
+    fridgeName: { type: String, required: false, default: null}
 });
 
 const displayTemperature = computed(() => {
@@ -20,6 +17,12 @@ const displayTemperature = computed(() => {
     return props.temperature;
 });
 
+const displayFridgeName = computed(() => {
+    if (props.fridgeName === null || props.fridgeName === undefined || props.fridgeName === '') {
+        return false;
+    }
+    return props.fridgeName;
+});
 const formattedDate = computed(() => {
     return new Date(props.date).toLocaleString('es-ES', {
         dateStyle: 'medium',
@@ -39,7 +42,8 @@ const formattedDate = computed(() => {
 
     <div class="px-4 py-3 space-y-1">
       <p class="text-slate-900 font-semibold">{{ username }}</p>
-      <p class="text-gray-500 text-sm">{{ date }}</p>
+      <p class="text-gray-500 text-sm">{{ formattedDate }}</p>
+      <p v-if="displayFridgeName" class="text-gray-500 text-sm">Nevera: {{displayFridgeName}}</p>
       <p v-if="displayTemperature" class="text-gray-500 text-sm">Temperatura: {{ displayTemperature }} °C</p>
     </div>
 

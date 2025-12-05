@@ -40,11 +40,11 @@ export const dashboardCards = [
         route: '/dashboard/close',
         roles: ['admin', 'employee']
     },
-    {
-        title: 'Menú',
-        description: 'Gestión del menú de productos disponibles.',
-        icon: MonitorX,
-        route: '/dashboard/menu',
-        roles: ['admin', 'employee']
-    }
+    //{
+    //    title: 'Menú',
+    //    description: 'Gestión del menú de productos disponibles.',
+    //    icon: MonitorX,
+    //    route: '/dashboard/menu',
+    //    roles: ['admin', 'employee']
+    // }
 ];

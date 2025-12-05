@@ -6,7 +6,7 @@ import DashboardMenu from '../views/Dashboard/DashboardMenu.vue';
 import UsersView from '../views/Dashboard/Users/UsersView.vue';
 import BakeryView from '../views/Dashboard/Pastrie/PastriesView.vue';
 import CloseView from '../views/Dashboard/Close/PastriesCloseView.vue';  
-import Menu from '../views/Dashboard/Menu/MenuView.vue';
+// import Menu from '../views/Dashboard/Menu/MenuView.vue';
 
 import { useUserStore } from '@/stores/userStore';
 
@@ -26,7 +26,7 @@ const routes = [
             { path: 'users', name: 'users', component: UsersView, meta: { roles: 'admin' } },
             { path: 'bakery', name: 'bakery', component: BakeryView, meta: { roles: ['admin', 'employee'] } }, 
             { path: 'close', name: 'close', component: CloseView, meta: { roles: ['admin', 'employee'] } },
-            { path: 'menu', name: 'menu', component: Menu, meta: { roles: ['admin', 'employee'] } },
+           // { path: 'menu', name: 'menu', component: Menu, meta: { roles: ['admin', 'employee'] } },
         ],
         meta: { requiresAuth: true, roles: ['admin', 'employee'] }
     }
