@@ -8,7 +8,7 @@ import { alert } from '../../../composables/Pastrie/alert'
 const props = defineProps({
   date: String,
   role: String,
-  fridge: [Number, String],   // ← FIX AQUÍ
+  fridge: [Number, String],  
   temperature: [String, Number],
   establishmentId: Number
 })
@@ -58,8 +58,9 @@ watch(
 )
 
 watch(selectedFridge, val => {
-  emit('update:fridge', val)
-  const fridge = fridges.value.find(f => f.id === val)
+  const normalized = val === "all" ? null : val
+  emit('update:fridge', normalized)
+  const fridge = fridges.value.find(f => f.id === normalized)
   note.value = fridge ? fridge.note || '' : ''
 })
 
@@ -111,8 +112,7 @@ const goBack = () => router.back()
           class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 hover:border-sky-400 transition"
         >
 
-          <!-- 🔥 OPCIÓN CORRECTA PARA "TODAS LAS NEVERAS" -->
-          <option value="">Todas las neveras</option>
+          <option value="all">Todas las neveras</option>
 
           <option disabled value="none">Seleccionar nevera</option>
 

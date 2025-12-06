@@ -10,12 +10,10 @@ export function useUploadClose() {
   const establishmentStore = useEstablishmentStore();
   const closeData = ref([]);
 
-
   const uploadCloseFiles = async (files, refrigeratorId, temperature) => {
     try {
       const formData = new FormData();
 
-  
       files.forEach((file) => {
         formData.append('images[]', file);
       });
@@ -23,7 +21,6 @@ export function useUploadClose() {
       formData.append('refrigerator_id', refrigeratorId);
       formData.append('temperature', temperature);
 
-     
       const establishmentId = establishmentStore.getCode();
       formData.append('establishment_id', establishmentId);
 
@@ -47,7 +44,6 @@ export function useUploadClose() {
     }
   };
 
-
   const fetchCloseFiles = async (date, refrigeratorId = null) => {
     try {
       const establishmentId = establishmentStore.getCode();
@@ -57,16 +53,14 @@ export function useUploadClose() {
         return;
       }
 
-
       let params = {
         establishment_id: establishmentId,
         date,
+        refrigerator_id:
+          refrigeratorId === null || refrigeratorId === "" || refrigeratorId === "null"
+            ? null
+            : refrigeratorId,
       };
-
-    
-      if (refrigeratorId) {
-        params.refrigerator_id = refrigeratorId;
-      }
 
       const response = await axios.get('/api/closing-logs', {
         headers: {

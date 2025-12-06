@@ -15,16 +15,14 @@ class CloseController extends Controller
     public function index(Request $request)
     {
         try {
-            // VALIDACIONES
             $validated = $request->validate([
                 'establishment_id' => 'required|integer|exists:establishments,id',
                 'date' => 'required|date',
-                'refrigerator_id' => 'nullable|integer|exists:refrigerators,id',
+                'refrigerator_id' => 'nullable',
             ]);
 
             $authUser = Auth::user();
 
-            // CONTROL DE PERMISOS
             if (
                 !$authUser->hasRole('admin') &&
                 $authUser->establishment_id != $validated['establishment_id']
@@ -34,22 +32,24 @@ class CloseController extends Controller
                 ], 403);
             }
 
-            // CONSULTA BASE
             $query = ClosingLog::with(['user', 'refrigerator'])
                 ->where('establishment_id', $validated['establishment_id'])
                 ->whereDate('created_at', $validated['date']);
 
-            // SOLO FILTRA POR NEVERA SI SE ENVÍA EL REFRIGERATOR_ID
-            if (!empty($validated['refrigerator_id'])) {
-                $query->where('refrigerator_id', $validated['refrigerator_id']);
+            if (
+                $request->has('refrigerator_id') &&
+                $request->refrigerator_id !== null &&
+                $request->refrigerator_id !== "null" &&
+                $request->refrigerator_id !== ""
+            ) {
+                $query->where('refrigerator_id', $request->refrigerator_id);
             }
 
-            // EJECUTAR CONSULTA
             $logs = $query->orderBy('created_at', 'desc')->get();
 
-            // FORMATEAR RUTA DE IMAGEN
             $logs->transform(function ($log) {
-                $log->image_url = Storage::url(str_replace('/storage/', '', $log->image_url));
+                $cleanPath = str_replace('/storage/', '', $log->image_url);
+                $log->image_url = Storage::disk('public')->url($cleanPath);
                 return $log;
             });
 
@@ -96,7 +96,7 @@ class CloseController extends Controller
                         'user_id' => $authUser->id,
                         'refrigerator_id' => $request->refrigerator_id,
                         'temperature' => $request->temperature,
-                        'image_url' => Storage::url($path),
+                        'image_url' => Storage::disk('public')->url($path),
                     ]);
                 }
             }
@@ -121,6 +121,7 @@ class CloseController extends Controller
             $closingLog = ClosingLog::findOrFail($id);
 
             $authUser = Auth::user();
+
             if (
                 !$authUser->hasRole('admin') &&
                 $authUser->id !== $closingLog->user_id
@@ -129,6 +130,7 @@ class CloseController extends Controller
             }
 
             $path = str_replace('/storage/', '', $closingLog->image_url);
+
             if (Storage::disk('public')->exists($path)) {
                 Storage::disk('public')->delete($path);
             }

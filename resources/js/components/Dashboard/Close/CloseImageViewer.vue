@@ -6,7 +6,7 @@ import { useEstablishmentStore } from '../../../stores/establishmentStore';
 
 const props = defineProps({
   date: { type: String, required: true },
-  refrigeratorId: { type: [String, Number], default: null }
+  refrigeratorId: { type: [String, Number, null], default: null }
 });
 
 const establishmentStore = useEstablishmentStore();
@@ -19,8 +19,13 @@ onMounted(() => {
 });
 
 const loadCloseFiles = () => {
-  if (!props.date) return;
-  fetchCloseFiles(props.date, props.refrigeratorId || null);
+  let fridge = props.refrigeratorId;
+
+  if (fridge === "Todas las neveras" || fridge === "" || fridge === undefined) {
+    fridge = null;
+  }
+
+  fetchCloseFiles(props.date, fridge);
 };
 
 watch(
