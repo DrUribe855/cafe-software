@@ -9,10 +9,10 @@ use Illuminate\Http\Request;
 
 class LeaveRequestController extends Controller
 {
-    public function storePermission(LeaveRequest $request){
+    public function storeLeaveRequest(LeaveRequest $request){
         try {
 
-            $permissionData = Leave::create([
+            $leaveRecord = Leave::create([
                 'user_id'    => auth()->user()->id,
                 'type'       => $request->type,
                 'start_date' => $request->start_date,
@@ -23,13 +23,35 @@ class LeaveRequestController extends Controller
 
             return response()->json([
                 'message' => 'Solicitud creada con éxito',
-                'status' => true,
-                'record' => $permissionData
+                'status'  => true,
+                'record'  => $leaveRecord
             ], 201);
 
         }catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al validar la solicitud',
+                'error' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function fetchLeaveRequestsPerUser(Request $request){
+        try{
+
+
+            $leaveRequests = Leave::where('user_id', auth()->user()->id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return response()->json([
+                'message'  => 'Solicitudes obtenidas con éxito',
+                'status'   => true,
+                'requests' => $leaveRequests
+            ]);
+
+        }catch(\Exception $e){
+            return response()->json([
+                'message' => 'Error al obtener las solicitudes',
                 'error' => $e->getMessage(),
             ], 400);
         }

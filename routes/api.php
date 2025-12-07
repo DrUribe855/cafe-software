@@ -52,7 +52,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 /* -------------------------------- Rutas de permisos y vacaciones -------------------------------- */
 Route::middleware('auth:sanctum')->group(function () {
-    Route::middleware(['role:admin|employee'])->post('/permissions', [LeaveRequestController::class, 'storePermission']);
+    Route::middleware(['role:admin|employee'])->post('/leave-requests', [LeaveRequestController::class, 'storeLeaveRequest']);
+    Route::middleware(['role:admin|employee'])->get('/leave-requests', [LeaveRequestController::class, 'fetchLeaveRequestsPerUser']);
 });
 
 /* -------------------------------- Rutas de establecimientos -------------------------------- */

@@ -22,11 +22,6 @@
         Rechazado: 'bg-red-50 text-red-700 border-red-500',
     };
 
-    const iconClasses = {
-        Pendiente: 'text-yellow-600',
-        Aprobado: 'text-green-600',
-        Rechazado: 'text-red-600',
-    };
 </script>
 
 <template>
@@ -38,11 +33,15 @@
         <div>
             <!-- Título + Estado -->
             <div class="flex items-center gap-3">
-                <h2 class="text-lg md:text-md sm:text-sm font-semibold">{{  type  }}</h2>
+                <h2 class="text-sm md:text-md sm:text-sm font-semibold">{{  type  }}</h2>
 
                 <span
                     class="px-3 py-1 text-sm rounded-full font-medium flex items-center gap-1"
-                    :class="statusClasses[status]"
+                    :class="{
+                            'bg-orange-100': status === 'Pendiente',
+                            'bg-green-200': status === 'Aprobado',
+                            'bg-red-100': status === 'Rechazado'
+                        }"
                 >
                     <span class="inline-block w-2 h-2 rounded-full"
                         :class="{
@@ -56,12 +55,12 @@
             </div>
 
             <!-- Fechas -->
-            <p class="text-gray-600 mt-2">
+            <p class="text-gray-600 mt-2 text-sm md:text-md">
                 {{ startDate }} / {{ endDate }}
             </p>
 
             <!-- Descripción -->
-            <p class="text-gray-700 mt-1">
+            <p class="text-gray-700 mt-1 text-sm md:text-md">
                 {{ reason }}
             </p>
         </div>
