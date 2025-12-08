@@ -51,10 +51,6 @@ class PastrieController extends Controller
                                 ->whereDate('created_at', $today)
                                 ->exists();
 
-            return response()->json([
-                    'message' => 'Traza 1 controlador',
-                ], 409);
-
             if($findLog){
                 return response()->json([
                     'message' => 'Ya se ha registrado una foto con este horario el día de hoy',

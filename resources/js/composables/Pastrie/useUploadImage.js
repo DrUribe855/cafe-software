@@ -2,7 +2,10 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useUserStore } from '../../stores/userStore';
 import { useEstablishmentStore } from '../../stores/establishmentStore';
+import { useLoader } from '../useLoader.js';
 import { alert } from './alert.js';
+
+const { showLoader, hideLoader } = useLoader();
 
 export function useUploadImage(){
 
@@ -30,6 +33,8 @@ export function useUploadImage(){
     }
 
     const uploadImage = async (file, schedule) => {
+
+        showLoader();
 
         try{
             const formData = new FormData();
@@ -61,6 +66,8 @@ export function useUploadImage(){
               alert('Depuracion', 'Error fuera de condiciones controladas', error.response);
               window.alert("Error de catch: " + error.message);
             }
+        }finally{
+            hideLoader();
         }
 
     }
