@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Refrigerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
@@ -7,8 +8,8 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Pastrie\PastrieController;
 use App\Http\Controllers\Close\CloseController;
 use App\Http\Controllers\EstablishmentController;
-use App\Models\Refrigerator;
 use App\Http\Controllers\Close\RefrigeratorController;
+use App\Http\Controllers\Leave\LeaveRequestController;
 
 
 /* -------------------------------- Rutas para inicio de sesión -------------------------------- */
@@ -48,6 +49,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware(['role:admin'])->delete('/closing-logs/{id}', [CloseController::class, 'destroy']);
     Route::middleware(['role:admin'])->put('/refrigerators/{id}/note', [RefrigeratorController::class, 'updateNote']);
 });
+
+/* -------------------------------- Rutas de permisos y vacaciones -------------------------------- */
+Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware(['role:admin|employee'])->post('/leave-requests', [LeaveRequestController::class, 'storeLeaveRequest']);
+    Route::middleware(['role:admin|employee'])->get('/leave-requests', [LeaveRequestController::class, 'fetchLeaveRequestsPerUser']);
+});
+
+/* -------------------------------- Rutas de establecimientos -------------------------------- */
 Route::get('/establishments', [EstablishmentController::class, 'fetchStores']);
 
 

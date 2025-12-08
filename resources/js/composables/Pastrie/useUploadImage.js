@@ -2,7 +2,11 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useUserStore } from '../../stores/userStore';
 import { useEstablishmentStore } from '../../stores/establishmentStore';
+import { useLoader } from '../useLoader.js';
 import { alert } from './alert.js';
+
+const { showLoader, hideLoader } = useLoader();
+const images = ref([]);
 
 export function useUploadImage(){
 
@@ -20,7 +24,7 @@ export function useUploadImage(){
                 }
             });
 
-            imageData.value = data;
+            imageData.value = data.images;
             console.log("Imagen obtenida: ", imageData.value);
 
 
@@ -29,25 +33,66 @@ export function useUploadImage(){
         }
     }
 
-    const uploadImage = async (file, schedule) => {
+    const uploadImage = async (schedule) => {
 
-        const formData = new FormData();
-        formData.append('establishment_id', parseInt(establishmentStore.getCode()));
-        formData.append('user_id', store.user.id);
-        formData.append('schedule', schedule);
-        formData.append('file', file);
+        if (images.value.length == 0) {
+            alert("Selecciona un archivo");
+            return;
+        }
+        if (!schedule) {
+            alert("No hay horario definido");
+            return;
+        }
+
+        showLoader();
 
         try{
+            const formData = new FormData();
+            formData.append('establishment_id', parseInt(establishmentStore.getCode()));
+            formData.append('user_id', store.user.id);
+            formData.append('schedule', schedule);
+            images.value.forEach(image => {
+                formData.append('images[]', image.file);
+            });
+
             const { data } = await axios.post('/api/upload-image', formData);
-            console.log("Respuesta de subida de image: ", data);
-            alert('Validado', 'Imagen subida correctamente', 'success');
-            return true;
+
+            if(data.status){
+                alert('Validado','La imagen se ha subido correctamente', 'success');
+                images.value = [];
+            }
+
         }catch(error){
-            console.error("Error al subir la imagen: ", error);
-            alert('Error', 'No se pudo subir la imagen', 'error');
+            console.error("Error al subir la imagen: ", error.response);
+            alert('¡Error!', 'Ocurrió un error desconocido, contacte son soporte.', 'info');
+        }finally{
+            hideLoader();
         }
+
     }
 
+    const fileSelected = (event) => {
 
-    return { uploadImage, fetchImage, imageData };
+        const selectedImages = Array.from(event.target.files);
+
+        selectedImages.forEach(file => {
+            images.value.push({
+                file,
+                preview: URL.createObjectURL(file),
+            });
+        });
+
+        event.target.value = "";
+
+    };
+
+    const removeImage = (index) => {
+
+        URL.revokeObjectURL(images.value[index].preview);
+
+        images.value.splice(index, 1);
+    };
+
+
+    return { uploadImage, fetchImage, fileSelected, removeImage, imageData, images };
 }

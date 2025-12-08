@@ -8,12 +8,13 @@ export const dashboardCards = [
         route: '/dashboard/users',
         roles: ['admin']
     },
-    // {
-    //     title: 'Vacaciones',
-    //     description: 'Gestiona tus vacaciones y solicita días libres.',
-    //     icon: BookOpen,
-    //     route: 'vacaciones'
-    // },
+    {
+        title: 'Vacaciones',
+        description: 'Gestion de vacaciones y permisos.',
+        icon: BookOpen,
+        route: '/dashboard/permissions',
+        roles: ['admin', 'employee']
+    },
     // {
     //     title: 'Horarios',
     //     description: 'Revisa tus turnos, horas de entrada y salida.',

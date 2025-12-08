@@ -16,7 +16,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="bg-[#edf2fa] h-screen">
+    <div class="bg-[#edf2fa] min-h-screen">
         <!-- Componente de navbar -->
         <NavBar/>
         <!-- Se renderizan las rutas hijas vinculadas al componente dashboardView -->

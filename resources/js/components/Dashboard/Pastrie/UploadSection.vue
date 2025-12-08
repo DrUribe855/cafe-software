@@ -31,7 +31,7 @@ onMounted(async () => {
     <template v-else>
         <InformationBar v-model:schedule="schedule"  v-model:date="date" :role="role"/>
         <UploaderFile v-if="role == 'employee'" :schedule="schedule"/>
-        <ImageViewer v-if="role == 'admin'" :date="date"/>
+        <ImageViewer v-if="role == 'admin'" :date="date" :schedule="schedule"/>
     </template>
 
 </template>

@@ -7,6 +7,8 @@ import UsersView from '../views/Dashboard/Users/UsersView.vue';
 import BakeryView from '../views/Dashboard/Pastrie/PastriesView.vue';
 import CloseView from '../views/Dashboard/Close/PastriesCloseView.vue';  
 // import Menu from '../views/Dashboard/Menu/MenuView.vue';
+import CloseView from '../views/Dashboard/Close/PastriesCloseView.vue';   
+import PermissionsView from '../views/Dashboard/Permissions/PermissionsView.vue';
 
 import { useUserStore } from '@/stores/userStore';
 
@@ -27,6 +29,7 @@ const routes = [
             { path: 'bakery', name: 'bakery', component: BakeryView, meta: { roles: ['admin', 'employee'] } }, 
             { path: 'close', name: 'close', component: CloseView, meta: { roles: ['admin', 'employee'] } },
            // { path: 'menu', name: 'menu', component: Menu, meta: { roles: ['admin', 'employee'] } },
+           // { path: 'permissions', name: 'permissions', component: PermissionsView, meta: { roles: ['admin', 'employee'] } },
         ],
         meta: { requiresAuth: true, roles: ['admin', 'employee'] }
     }
