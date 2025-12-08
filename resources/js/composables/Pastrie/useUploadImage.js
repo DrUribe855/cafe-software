@@ -6,6 +6,7 @@ import { useLoader } from '../useLoader.js';
 import { alert } from './alert.js';
 
 const { showLoader, hideLoader } = useLoader();
+const images = ref([]);
 
 export function useUploadImage(){
 
@@ -23,7 +24,7 @@ export function useUploadImage(){
                 }
             });
 
-            imageData.value = data;
+            imageData.value = data.images;
             console.log("Imagen obtenida: ", imageData.value);
 
 
@@ -32,7 +33,16 @@ export function useUploadImage(){
         }
     }
 
-    const uploadImage = async (file, schedule) => {
+    const uploadImage = async (schedule) => {
+
+        if (images.value.length == 0) {
+            alert("Selecciona un archivo");
+            return;
+        }
+        if (!schedule) {
+            alert("No hay horario definido");
+            return;
+        }
 
         showLoader();
 
@@ -41,37 +51,48 @@ export function useUploadImage(){
             formData.append('establishment_id', parseInt(establishmentStore.getCode()));
             formData.append('user_id', store.user.id);
             formData.append('schedule', schedule);
-            formData.append('file', file);
-
-            const { data } = await axios.post('/api/upload-image', formData, {
-                headers: {
-                    'Authorization': `Bearer ${store.token}`,
-                    // 'Content-Type': 'multipart/form-data',
-                },
+            images.value.forEach(image => {
+                formData.append('images[]', image.file);
             });
+
+            const { data } = await axios.post('/api/upload-image', formData);
 
             if(data.status){
                 alert('Validado','La imagen se ha subido correctamente', 'success');
-            }else{
-                alert('¡Ups!', 'No insertó pero tampoco lanzó error', data);
-                window.alert("Error de try: " + error.message);
+                images.value = [];
             }
 
-            return data.message;
         }catch(error){
             console.error("Error al subir la imagen: ", error.response);
-            if(error.status === 409){
-                alert('¡Ups!', 'Ya existe una imagen para este horario', 'info');
-            }else{
-              alert('Depuracion', 'Error fuera de condiciones controladas', error.response);
-              window.alert("Error de catch: " + error.message);
-            }
+            alert('¡Error!', 'Ocurrió un error desconocido, contacte son soporte.', 'info');
         }finally{
             hideLoader();
         }
 
     }
 
+    const fileSelected = (event) => {
 
-    return { uploadImage, fetchImage, imageData };
+        const selectedImages = Array.from(event.target.files);
+
+        selectedImages.forEach(file => {
+            images.value.push({
+                file,
+                preview: URL.createObjectURL(file),
+            });
+        });
+
+        event.target.value = "";
+
+    };
+
+    const removeImage = (index) => {
+
+        URL.revokeObjectURL(images.value[index].preview);
+
+        images.value.splice(index, 1);
+    };
+
+
+    return { uploadImage, fetchImage, fileSelected, removeImage, imageData, images };
 }

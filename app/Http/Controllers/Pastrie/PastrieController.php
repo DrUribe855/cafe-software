@@ -45,39 +45,41 @@ class PastrieController extends Controller
     public function uploadPhoto(Request $request){
 
         try{
+
             $today = Carbon::today()->toDateString();
             $findLog = PastrieLog::where('establishment_id', $request->establishment_id)
                                 ->where('schedule', $request->schedule)
                                 ->whereDate('created_at', $today)
                                 ->exists();
 
-            if($findLog){
+            if($request->hasFile('images')){
+
+                $files = $request->file('images');
+
+                foreach ($files as $file) {
+
+                    $path = $file->store('pastrie_logs', 'public');
+
+                    PastrieLog::create([
+                        'establishment_id' => $request->establishment_id,
+                        'user_id' => $request->user_id,
+                        'schedule' => $request->schedule,
+                        'image_url' => Storage::url($path),
+                    ]);
+    
+                }
+                
                 return response()->json([
-                    'message' => 'Ya se ha registrado una foto con este horario el día de hoy',
-                ], 409);
-            }
-
-            if($request->hasFile('file')){
-
-                $file = $request->file('file');
-                $path = $file->store('pastrie_logs', 'public');
-
-                PastrieLog::create([
-                    'establishment_id' => $request->establishment_id,
-                    'user_id' => $request->user_id,
-                    'schedule' => $request->schedule,
-                    'image_url' => Storage::url($path),
-                ]);
-
-                return response()->json([
-                    'message' => 'Registro en bollería guardado exitosamente',
+                    'message' => 'Registro(s) en bollería guardado exitosamente',
                     'status' => true
                 ], 201);
+
             }
 
 
         }catch(\Exception $e){
-            Log::error('Errpr en uploadPhoto PastrieController: ' . $e->getMessage());
+            Log::error('Error en uploadPhoto - PastrieController: ' . $e->getMessage());
+            
             return response()->json([
                 'message' => 'Error al guardar registro en bollería',
                 'error' => $e->getMessage(),
