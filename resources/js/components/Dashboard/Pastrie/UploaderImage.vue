@@ -1,6 +1,7 @@
 <script setup>
 import { useUploadImage } from '../../../composables/Pastrie/useUploadImage';
 import { useLoader } from '../../../composables/useLoader.js';
+import Loader from '../../Loader.vue';
 
 const props = defineProps({
     schedule: { type: String, required: true },
@@ -14,10 +15,7 @@ const { isLoading } = useLoader();
 <template>
 
     <!-- Loader -->
-    <div v-if="isLoading"
-        class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-        <div class="h-12 w-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-    </div>
+    <Loader v-if="isLoading" />
 
     <!-- Dropzone para subida de imagenes -->
     <form @submit.prevent="uploadImage(props.schedule)">
@@ -71,7 +69,7 @@ const { isLoading } = useLoader();
              </label>
         </div>
         <div class="text-center mt-4 bg">
-            <button class="p-2.5 bg-sky-400 rounded text-white hover:bg-sky-500" type="submit">Subir imagen</button>
+            <button class="p-2.5 bg-sky-500 rounded text-white hover:bg-sky-600" type="submit">Subir imagen</button>
         </div>
     </form>
 </template>
