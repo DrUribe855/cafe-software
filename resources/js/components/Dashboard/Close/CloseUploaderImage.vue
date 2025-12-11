@@ -2,8 +2,8 @@
 import { ref } from 'vue';
 import { useUploadClose } from '../../../composables/Pastrie/useUploadClose';
 import { alert } from '../../../composables/Pastrie/alert';
-import Swal from 'sweetalert2';
-import heic2any from "heic2any"
+import { useLoader } from '../../../composables/useLoader';
+import Loader from '../../Loader.vue';
 
 
 const props = defineProps({
@@ -24,6 +24,7 @@ const props = defineProps({
 const file = ref(null);
 const isSelected = ref(false);
 const { uploadCloseFiles } = useUploadClose();
+const { isLoading } = useLoader();
 
 async function handleFileUpload(file) {
   if (!file) return null; 
@@ -87,6 +88,9 @@ const submitFile = async () => {
 </script>
 
 <template>
+
+  <Loader v-if="isLoading"/>
+
   <form @submit.prevent="submitFile">
     <div class="flex items-center justify-center w-full mt-5">
       <label

@@ -4,14 +4,20 @@ import { useUserStore } from '../../stores/userStore';
 import { useEstablishmentStore } from '../../stores/establishmentStore';
 import { alert } from './alert';
 import Swal from 'sweetalert2';
+import { useLoader } from '../useLoader';
 
 export function useUploadClose() {
+  const { showLoader, hideLoader } = useLoader();
   const store = useUserStore();
   const establishmentStore = useEstablishmentStore();
   const closeData = ref([]);
 
   const uploadCloseFiles = async (files, refrigeratorId, temperature) => {
+    
+    showLoader();
+    
     try {
+
       const formData = new FormData();
 
       files.forEach((file) => {
@@ -41,6 +47,8 @@ export function useUploadClose() {
     } catch (error) {
       console.error('Error al subir archivos de cierre:', error.response?.data || error);
       throw error;
+    }finally{
+      hideLoader();
     }
   };
 

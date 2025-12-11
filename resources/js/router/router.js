@@ -7,7 +7,6 @@ import UsersView from '../views/Dashboard/Users/UsersView.vue';
 import BakeryView from '../views/Dashboard/Pastrie/PastriesView.vue';
 import CloseView from '../views/Dashboard/Close/PastriesCloseView.vue';  
 // import Menu from '../views/Dashboard/Menu/MenuView.vue';
-import CloseView from '../views/Dashboard/Close/PastriesCloseView.vue';   
 import PermissionsView from '../views/Dashboard/Permissions/PermissionsView.vue';
 
 import { useUserStore } from '@/stores/userStore';
