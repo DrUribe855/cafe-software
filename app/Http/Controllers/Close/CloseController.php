@@ -18,7 +18,7 @@ class CloseController extends Controller
             $validated = $request->validate([
                 'establishment_id' => 'required|integer|exists:establishments,id',
                 'date' => 'required|date',
-                'refrigerator_id' => 'nullable|integer|exists:refrigerators,id',
+                'refrigerator_id' => 'nullable',
             ]);
 
             $authUser = Auth::user();
@@ -36,18 +36,25 @@ class CloseController extends Controller
                 ->where('establishment_id', $validated['establishment_id'])
                 ->whereDate('created_at', $validated['date']);
 
-            if (!empty($validated['refrigerator_id'])) {
-                $query->where('refrigerator_id', $validated['refrigerator_id']);
+            if (
+                $request->has('refrigerator_id') &&
+                $request->refrigerator_id !== null &&
+                $request->refrigerator_id !== "null" &&
+                $request->refrigerator_id !== ""
+            ) {
+                $query->where('refrigerator_id', $request->refrigerator_id);
             }
 
-            $logs = $query->get();
+            $logs = $query->orderBy('created_at', 'desc')->get();
 
             $logs->transform(function ($log) {
-                $log->image_url = Storage::url(str_replace('/storage/', '', $log->image_url));
+                $cleanPath = str_replace('/storage/', '', $log->image_url);
+                $log->image_url = Storage::disk('public')->url($cleanPath);
                 return $log;
             });
 
             return response()->json($logs, 200);
+
         } catch (\Exception $e) {
             Log::error('Error en index de CloseController: ' . $e->getMessage());
             return response()->json([
@@ -89,7 +96,7 @@ class CloseController extends Controller
                         'user_id' => $authUser->id,
                         'refrigerator_id' => $request->refrigerator_id,
                         'temperature' => $request->temperature,
-                        'image_url' => Storage::url($path),
+                        'image_url' => Storage::disk('public')->url($path),
                     ]);
                 }
             }
@@ -98,6 +105,7 @@ class CloseController extends Controller
                 'message' => 'Cierre(s) guardado(s) exitosamente',
                 'data' => $logs,
             ], 201);
+
         } catch (\Exception $e) {
             Log::error('Error en store de CloseController: ' . $e->getMessage());
             return response()->json([
@@ -113,6 +121,7 @@ class CloseController extends Controller
             $closingLog = ClosingLog::findOrFail($id);
 
             $authUser = Auth::user();
+
             if (
                 !$authUser->hasRole('admin') &&
                 $authUser->id !== $closingLog->user_id
@@ -121,6 +130,7 @@ class CloseController extends Controller
             }
 
             $path = str_replace('/storage/', '', $closingLog->image_url);
+
             if (Storage::disk('public')->exists($path)) {
                 Storage::disk('public')->delete($path);
             }
@@ -128,6 +138,7 @@ class CloseController extends Controller
             $closingLog->delete();
 
             return response()->json(['message' => 'Cierre eliminado correctamente']);
+
         } catch (\Exception $e) {
             Log::error('Error al eliminar cierre: ' . $e->getMessage());
             return response()->json([
@@ -141,9 +152,10 @@ class CloseController extends Controller
     {
         try {
             $refrigerators = Refrigerator::where('establishment_id', $id)
-                ->get(['id as value', 'name as label', 'temperature', 'note']);
+                ->get(['id as value', 'name as label', 'note']);
 
             return response()->json($refrigerators);
+
         } catch (\Exception $e) {
             Log::error('Error al obtener neveras del establecimiento: ' . $e->getMessage());
             return response()->json([

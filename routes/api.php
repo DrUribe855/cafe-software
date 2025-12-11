@@ -58,3 +58,21 @@ Route::middleware('auth:sanctum')->group(function () {
 
 /* -------------------------------- Rutas de establecimientos -------------------------------- */
 Route::get('/establishments', [EstablishmentController::class, 'fetchStores']);
+
+
+
+/* -------------------------------- Rutas de carta/menu -------------------------------- */
+Route::prefix('menu')->group(function () {
+    
+    // Categorias
+    Route::get('/categories', [\App\Http\Controllers\Menu\CategoryController::class, 'index']);
+    Route::post('/categories', [\App\Http\Controllers\Menu\CategoryController::class, 'store']);
+    Route::put('/categories/{id}', [\App\Http\Controllers\Menu\CategoryController::class, 'update']);
+    Route::delete('/categories/{id}', [\App\Http\Controllers\Menu\CategoryController::class, 'destroy']);
+
+    // Productos
+    Route::get('/products', [\App\Http\Controllers\Menu\ProductController::class, 'index']);
+    Route::post('/products', [\App\Http\Controllers\Menu\ProductController::class, 'store']);
+    Route::put('/products/{id}', [\App\Http\Controllers\Menu\ProductController::class, 'update']);
+    Route::delete('/products/{id}', [\App\Http\Controllers\Menu\ProductController::class, 'destroy']);
+    });

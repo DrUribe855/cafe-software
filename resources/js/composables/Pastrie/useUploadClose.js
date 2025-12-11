@@ -24,50 +24,55 @@ export function useUploadClose() {
       const establishmentId = establishmentStore.getCode();
       formData.append('establishment_id', establishmentId);
 
-      const response = await axios.post(
-        '/api/closing-logs',
-        formData,
-        {
-          headers: {
-            'Authorization': `Bearer ${store.token}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        }
+      const response = await axios.post('/api/closing-logs', formData, {
+        headers: {
+          Authorization: `Bearer ${store.token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      alert(
+        'Cierre subido exitosamente',
+        'Las imágenes y la temperatura se registraron correctamente.',
+        'success'
       );
-     alert('Cierre subido exitosamente', 'La imagen y temperatura han sido subidas correctamente.', 'success');
 
       return response.data;
     } catch (error) {
-      console.error("Error al subir archivos de cierre:", error.response?.data || error);
-    
+      console.error('Error al subir archivos de cierre:', error.response?.data || error);
       throw error;
     }
   };
 
-  // 🔹 Consultar imágenes de cierre
-  const fetchCloseFiles = async (date, refrigeratorId) => {
+  const fetchCloseFiles = async (date, refrigeratorId = null) => {
     try {
       const establishmentId = establishmentStore.getCode();
+
       if (!establishmentId) {
-        console.warn("No hay establecimiento seleccionado");
+        console.log('No hay establecimiento seleccionado');
         return;
       }
 
+      let params = {
+        establishment_id: establishmentId,
+        date,
+        refrigerator_id:
+          refrigeratorId === null || refrigeratorId === "" || refrigeratorId === "null"
+            ? null
+            : refrigeratorId,
+      };
+
       const response = await axios.get('/api/closing-logs', {
         headers: {
-          'Authorization': `Bearer ${store.token}`,
+          Authorization: `Bearer ${store.token}`,
         },
-        params: {
-          establishment_id: establishmentId,
-          date,
-          refrigerator_id: refrigeratorId,
-        },
+        params,
       });
 
       closeData.value = response.data;
-      console.log("Datos de cierre cargados:", closeData.value);
+      console.log('Datos de cierre cargados:', closeData.value);
     } catch (error) {
-      console.error("Error al cargar archivos de cierre:", error.response?.data || error);
+      console.error('Error al cargar archivos de cierre:', error.response?.data || error);
 
       Swal.fire({
         icon: 'error',
