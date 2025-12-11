@@ -20,6 +20,16 @@ class UserController
 
         $establishmentId = $request->validate(['establishmentId' => 'required']);
 
+        $authUser = auth()->user();
+
+        if(!$authUser->hasRole('admin')){
+            if($authUser->establishment_id != $request->establishmentId){
+                return response()->json([
+                    'message' => 'No tienes permiso para ver los usuarios de este establecimiento',
+                ], 403);
+            }
+        }
+
         if(!$establishmentId){
             return response()->json([
                 'message' => 'No se ha proporcionado un ID de establecimiento',
@@ -29,12 +39,14 @@ class UserController
         /* Consultamos los usuarios correspondientes a ese establecimiento */
 
         $users = User::where('establishment_id', $establishmentId['establishmentId'])
+            ->where('isDeleted', 0)
             ->with('roles')
-            ->get();
+            ->paginate(6);
 
-        if($users->isEmpty()){
+        if($users->total() === 0){
             return response()->json([
             'message' => 'No hay empleados asignados a esta tienda',
+            'users' => $users,
             ], 404);
         }
 
@@ -48,6 +60,7 @@ class UserController
     public function createUser(UserRequest $request){
 
         try{
+
             $user = User::create([
                 'document' => $request->document,
                 'name'     => $request->name,
@@ -116,6 +129,33 @@ class UserController
                'status'  => false,
                'error'   => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    /* Función para eliminar usuario */
+
+    public function deleteUser(Request $request, $id){
+
+        try{
+            $user = User::find($id);
+    
+            if($user){
+                $user->isDeleted = 1;
+                $user->save();
+            }
+
+            return response()->json([
+                'message' => 'Usuario eliminado con éxito',
+            ], 200);
+
+        }catch(Exception $e){
+            Log::error('Error eliminando usuario: ' . $e->getMessage());
+
+            return response()->json([
+                'message' => 'Error al eliminar el usuario',
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 }

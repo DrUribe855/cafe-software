@@ -16,7 +16,7 @@
                     <p class="pt-2 text-red-500 text-center" v-if="errors.inactiveUser">¡{{ errors.inactiveUser }}!</p>
                     <div class="block m-3">
                         <label class="block text-white pb-1" for="document">DNI</label>
-                        <input v-model="document" maxlength="20" class="block text-white border-1 border-gray-400 w-full rounded-sm p-1.5" type="number" placeholder="Ingrese su DNI">
+                        <input v-model="document" maxlength="20" class="block text-white border-1 border-gray-400 w-full rounded-sm p-1.5" type="text" placeholder="Ingrese su DNI">
                         <p class="pt-2 text-red-500" v-if="errors.document">¡{{ errors.document[0] }}!</p>
                     </div>
                     <div class="block m-3">

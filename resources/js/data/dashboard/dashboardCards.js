@@ -5,36 +5,47 @@ export const dashboardCards = [
         title: 'Empleados',
         description: 'Gestiona los empleados de la empresa.',
         icon: Users,
-        route: '/dashboard/users'
+        route: '/dashboard/users',
+        roles: ['admin']
     },
     {
         title: 'Vacaciones',
-        description: 'Gestiona tus vacaciones y solicita días libres.',
+        description: 'Gestion de vacaciones y permisos.',
         icon: BookOpen,
-        route: 'vacaciones'
+        route: '/dashboard/permissions',
+        roles: ['admin', 'employee']
     },
-    {
-        title: 'Horarios',
-        description: 'Revisa tus turnos, horas de entrada y salida.',
-        icon: Calendar1,
-        route: 'horarios'
-    },
-    {
-        title: 'Actividades',
-        description: 'Revisa y gestiona actividades asignadas.',
-        icon: NotebookPen,
-        route: 'actividades'
-    },
+    // {
+    //     title: 'Horarios',
+    //     description: 'Revisa tus turnos, horas de entrada y salida.',
+    //     icon: Calendar1,
+    //     route: 'horarios'
+    // },
+    // {
+    //     title: 'Actividades',
+    //     description: 'Revisa y gestiona actividades asignadas.',
+    //     icon: NotebookPen,
+    //     route: 'actividades'
+    // },
     {
         title: 'Bolleria',
         description: 'Estado de la bolleria en apertura, mediodía y cierre.',
         icon: Coffee,
-        route: 'bolleria'
+        route: '/dashboard/bakery',
+        roles: ['admin', 'employee']
     },
     {
         title: 'Cierre',
         description: 'Temperaturas, actividades, lista de cierre.',
         icon: MonitorX,
-        route: 'cierre'
-    }
+        route: '/dashboard/close',
+        roles: ['admin', 'employee']
+    },
+    //{
+    //    title: 'Menú',
+    //    description: 'Gestión del menú de productos disponibles.',
+    //    icon: MonitorX,
+    //    route: '/dashboard/menu',
+    //    roles: ['admin', 'employee']
+    // }
 ];

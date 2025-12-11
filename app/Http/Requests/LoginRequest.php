@@ -22,7 +22,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'document' => 'required|numeric',
+            'document' => 'required',
             'password' => 'required'
         ];
     }
@@ -30,7 +30,6 @@ class LoginRequest extends FormRequest
     public function messages(){
         return [
             'document.required' => 'El DNI es obligatorio',
-            'document.numeric' => 'Los datos ingresados no corresponden a un DNI',
             'password.required' => 'La contraseña es obligatoria',
         ];
     }

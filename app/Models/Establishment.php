@@ -15,4 +15,8 @@ class Establishment extends Model
         return $this->HasMany(User::class);
     }
 
+    public function refrigerator(): HasOne{
+        return $this->HasOne(Refrigerator::class);
+    }
+
 }
