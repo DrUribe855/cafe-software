@@ -1,9 +1,12 @@
 <script setup>
 import PermissionForm from '../../../components/Dashboard/Permissions/Employee/PermissionForm.vue';
 import PermissionsList from '../../../components/Dashboard/Permissions/Employee/PermissionsList.vue';
+import CalendarTemplate from '../../../components/Dashboard/Permissions/Administrator/CalendarTemplate.vue';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '../../../stores/userStore';
 
 const router = useRouter();
+const store = useUserStore();
 
 const goBack = () => {
     router.back();
@@ -20,13 +23,16 @@ const goBack = () => {
             <span class="hidden md:inline text-sm font-medium">Volver</span>
             </button>
         </div>
-        <div class="flex flex-col md:flex-row justify-center">
+        <div v-if="store.user.role !== 'admin'"class="flex flex-col md:flex-row justify-center">
             <section class="md:w-1/2 bg-white m-[1.5em] md:m-[1em] rounded-xl mb-0 shadow-lg">
                 <PermissionForm/>
             </section>
             <section class="md:w-1/2 bg-white m-[1.5em] md:m-[1em] rounded-xl mb-0 shadow-lg">
                 <PermissionsList/>
             </section>
+        </div>
+        <div>
+            <CalendarTemplate/>
         </div>
     </div>
 </template>

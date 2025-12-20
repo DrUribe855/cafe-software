@@ -28,46 +28,44 @@ onMounted( async () => {
 
 
 <template>
-    <nav class="flex items-center h-15 px-4 bg-white shadow-xs mb-5">
-        <!-- Primer item a la izquierda -->
-        <div class="flex-shrink-5 text-sm md:text-base leading-tight"></div>
-        <!-- Bienvenida en PC -->
-        <p class="hidden md:block font-semibold text-lg">¡Bienvenido {{userStore.user.name}}!</p>
-        <!-- Bienvenida en móviles -->
-        <div class="block md:hidden">
-            <p class="font-bold text-lg pl-1">¡Bienvenido</p>
-            <p class="font-bold text-base">{{ userStore.user.name }}!</p>
+    <nav class="flex items-center justify-between h-15 px-4  py-3 bg-white shadow-xs mb-5 w-full">
+        
+        <!-- Izquierda -->
+        <div class="flex flex-col">
+            <p class="font-semibold text-sm lg:text-lg">¡Bienvenido!</p>
+            <p class="font-semibold text-sm lg:text-lg truncate">{{ userStore.user.name.split(' ')[0] }}
+</p>
         </div>
 
-    <!-- Espaciador para empujar lo demás a la derecha -->
-    <div class="flex-15"></div>
+        
 
-    <!-- Items a la derecha -->
-    <div class="flex items-center gap-4">
-        <select
-            @change="changeStore"
-            v-if="userStore.user.role == 'admin'"
-            class="border rounded-lg px-4 py-2 text-sm shadow-sm"
-            name="store"
-            id="store"
-        >
-            <option disabled selected>Tienda</option>
-            <option
-                v-for="store in stores" 
-                :value="store.id"
-                :key="store.id"
+        <!-- Derecha -->
+
+        <div class="flex items-center gap-3 flex-shrink-0">
+
+            <select 
+                @change="changeStore"
+                v-if="userStore.user.role === 'admin'"
+                class="border rounded-lg px-3 py-1.5 text-sm shadow-sm max-w-[120px] truncate"
+                name="store" 
+                id="store"
             >
-                {{ store.name }}
-            </option>
-        </select>
-
-    <!-- Botón cerrar sesión -->
-    <button @click="authComposable.logout()" class="flex items-center gap-2 bg-red-500 text-white px-3 py-1.5 rounded-md hover:bg-red-600 transition">
-      <!-- Icono para dispositivos móviles -->
-      <ArrowRightOnRectangleIcon class="w-7 h-7"/>
-      <span class="hidden md:inline text-sm font-medium">Cerrar sesión</span>
-    </button>
-
-    </div>
+                <option disabled selected>Tienda</option>
+                <option
+                    v-for="store in stores" 
+                    :value="store.id"
+                    :key="store.id"
+                >
+                    {{ store.name }}
+                </option>
+            </select>
+            <button 
+                @click="authComposable.logout()" 
+                class="flex items-center gap-2 bg-red-500 text-white px-3 py-1.5 rounded-md hover:bg-red-600 transition flex-shrink-0"
+            >
+                <ArrowRightOnRectangleIcon class="w-7 h-7" />
+                <span class="hidden md:inline text-sm font-medium">Cerrar sesión</span>
+            </button>
+        </div>
   </nav>
 </template>

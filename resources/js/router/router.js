@@ -28,7 +28,7 @@ const routes = [
             { path: 'bakery', name: 'bakery', component: BakeryView, meta: { roles: ['admin', 'employee'] } }, 
             { path: 'close', name: 'close', component: CloseView, meta: { roles: ['admin', 'employee'] } },
            // { path: 'menu', name: 'menu', component: Menu, meta: { roles: ['admin', 'employee'] } },
-           // { path: 'permissions', name: 'permissions', component: PermissionsView, meta: { roles: ['admin', 'employee'] } },
+           { path: 'permissions', name: 'permissions', component: PermissionsView, meta: { roles: ['admin', 'employee'] } },
         ],
         meta: { requiresAuth: true, roles: ['admin', 'employee'] }
     }
