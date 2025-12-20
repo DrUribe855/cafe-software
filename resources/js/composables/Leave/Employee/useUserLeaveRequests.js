@@ -50,6 +50,8 @@ export function useUserLeaveRequests(){
 
     /* Valida el contenido de errors para confirmar si se detectó error o no en los campos */
 
+    /* Valida el contenido de errors para confirmar si se detectó error o no en los campos */
+
     const hasErrors = computed(() =>
         Object.values(errors.value).some(error => error !== '')
     );
@@ -91,6 +93,7 @@ export function useUserLeaveRequests(){
             hideLoader();
         }
     }
+
 
     /* Funcion para traer los permisos o vacaciones del usuario logueado */
 
