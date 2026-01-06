@@ -58,9 +58,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware(['role:admin'])->group(function (){
         Route::get('/establishments/{id}/leave-requests', [LeaveRequestController::class, 'fetchLeaveRequestsPerEstablishment']);
+        Route::get('/establishments/{id}/leave-requests/sum', [LeaveRequestController::class, 'getRequestSum']);
+        Route::patch('/leave-requests/{id}', [LeaveRequestController::class, 'saveRequestResponse']);
     });
-    
-    
+
 });
 
 /* -------------------------------- Rutas de establecimientos -------------------------------- */
@@ -71,7 +72,7 @@ Route::get('/establishments', [EstablishmentController::class, 'fetchStores']);
 
 /* -------------------------------- Rutas de carta/menu -------------------------------- */
 Route::prefix('menu')->group(function () {
-    
+
     // Categorias
     Route::get('/categories', [\App\Http\Controllers\Menu\CategoryController::class, 'index']);
     Route::post('/categories', [\App\Http\Controllers\Menu\CategoryController::class, 'store']);

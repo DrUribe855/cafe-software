@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LeaveRequest;
 use App\Models\LeaveRequest as Leave;
 use App\Models\Establishment;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class LeaveRequestController extends Controller
@@ -59,16 +62,16 @@ class LeaveRequestController extends Controller
         }
     }
 
+    /* Función para obtener solicitudes de permisos por establecimiento */
     public function fetchLeaveRequestsPerEstablishment(Request $request, $id){
         try{
 
+            /* Asignación de variables */
             $establishmentExists = Establishment::find($id);
-
             $month = $request->month;
+            $year  = $request->year;
 
-            $startOfMonth = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
-            $endOfMonth   = Carbon::createFromFormat('Y-m', $month)->endOfMonth();
-
+            /* Validamos que el establecimiento exista */
             if(!$establishmentExists){
                 return response()->json([
                     'message' => 'El establecimiento suministrado no existe',
@@ -78,13 +81,17 @@ class LeaveRequestController extends Controller
             $leaveRequests = Leave::whereHas('user', function($query) use ($id) {
                 $query->where('establishment_id', $id);
             })
-            ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
-            ->with('user:id,name')
+            ->whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
+            ->with('user:id,name',
+                   'approver:id,name')
             ->get();
 
             return response()->json([
                 'message' => 'Solicitudes obtenidas con éxitos',
-                'requests' => $leaveRequests
+                'requests' => $leaveRequests,
+                'month' => $month,
+                'year' => $year,
             ], 200);
 
         }catch(\Exception $e){
@@ -92,6 +99,83 @@ class LeaveRequestController extends Controller
                 'message' => 'Error al obtener las solicitudes',
                 'error' => $e->getMessage(),
             ], 400);
+        }
+    }
+
+    public function saveRequestResponse(Request $request, $id){
+
+        try{
+            $sentRequest = Leave::find($id);
+            $approvedBy  = Auth::id();
+            $approvedAt  = Carbon::now();
+
+            if(!$sentRequest){
+                return response()->json([
+                    'message' => 'No se encontró una solicitud vinculada a ese ID'
+                ], 404);
+            }
+
+            $sentRequest->status = $request->response;
+            $sentRequest->approved_by = $approvedBy;
+            $sentRequest->approved_at = $approvedAt->format('Y-m-d H:i:s');
+
+            if($sentRequest){
+                $sentRequest->comments = $request->comment;
+            }
+
+            $sentRequest->save();
+
+            return response()->json([
+                'message' => 'La respuesta se ha registrado con éxito',
+                'request' => $sentRequest
+            ], 200);
+
+        }catch(Exception $e){
+            Log::error('Error registrando respuesta de solicitud de permiso: ' . $e->getMessage());
+
+            return response()->json([
+                'message' => 'Error al registrar respuesta de solicitud',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getRequestSum(Request $request, $id){
+        try{
+            $establishmentExists = Establishment::find($id);
+            $month = $request->month;
+            $year  = $request->year;
+
+            if(!$establishmentExists){
+                return response()->json([
+                    'message' => 'Ocurrió un error con el ID del establecimiento'
+                ]);
+            }
+
+            $leaveStats = Leave::whereHas('user', function($query) use ($id) {
+                $query->where('establishment_id', $id);
+            })
+            ->whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
+            ->selectRaw('
+                COUNT(*) as total,
+                SUM(CASE WHEN status = "Pendiente" THEN 1 ELSE 0 END) as pendings,
+                SUM(CASE WHEN status = "Aprobado" THEN 1 ELSE 0 END) as approved,
+                SUM(CASE WHEN status = "Rechazado" THEN 1 ELSE 0 END) as rejected
+            ')
+            ->first();
+
+            return response()->json([
+                'message'    => 'Suma de peticiones generada con éxito',
+                'sumRequest' => $leaveStats
+            ], 200);
+
+        }catch(Exception $e){
+            Log::error('Error generando la suma de las solicitudes: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Error generando la suma de las solicitudes',
+                'error'   => $e->getMessage(),
+            ], 500);
         }
     }
 }
