@@ -15,8 +15,8 @@ const emits = defineEmits(['update:search', 'update:status', 'prev', 'next']);
 <template>
     <div class="flex flex-wrap gap-3 mb-6 bg-white border-t border-gray-200 shadow-md rounded-lg p-3">
         <div class="px-3 py-2 flex gap-2">
-            <ChevronLeft @click="$emit('prev')" />
-            <ChevronRight @click="$emit('next')" />
+            <ChevronLeft  @click="$emit('prev', 1)" />
+            <ChevronRight @click="$emit('next', 1)" />
         </div>
         <input
             type="text"

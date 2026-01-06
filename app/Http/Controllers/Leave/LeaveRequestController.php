@@ -40,19 +40,30 @@ class LeaveRequestController extends Controller
         }
     }
 
-    public function fetchLeaveRequestsPerUser(Request $request){
+    public function fetchLeaveRequestsPerUser(Request $request, $id){
+
+        $month = $request->month;
+        $year  = $request->year;
 
         try{
 
-            $leaveRequests = Leave::where('user_id', auth()->user()->id)
+            if(!$id){
+                return response()->json([
+                    'message' => 'Ocurrio un error con el ID del usuario',
+                ]);
+            }
+
+            $leaveRequests = Leave::where('user_id', $id)
+                ->whereYear ('created_at', $year)
+                ->whereMonth('created_at', $month)
                 ->orderBy('created_at', 'desc')
                 ->get();
 
             return response()->json([
                 'message'  => 'Solicitudes obtenidas con éxito',
                 'status'   => true,
-                'requests' => $leaveRequests
-            ]);
+                'requests' => $leaveRequests,
+            ], 200);
 
         }catch(\Exception $e){
             return response()->json([
