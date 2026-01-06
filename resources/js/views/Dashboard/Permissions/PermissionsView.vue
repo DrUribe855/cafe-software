@@ -23,7 +23,7 @@ const goBack = () => {
             <span class="hidden md:inline text-sm font-medium">Volver</span>
             </button>
         </div>
-        <div v-if="store.user.role !== 'admin'"class="flex flex-col md:flex-row justify-center">
+        <div v-if="store.user.role !== 'admin' && store.user.role"class="flex flex-col md:flex-row justify-center items-start">
             <section class="md:w-1/2 bg-white m-[1.5em] md:m-[1em] rounded-xl mb-0 shadow-lg">
                 <PermissionForm/>
             </section>
@@ -31,7 +31,7 @@ const goBack = () => {
                 <PermissionsList/>
             </section>
         </div>
-        <div>
+        <div v-if="store.user.role === 'admin' && store.user.role">
             <CalendarTemplate/>
         </div>
     </div>

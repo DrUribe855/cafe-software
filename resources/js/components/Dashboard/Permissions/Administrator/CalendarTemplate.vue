@@ -1,12 +1,12 @@
 <script setup>
 import { onMounted } from 'vue';
-import SummaryCard from './SummaryCard.vue';
-import Loader from '../../../Loader.vue';
-import RequestCard from './RequestCard.vue';
-import LeaveFilters from './LeaveFilters.vue';
+import SummaryCard   from './SummaryCard.vue';
+import Loader        from '../../../Loader.vue';
+import RequestCard   from './RequestCard.vue';
+import LeaveFilters  from './LeaveFilters.vue';
 import LeaveCalendar from './LeaveCalendar.vue';
 import { Calendar, Clock, CircleCheck, CircleX } from 'lucide-vue-next';
-import { useLeaveRequests } from '../../../../composables/Leave/useLeaveRequests';
+import { useAdminLeaveRequests } from '../../../../composables/Leave/Administrator/useAdminLeaveRequests';
 import { useDateFilter } from '../../../../composables/DateFilters/useDateFilter';
 import { useLoader } from '../../../../composables/useLoader';
 import { useLeaveRequestsStore } from '../../../../stores/LeaveRequests/Administrator/useLeaveRequestStore';
@@ -23,7 +23,7 @@ const {
     selectedRequest,
     isModalOpen,
     sendRequestResponse
-} = useLeaveRequests();
+} = useAdminLeaveRequests();
 const { currentDate, previousMonth, nextMonth } = useDateFilter();
 const { isLoading } = useLoader();
 const leaveRequestStore = useLeaveRequestsStore();

@@ -1,22 +1,16 @@
 import { ref } from 'vue';
-import { useLeaveRequests } from '../Leave/useLeaveRequests';
 
 const currentDate = ref(new Date());
 
-
 export function useDateFilter(){
 
-    const { fetchMonthData } = useLeaveRequests();
 
     const previousMonth = () => {
-        currentDate.value.setMonth(currentDate.value.getMonth() - 1);
-        fetchMonthData(currentDate.value);
+        currentDate.value = new Date( currentDate.value.getFullYear(), currentDate.value.getMonth() - 1, 1);
     }
 
     const nextMonth = () => {
-        console.log('Next month clicked');
-        currentDate.value.setMonth(currentDate.value.getMonth() + 1);
-        fetchMonthData(currentDate.value);
+        currentDate.value = new Date( currentDate.value.getFullYear(), currentDate.value.getMonth() + 1, 1);
     }
 
     return{
