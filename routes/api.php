@@ -48,8 +48,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware(['role:admin'])->delete('/closing-logs/{id}', [CloseController::class, 'destroy']);
     Route::middleware(['role:admin'])->put('/refrigerators/{id}/note', [RefrigeratorController::class, 'updateNote']);
 });
-<<<<<<< HEAD
-=======
 
 /* -------------------------------- Rutas de permisos y vacaciones -------------------------------- */
 Route::middleware('auth:sanctum')->group(function () {
@@ -68,7 +66,6 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 /* -------------------------------- Rutas de establecimientos -------------------------------- */
->>>>>>> ed5d975... Desarrollo vista administrador módulo de permisos y rework login
 Route::get('/establishments', [EstablishmentController::class, 'fetchStores']);
 
 
