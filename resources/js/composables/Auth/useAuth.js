@@ -33,7 +33,6 @@ export function useAuth(){
 
             /* Asignación y desestructuración de objetos */
             const { data } = await axios.post('/api/login', { document, password});
-            console.log('respuesta de login', data);
             const { establishment_id } = data.user;
             const user = {
                 id: data.user.id,

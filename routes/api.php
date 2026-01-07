@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Refrigerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
@@ -7,8 +8,8 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Pastrie\PastrieController;
 use App\Http\Controllers\Close\CloseController;
 use App\Http\Controllers\EstablishmentController;
-use App\Models\Refrigerator;
 use App\Http\Controllers\Close\RefrigeratorController;
+use App\Http\Controllers\Leave\LeaveRequestController;
 
 
 /* -------------------------------- Rutas para inicio de sesión -------------------------------- */

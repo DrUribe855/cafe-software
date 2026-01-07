@@ -13,7 +13,6 @@ const establishmentStore = useEstablishmentStore();
 const { fetchCloseFiles, closeData } = useUploadClose();
 
 onMounted(() => {
-  loadCloseFiles();
   if (!establishmentStore.refrigeratorsLoaded) {
     establishmentStore.fetchRefrigerators();
   }

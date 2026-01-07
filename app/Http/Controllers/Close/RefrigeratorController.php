@@ -12,7 +12,7 @@ class RefrigeratorController extends Controller
     public function getById($id)
     {
         $refrigerators = Refrigerator::where('establishment_id', $id)
-            ->select('id', 'name','note')
+            ->select('id', 'name', 'note')
             ->get();
 
         return response()->json($refrigerators);
