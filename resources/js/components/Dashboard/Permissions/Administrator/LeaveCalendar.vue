@@ -1,9 +1,20 @@
 <script setup>
+import { computed } from 'vue';
 
 const props = defineProps({
     weekDays: Array,
     filteredRequests: Array,
+    date: Date,
 });
+
+const formattedDate = computed(() => {
+  const d = new Date(props.date)
+
+  return d.toLocaleDateString('es-ES', {
+    year: 'numeric',
+    month: 'long'
+  })
+})
 
 const emits = defineEmits(['openModal']);
 </script>
@@ -13,7 +24,7 @@ const emits = defineEmits(['openModal']);
         <div class="p-4">
             <!-- Titulo del calendario (Mes y año) -->
             <h2 class="text-xl font-bold mb-4">
-                test
+                {{ formattedDate }}
             </h2>
             <div class="relative md:overflow-visible overflow-x-auto scroll-smooth">
                 <div

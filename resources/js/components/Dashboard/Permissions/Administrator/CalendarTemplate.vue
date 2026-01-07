@@ -64,16 +64,33 @@ onMounted(() => {
         <LeaveCalendar
             :weekDays="weekDays"
             :filteredRequests="filteredRequests"
+            :date="currentDate"
             @openModal="openRequestModal"
         />
     </div>
 
     <!-- Modal para visualización de información de la petición -->
-    <RequestCard
-        v-if="isModalOpen"
-        :request="selectedRequest"
-        @close="closeRequestModal"
-        @sendResponse="sendRequestResponse"
-    />
+    <Transition name="request-modal">
+        <RequestCard
+            v-if="isModalOpen"
+            :request="selectedRequest"
+            @close="closeRequestModal"
+            @sendResponse="sendRequestResponse"
+        />
+    </Transition>
 
 </template>
+
+<style setup>
+
+    .request-modal-enter-active,
+    .request-modal-leave-active {
+        transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .request-modal-enter-from,
+    .request-modal-leave-to {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+</style>
