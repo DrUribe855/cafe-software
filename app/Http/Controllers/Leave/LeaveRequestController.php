@@ -14,9 +14,10 @@ use Carbon\Carbon;
 
 class LeaveRequestController extends Controller
 {
+    /* Función para creación de solicitud de permiso */
     public function storeLeaveRequest(LeaveRequest $request){
         try {
-
+            /* Se hace la respectiva inserción en tabla y se envía respuesta a front */
             $leaveRecord = Leave::create([
                 'user_id'    => auth()->user()->id,
                 'type'       => $request->type,
@@ -33,6 +34,8 @@ class LeaveRequestController extends Controller
             ], 201);
 
         }catch (\Exception $e) {
+            /* En caso de error se envía respuesta a front y se genera registro en log */
+            Log::error('Error creando solicitud de permiso: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error al validar la solicitud',
                 'error' => $e->getMessage(),

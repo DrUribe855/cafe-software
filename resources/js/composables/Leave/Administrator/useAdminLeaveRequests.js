@@ -12,7 +12,8 @@ export function useAdminLeaveRequests(){
 
     /* ============================= Declaración de variables ============================= */
 
-    const { code }  = useEstablishmentStore();
+    const establishmentStore  = useEstablishmentStore();
+    const { code } = storeToRefs(establishmentStore);
     const leaveRequestStore = useLeaveRequestsStore();
     const { requests } = storeToRefs(leaveRequestStore);
     const { showLoader, hideLoader } = useLoader();
@@ -26,11 +27,15 @@ export function useAdminLeaveRequests(){
         fetchMonthData(date);
     });
 
+    watch(code, newCode =>{
+        if(!newCode) return
+        fetchMonthData(currentDate.value);
+    })
+
+
     /* Variable computada para filtras solicitudes por usuario o tipo de solicitud */
     const filteredRequests = computed(() => {
         const search = employeeSearch.value.toLowerCase();
-
-        console.log('entro en computed')
 
         return (requests.value ?? []).map(day => ({
             ...day,
@@ -86,7 +91,8 @@ export function useAdminLeaveRequests(){
                 comment: comment
             });
 
-            console.log('Informacion insertada tras respuesta: ', data);
+            closeRequestModal();
+            await fetchMonthData(currentDate.value);
         }catch(error){
             console.log('Se ha producido un error', error.message);
         }finally{
@@ -99,14 +105,13 @@ export function useAdminLeaveRequests(){
 
     const getRequestSum = async (month, year) => {
         try{
-            const { data } = await axios.get(`/api/establishments/${code}/leave-requests/sum`, {
+            const { data } = await axios.get(`/api/establishments/${code.value}/leave-requests/sum`, {
                 params: {
                     month: month,
                     year: year
                 }
             });
 
-            console.log('Respuesta de suma de peticiones', data);
             leaveRequestStore.setSumRequests(data.sumRequest);
         }catch(error){
             console.log('Ocurrió un error al traer la suma de las peticiones', error);
@@ -184,7 +189,7 @@ export function useAdminLeaveRequests(){
         getRequestSum(month, year);
 
         try{
-            const { data } = await axios.get(`/api/establishments/${code}/leave-requests`, {
+            const { data } = await axios.get(`/api/establishments/${code.value}/leave-requests`, {
                 params: {
                     month: month,
                     year: year,
