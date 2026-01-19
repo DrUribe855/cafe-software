@@ -60,19 +60,23 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/establishments', [EstablishmentController::class, 'fetchStores']);
 
 
-
 /* -------------------------------- Rutas de carta/menu -------------------------------- */
-Route::prefix('menu')->group(function () {
-    
-    // Categorias
-    Route::get('/categories', [\App\Http\Controllers\Menu\CategoryController::class, 'index']);
-    Route::post('/categories', [\App\Http\Controllers\Menu\CategoryController::class, 'store']);
-    Route::put('/categories/{id}', [\App\Http\Controllers\Menu\CategoryController::class, 'update']);
-    Route::delete('/categories/{id}', [\App\Http\Controllers\Menu\CategoryController::class, 'destroy']);
 
-    // Productos
-    Route::get('/products', [\App\Http\Controllers\Menu\ProductController::class, 'index']);
-    Route::post('/products', [\App\Http\Controllers\Menu\ProductController::class, 'store']);
-    Route::put('/products/{id}', [\App\Http\Controllers\Menu\ProductController::class, 'update']);
-    Route::delete('/products/{id}', [\App\Http\Controllers\Menu\ProductController::class, 'destroy']);
-    });
+// Categorías 
+Route::get('/menu/categories', [\App\Http\Controllers\Menu\CategoryController::class, 'index']);
+
+// Productos 
+Route::get('/menu/products', [\App\Http\Controllers\Menu\ProductController::class, 'index']);
+
+Route::middleware(['auth:sanctum'])->prefix('menu')->group(function () {
+
+    // Categorías
+    Route::middleware(['role:admin'])->post('/categories', [\App\Http\Controllers\Menu\CategoryController::class, 'store']);
+    Route::middleware(['role:admin'])->put('/categories/{id}', [\App\Http\Controllers\Menu\CategoryController::class, 'update']);
+    Route::middleware(['role:admin'])->delete('/categories/{id}', [\App\Http\Controllers\Menu\CategoryController::class, 'destroy']);
+
+    // Productos 
+    Route::middleware(['role:admin'])->post('/products', [\App\Http\Controllers\Menu\ProductController::class, 'store']);
+    Route::middleware(['role:admin'])->put('/products/{id}', [\App\Http\Controllers\Menu\ProductController::class, 'update']);
+    Route::middleware(['role:admin'])->delete('/products/{id}', [\App\Http\Controllers\Menu\ProductController::class, 'destroy']);
+});

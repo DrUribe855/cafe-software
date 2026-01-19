@@ -1,47 +1,31 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
-import Swal from "sweetalert2";
+import { useMenuCategories, useMenuProducts } from "/resources/js/composables/Pastrie/useMenu.js";
+import MenuUploaderImage from "@/components/Dashboard/Menu/MenuUploaderImage.vue";
+import { Trash } from "lucide-vue-next";
 
-const categories = ref([]);
-const products = ref([]);
+const { categories, fetchCategories } = useMenuCategories();
+const { products, fetchProducts, saveProduct, deleteProduct } = useMenuProducts();
+
 const selectedCategory = ref("");
-
 const isEditing = ref(false);
+
 const form = ref({
   id: null,
   category_id: "",
   name: "",
   description: "",
   price: "",
-  image: null,
+  image_url: null,
   tag: "",
+  custom_tags: [],
   recommended: false,
 });
 
+const newCustomTag = ref("");
 
-const fetchCategories = async () => {
-  try {
-    const res = await axios.get("/api/menu/categories");
-    categories.value = res.data;
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-
-const fetchProducts = async () => {
-  if (!selectedCategory.value) return;
-  try {
-    const res = await axios.get(`/api/menu/products/${selectedCategory.value}`);
-    products.value = res.data;
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-const handleImage = (e) => {
-  form.value.image = e.target.files[0];
+const onImageSelected = (file) => {
+  form.value.image_url = file;
 };
 
 const resetForm = () => {
@@ -51,42 +35,37 @@ const resetForm = () => {
     name: "",
     description: "",
     price: "",
-    image: null,
+    image_url: null,
     tag: "",
+    custom_tags: [],
     recommended: false,
   };
+  newCustomTag.value = "";
   isEditing.value = false;
 };
 
-const saveProduct = async () => {
-  if (!form.value.name || !form.value.price) {
-    Swal.fire("Campos obligatorios", "Nombre y precio son requeridos", "warning");
-    return;
-  }
-
-  const payload = new FormData();
-  Object.entries(form.value).forEach(([key, value]) => {
-    payload.append(key, value);
-  });
-
-  try {
-    if (isEditing.value) {
-      await axios.post(`/api/menu/products/update/${form.value.id}`, payload);
-      Swal.fire("Actualizado", "Producto actualizado correctamente", "success");
-    } else {
-      await axios.post("/api/menu/products", payload);
-      Swal.fire("Creado", "Producto creado correctamente", "success");
-    }
-
-    fetchProducts();
-    resetForm();
-  } catch (e) {
-    console.error(e);
-    Swal.fire("Error", "Hubo un problema guardando el producto", "error");
+const loadProducts = () => {
+  if (selectedCategory.value) {
+    fetchProducts(selectedCategory.value);
+  } else {
+    products.value = [];
   }
 };
 
-const editProduct = (p) => {
+const save = async () => {
+  form.value.category_id = selectedCategory.value;
+
+  const payload = {
+    ...form.value,
+    custom_tags: Array.isArray(form.value.custom_tags) ? form.value.custom_tags.join(",") : form.value.custom_tags ?? "",
+  };
+
+  await saveProduct(payload, isEditing.value);
+  await loadProducts();
+  resetForm();
+};
+
+const edit = (p) => {
   isEditing.value = true;
   form.value = {
     id: p.id,
@@ -94,146 +73,202 @@ const editProduct = (p) => {
     name: p.name,
     description: p.description,
     price: p.price,
-    image: null,
+    image_url: p.image_url,
     tag: p.tag,
+    custom_tags: p.custom_tags ? p.custom_tags.split(",").map(t => t.trim()) : [],
     recommended: p.recommended,
   };
 };
 
-// Eliminar
-const deleteProduct = async (id) => {
-  const confirm = await Swal.fire({
-    title: "¿Eliminar producto?",
-    text: "No podrás deshacer esta acción",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "Eliminar",
-  });
-
-  if (!confirm.isConfirmed) return;
-
-  try {
-    await axios.delete(`/api/menu/products/${id}`);
-    fetchProducts();
-    Swal.fire("Eliminado", "Producto eliminado", "success");
-  } catch (e) {
-    console.error(e);
-    Swal.fire("Error", "No se pudo eliminar", "error");
-  }
+const remove = async (id) => {
+  await deleteProduct(id);
+  await loadProducts();
 };
 
-onMounted(() => {
-  fetchCategories();
-});
+const addCustomTag = () => {
+  if (!newCustomTag.value.trim()) return;
+  form.value.custom_tags.push(newCustomTag.value.trim());
+  newCustomTag.value = "";
+};
+
+const removeCustomTag = (index) => {
+  form.value.custom_tags.splice(index, 1);
+};
+
+onMounted(fetchCategories);
 </script>
 
 <template>
-  <section class="p-6">
+  <section class="flex flex-col gap-4 p-4 mt-3 bg-white shadow-sm rounded-lg mb-4">
+    <h1 class="text-lg md:text-xl font-bold text-slate-800 border-l-4 border-sky-400 pl-3">
+      Administración de productos
+    </h1>
 
-    <h1 class="text-2xl font-bold mb-6">Administración de Productos</h1>
-
-    <!-- Seleccionar categoría -->
-    <div class="mb-6">
-      <label class="font-semibold text-gray-700">Seleccionar categoría:</label>
+    <div class="flex flex-col sm:flex-row sm:items-center gap-2 mt-3 md:mt-0">
+      <label class="text-base font-semibold text-slate-700">Seleccionar categoría:</label>
       <select
         v-model="selectedCategory"
-        @change="fetchProducts"
-        class="p-2 border rounded w-64"
+        @change="loadProducts"
+        class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
       >
-        <option value="">Seleccione…</option>
+        <option disabled value="">Seleccionar categoría</option>
         <option v-for="cat in categories" :key="cat.id" :value="cat.id">
           {{ cat.name }}
         </option>
       </select>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="bg-white p-5 rounded-lg shadow">
-        <h2 class="font-bold text-lg mb-4">
-          {{ isEditing ? "Editar producto" : "Nuevo producto" }}
+    <div class="flex flex-col sm:flex-row gap-6 mt-4">
+      <div class="flex-1">
+        <h2 class="text-base font-semibold text-slate-700 mb-3">
+          {{ isEditing ? "Editar producto" : "Añadir nuevo producto" }}
         </h2>
 
         <div class="flex flex-col gap-3">
-
           <input
             type="text"
             v-model="form.name"
             placeholder="Nombre"
-            class="p-2 border rounded"
+            class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
           />
 
           <textarea
             v-model="form.description"
             placeholder="Descripción"
-            class="p-2 border rounded"
-          ></textarea>
+            class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+          />
 
           <input
             type="number"
             v-model="form.price"
             placeholder="Precio (€)"
-            class="p-2 border rounded"
+            class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
           />
 
-          <select v-model="form.tag" class="p-2 border rounded">
-            <option value="">Etiqueta…</option>
+          <select
+            v-model="form.tag"
+            class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+          >
+            <option disabled value="">Seleccionar etiqueta</option>
             <option value="dulce">Dulce</option>
             <option value="salado">Salado</option>
             <option value="frio">Frío</option>
             <option value="especialidad">Especialidad</option>
           </select>
 
-          <label class="flex items-center gap-2">
-            <input type="checkbox" v-model="form.recommended" />
-            <span>Recomendado</span>
+          <div>
+            <label class="text-sm font-semibold text-slate-700 mb-1 block">
+              Etiquetas personalizadas
+            </label>
+
+            <div class="flex gap-2">
+              <input
+                type="text"
+                v-model="newCustomTag"
+                @keyup.enter="addCustomTag"
+                placeholder="Ej: Contiene maní"
+                class="flex-1 p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+              />
+              <button
+                type="button"
+                @click="addCustomTag"
+                class="px-3 rounded-lg bg-sky-500 text-white hover:bg-sky-400 transition"
+              >
+                Añadir
+              </button>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mt-2">
+              <span
+                v-for="(tag, index) in form.custom_tags"
+                :key="index"
+                class="flex items-center gap-2 bg-sky-100 text-sky-700 text-xs px-3 py-1 rounded-full"
+              >
+                {{ tag }}
+                <button
+                  type="button"
+                  @click="removeCustomTag(index)"
+                  class="text-sky-500 hover:text-sky-700"
+                >
+                  ×
+                </button>
+              </span>
+            </div>
+          </div>
+
+          <label class="flex items-center gap-3 cursor-pointer select-none">
+            <span class="text-sm font-medium text-slate-700">
+              Producto recomendado
+            </span>
+            <div class="relative">
+              <input type="checkbox" v-model="form.recommended" class="sr-only" />
+              <div
+                class="w-10 h-5 bg-gray-300 rounded-full transition"
+                :class="form.recommended ? 'bg-sky-500' : 'bg-gray-300'"
+              ></div>
+              <div
+                class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition"
+                :class="form.recommended ? 'translate-x-5' : ''"
+              ></div>
+            </div>
           </label>
 
-          <input type="file" @change="handleImage" />
+          <MenuUploaderImage @selected="onImageSelected" />
 
           <button
-            @click="saveProduct"
-            class="bg-blue-600 text-white px-4 py-2 rounded mt-3"
+            @click="save"
+            class="self-center bg-sky-500 hover:bg-sky-400 text-white font-medium px-3 py-1 rounded transition"
           >
-            {{ isEditing ? "Actualizar" : "Crear" }}
+            {{ isEditing ? "Actualizar" : "Añadir producto" }}
           </button>
 
           <button
             v-if="isEditing"
             @click="resetForm"
-            class="text-gray-600 text-sm mt-2 underline"
+            class="self-center bg-red-500 hover:bg-red-400 text-white font-medium px-3 py-1 rounded transition"
           >
             Cancelar edición
           </button>
         </div>
       </div>
 
-      <div class="bg-white p-5 rounded-lg shadow">
-        <h2 class="font-bold text-lg mb-4">Productos</h2>
+      <div class="flex-1 bg-white p-5 rounded-lg shadow max-h-[520px] overflow-y-auto">
+        <h2 class="font-bold text-lg mb-4 border-b pb-2">Productos creados</h2>
 
-        <div v-if="!products.length" class="text-gray-500">
+        <div v-if="!products.length" class="text-gray-500 italic">
           No hay productos para esta categoría.
         </div>
 
-        <div v-for="p in products" :key="p.id" class="flex items-center justify-between border-b py-3">
-          <div>
-            <p class="font-semibold">{{ p.name }}</p>
-            <p class="text-sm text-gray-600">{{ p.price }} €</p>
-            <p class="text-xs text-gray-500">{{ p.tag }}</p>
-          </div>
+        <div class="grid gap-4 sm:grid-cols-2 mt-4">
+          <div
+            v-for="p in products"
+            :key="p.id"
+            class="group bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md hover:border-sky-400 transition"
+          >
+            <div class="flex justify-between items-start gap-3">
+              <div>
+                <p class="font-semibold text-slate-800">Categoría: {{ p.category?.name }}</p>
+                <p class="font-semibold text-slate-800">Nombre: {{ p.name }}</p>
+                <p class="font-semibold text-gray-800">Precio: {{ p.price }} €</p>
+                <p class="font-semibold text-gray-800">Etiqueta: {{ p.tag }}</p>
+                <div v-if="p.custom_tags">
+                <p class="font-semibold text-gray-800">Alergenos: {{ p.custom_tags }}</p>
+                </div>
+              </div>
 
-          <div class="flex gap-2">
-            <button
-              @click="editProduct(p)"
-              class="px-2 py-1 bg-yellow-400 text-white rounded text-sm"
-            >
-              Editar
-            </button>
+              <button
+                @click="remove(p.id)"
+                class="p-1 text-red-500 hover:text-red-600 hover:bg-red-50 rounded transition"
+              >
+                <Trash />
+              </button>
+            </div>
 
             <button
-              @click="deleteProduct(p.id)"
-              class="px-2 py-1 bg-red-500 text-white rounded text-sm"
+              @click="edit(p)"
+              class="mt-3 text-sm text-sky-600 hover:underline"
             >
-              Eliminar
+              Editar producto
             </button>
           </div>
         </div>

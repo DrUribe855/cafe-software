@@ -16,6 +16,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->decimal('price', 8, 2);
             $table->string('tag')->nullable();
+            $table->string('custom_tags')->nullable();
             $table->string('image_url')->nullable();
             $table->boolean('recommended')->default(false);
             $table->timestamps();
