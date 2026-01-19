@@ -52,8 +52,18 @@ Route::middleware('auth:sanctum')->group(function () {
 
 /* -------------------------------- Rutas de permisos y vacaciones -------------------------------- */
 Route::middleware('auth:sanctum')->group(function () {
-    Route::middleware(['role:admin|employee'])->post('/leave-requests', [LeaveRequestController::class, 'storeLeaveRequest']);
-    Route::middleware(['role:admin|employee'])->get('/leave-requests', [LeaveRequestController::class, 'fetchLeaveRequestsPerUser']);
+
+    Route::middleware(['role:employee'])->group(function (){
+        Route::post('/leave-requests', [LeaveRequestController::class, 'storeLeaveRequest']);
+        Route::get('/leave-requests/{id}', [LeaveRequestController::class, 'fetchLeaveRequestsPerUser']);
+    });
+
+    Route::middleware(['role:admin'])->group(function (){
+        Route::get('/establishments/{id}/leave-requests', [LeaveRequestController::class, 'fetchLeaveRequestsPerEstablishment']);
+        Route::get('/establishments/{id}/leave-requests/sum', [LeaveRequestController::class, 'getRequestSum']);
+        Route::patch('/leave-requests/{id}', [LeaveRequestController::class, 'saveRequestResponse']);
+    });
+
 });
 
 /* -------------------------------- Rutas de establecimientos -------------------------------- */

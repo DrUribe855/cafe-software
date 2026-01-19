@@ -1,21 +1,21 @@
 <script setup>
 import { Send } from "lucide-vue-next";
-import { useLeaveRequests } from '../../../../composables/Leave/useLeaveRequests';
+import { useUserLeaveRequests } from '../../../../composables/Leave/Employee/useUserLeaveRequests';
 
-const { request, errors, touched, sendLeaveRequest } = useLeaveRequests();
+const { request, errors, touched, sendLeaveRequest } = useUserLeaveRequests();
 </script>
 
 <template>
-    <div class="m-3 mb-0 p-4 pb-4 ">
+    <div class="m-2 sm:m-3 p-3 sm:p-4">
         <!-- Encabezado formulario -->
         <section>
-            <div class="flex items-center">
-                <Send class="w-6 h-6 md:h-6 md:w-10 lg:h-7 lg:w-10"/>
-                <h1 class="ml-2 text-2xl md:text-2xl lg:text-3xl">Nueva solicitud</h1>
+            <div class="flex items-center gap-2">
+                <Send class="w-6 h-6 md:w-8 md:h-8"/>
+                <h1 class="text-base md:text-lg lg:text-2xl font-semibold">Nueva solicitud</h1>
 
             </div>
             <div class="mt-3">
-                <p class="text-sm md:text-md md:text-sm lg:text-lg text-gray-600">Completa el formulario para solicitar un permiso o vacaciones</p>
+                <p class="text-sm md:text-md lg:text-md text-gray-600">Completa el formulario para solicitar un permiso o vacaciones</p>
             </div>
         </section>
 
@@ -23,7 +23,7 @@ const { request, errors, touched, sendLeaveRequest } = useLeaveRequests();
         <form @submit.prevent="sendLeaveRequest">
             <div class="mt-5">
                 <div class="flex flex-col">
-                    <label for="type" class="text-md md:text-lg md:text-[1em]">Tipo de solicitud</label>
+                    <label for="type" class="text-md md:text-[1em]">Tipo de solicitud</label>
                     <select
                         name="type"
                         id="type"
@@ -37,13 +37,13 @@ const { request, errors, touched, sendLeaveRequest } = useLeaveRequests();
                     </select>
                     <span v-if="touched.type && errors.type" class="text-red-500 mt-2 text-sm">{{ errors.type }}</span>
                 </div>
-                <div class="flex mt-4">
-                    <div class="flex flex-col w-1/2 p-2 pl-0">
+                <div class="flex flex-col md:flex-row mt-4 gap-4">
+                    <div class="flex flex-col w-full md:w-1/2 gap-1">
                         <label for="start-date" class="text-sm md:text-[1em]">Fecha de inicio</label>
                         <input type="date" name="start-date" id="start-date" class="mt-2 border border-gray-300 rounded-lg p-2" v-model="request.startDate" @blur="touched.startDate = true">
                         <span v-if="touched.startDate && errors.startDate" class="text-red-500 mt-2 text-sm"> {{ errors.startDate }}</span>
                     </div>
-                    <div class="flex flex-col w-1/2 p-2 pl-0">
+                    <div class="flex flex-col w-full md:w-1/2 gap-1">
                         <label for="end-date" class="text-sm md:text-[1em]">Fecha de fin</label>
                         <input type="date" name="end-date" id="end-date" class="mt-2 border border-gray-300 rounded-lg p-2" v-model="request.endDate" @blur="touched.endDate = true">
                         <span v-if="touched.endDate && errors.endDate" class="text-red-500 mt-2 text-sm"> {{ errors.endDate }}</span>

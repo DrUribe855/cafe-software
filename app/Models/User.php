@@ -50,6 +50,10 @@ class User extends Authenticatable
         return $this->HasMany(PastrieLogs::class);
     }
 
+    public function leaveRequests(): HasMany {
+        return $this->HasMany(LeaveRequest::class);
+    }
+
 
 
 

@@ -26,7 +26,8 @@ const routes = [
             { path: 'users', name: 'users', component: UsersView, meta: { roles: 'admin' } },
             { path: 'bakery', name: 'bakery', component: BakeryView, meta: { roles: ['admin', 'employee'] } }, 
             { path: 'close', name: 'close', component: CloseView, meta: { roles: ['admin', 'employee'] } },
-            { path: 'menu/admin', name: 'menu-admin', component: MenuAdmin, meta: { roles: ['admin'] } }
+            { path: 'menu/admin', name: 'menu-admin', component: MenuAdmin, meta: { roles: ['admin'] } },
+            { path: 'permissions', name: 'permissions', component: PermissionsView, meta: { roles: ['admin', 'employee'] } },
         ],
         meta: { requiresAuth: true, roles: ['admin', 'employee'] }
     }
