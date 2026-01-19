@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\User;
 
 class LeaveRequest extends Model
 {
@@ -16,12 +14,4 @@ class LeaveRequest extends Model
         'reason',
         'status',
     ];
-
-    public function user(): BelongsTo {
-        return $this->belongsTo(User::class);
-    }
-
-    public function approver(): BelongsTo{
-        return $this->belongsTo(User::class, 'approved_by');
-    }
 }

@@ -52,37 +52,31 @@ Route::middleware('auth:sanctum')->group(function () {
 
 /* -------------------------------- Rutas de permisos y vacaciones -------------------------------- */
 Route::middleware('auth:sanctum')->group(function () {
-
-    Route::middleware(['role:employee'])->group(function (){
-        Route::post('/leave-requests', [LeaveRequestController::class, 'storeLeaveRequest']);
-        Route::get('/leave-requests/{id}', [LeaveRequestController::class, 'fetchLeaveRequestsPerUser']);
-    });
-
-    Route::middleware(['role:admin'])->group(function (){
-        Route::get('/establishments/{id}/leave-requests', [LeaveRequestController::class, 'fetchLeaveRequestsPerEstablishment']);
-        Route::get('/establishments/{id}/leave-requests/sum', [LeaveRequestController::class, 'getRequestSum']);
-        Route::patch('/leave-requests/{id}', [LeaveRequestController::class, 'saveRequestResponse']);
-    });
-
+    Route::middleware(['role:admin|employee'])->post('/leave-requests', [LeaveRequestController::class, 'storeLeaveRequest']);
+    Route::middleware(['role:admin|employee'])->get('/leave-requests', [LeaveRequestController::class, 'fetchLeaveRequestsPerUser']);
 });
 
 /* -------------------------------- Rutas de establecimientos -------------------------------- */
 Route::get('/establishments', [EstablishmentController::class, 'fetchStores']);
 
 
-
 /* -------------------------------- Rutas de carta/menu -------------------------------- */
-Route::prefix('menu')->group(function () {
 
-    // Categorias
-    Route::get('/categories', [\App\Http\Controllers\Menu\CategoryController::class, 'index']);
-    Route::post('/categories', [\App\Http\Controllers\Menu\CategoryController::class, 'store']);
-    Route::put('/categories/{id}', [\App\Http\Controllers\Menu\CategoryController::class, 'update']);
-    Route::delete('/categories/{id}', [\App\Http\Controllers\Menu\CategoryController::class, 'destroy']);
+// Categorías 
+Route::get('/menu/categories', [\App\Http\Controllers\Menu\CategoryController::class, 'index']);
 
-    // Productos
-    Route::get('/products', [\App\Http\Controllers\Menu\ProductController::class, 'index']);
-    Route::post('/products', [\App\Http\Controllers\Menu\ProductController::class, 'store']);
-    Route::put('/products/{id}', [\App\Http\Controllers\Menu\ProductController::class, 'update']);
-    Route::delete('/products/{id}', [\App\Http\Controllers\Menu\ProductController::class, 'destroy']);
+// Productos 
+Route::get('/menu/products', [\App\Http\Controllers\Menu\ProductController::class, 'index']);
+
+Route::middleware(['auth:sanctum'])->prefix('menu')->group(function () {
+
+    // Categorías
+    Route::middleware(['role:admin'])->post('/categories', [\App\Http\Controllers\Menu\CategoryController::class, 'store']);
+    Route::middleware(['role:admin'])->put('/categories/{id}', [\App\Http\Controllers\Menu\CategoryController::class, 'update']);
+    Route::middleware(['role:admin'])->delete('/categories/{id}', [\App\Http\Controllers\Menu\CategoryController::class, 'destroy']);
+
+    // Productos 
+    Route::middleware(['role:admin'])->post('/products', [\App\Http\Controllers\Menu\ProductController::class, 'store']);
+    Route::middleware(['role:admin'])->put('/products/{id}', [\App\Http\Controllers\Menu\ProductController::class, 'update']);
+    Route::middleware(['role:admin'])->delete('/products/{id}', [\App\Http\Controllers\Menu\ProductController::class, 'destroy']);
 });
