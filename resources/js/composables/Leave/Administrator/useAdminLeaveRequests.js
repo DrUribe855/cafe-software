@@ -40,17 +40,18 @@ export function useAdminLeaveRequests(){
         return (requests.value ?? []).map(day => ({
             ...day,
             requests: (day.requests ?? []).filter(r =>{
-                const matchName =
-                    !search || r.user.name.toLowerCase().includes(search);
+                const matchName = !search || r.user.name.toLowerCase().includes(search);
 
-                const matchStatus =
-                    !statusFilter.value || r.status === statusFilter.value;
+                const matchStatus = !statusFilter.value || r.status === statusFilter.value;
 
                 return matchName && matchStatus;
             }),
-            absences: (day.absences ?? []).filter(a =>
-                a.user.name.toLowerCase().includes(search)
-            )
+            absences: (day.absences ?? []).filter(a => {
+
+                const absenceMatchName   = !search || a.user.name.toLowerCase().includes(search);
+                const absenceMatchStatus = !statusFilter.value || statusFilter.value === 'Aprobado';
+                return absenceMatchName && absenceMatchStatus;
+            })
         }));
 
     });

@@ -62,23 +62,32 @@ const readOnly = computed(() => request.status !== 'Pendiente');
                     <div class="bg-slate-100 rounded-lg p-3">
                         <p class="text-xs text-slate-500">Fecha de Solicitud</p>
                         <p class="font-medium text-slate-800">
-                            {{ new Date(request.created_at).toLocaleDateString('es-CO')}}
+                            <!-- {{ new Date(request.created_at).toLocaleDateString('es-ES')}} -->
+                              {{ new Date(request.created_at).toISOString().slice(0, 10).split('-').join('-') }}
                         </p>
                     </div>
                 </div>
 
-                <!-- Periodo -->
-                <div class="bg-slate-100 rounded-lg p-3">
-                    <p class="text-xs text-slate-500">Período Solicitado</p>
-                    <p class="font-medium text-slate-800">
-                        {{ request.start_date }} — {{ request.end_date }}
-                    </p>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-slate-100 rounded-lg p-3">
+                        <p class="text-xs text-slate-500">Fecha de inicio</p>
+                        <p class="font-medium text-slate-800">
+                            {{ request.start_date }}
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-100 rounded-lg p-3">
+                        <p class="text-xs text-slate-500">Fecha de fin</p>
+                        <p class="font-medium text-slate-800">
+                            {{ request.end_date }}
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Motivo -->
                 <div v-if="request.reason" class="bg-slate-100 rounded-lg p-3">
                     <p class="text-xs text-slate-500">Motivo</p>
-                    <p class="text-slate-700">
+                    <p class="text-slate-700 text-xs/6">
                         {{ request.reason }}
                     </p>
                 </div>
@@ -86,8 +95,8 @@ const readOnly = computed(() => request.status !== 'Pendiente');
                 <!-- Información de aprobación -->
                 <div v-if="request.status !== 'Pendiente'" class="grid grid-cols-2 gap-3">
                     <div class="bg-slate-100 rounded-lg p-3">
-                        <p class="text-sm text-slate-500">Respuesta dada por</p>
-                        <p class="text-sm text-slate-800">
+                        <p class="text-xs text-slate-500">Respuesta dada por</p>
+                        <p class="text-xs/5 text-slate-800">
                             {{ request.approver.name }}
                         </p>
                     </div>
@@ -95,7 +104,7 @@ const readOnly = computed(() => request.status !== 'Pendiente');
                     <div class="bg-slate-100 rounded-lg p-3">
                         <p class="text-xs text-slate-500">Fecha de respuesta</p>
                         <p class="font-medium text-slate-800">
-                            {{ new Date(request.approved_at).toLocaleDateString('es-CO')}}
+                            {{ request.approved_at }}
                         </p>
                     </div>
                 </div>

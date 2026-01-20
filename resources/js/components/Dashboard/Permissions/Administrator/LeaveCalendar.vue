@@ -64,7 +64,7 @@ const emits = defineEmits(['openModal']);
                                             v-for="request in day.requests"
                                             @click="$emit('openModal', request)"
                                             :key="request.id"
-                                            class="text-xs rounded mb-1 flex p-1 border-l-4 bg-white"
+                                            class="text-xs rounded mb-1 flex p-1 border-l-4 bg-white cursor-pointer"
                                             :class="{
                                                 'border-orange-500 text-orange-600': request.status === 'Pendiente',
                                                 'border-green-500 text-green-600': request.status === 'Aprobado',
@@ -83,16 +83,14 @@ const emits = defineEmits(['openModal']);
                                         <div
                                             v-for="absence in day.absences"
                                             :key="absence.id"
-                                            class="text-xs rounded mb-1 flex p-1 border-l-4 bg-white"
+                                            class="text-xs rounded mb-1 flex p-1 border-l-4 bg-white cursor-default"
                                             :class="{
-                                                'border-orange-500 text-orange-600': absence.status === 'Pendiente',
-                                                'border-green-500 text-green-600': absence.status === 'Aprobado',
-                                                'border-red-500 text-red-600': absence.status === 'Rechazado'
+                                                'border-gray-400 text-gray-500'  : absence.status === 'Aprobado',
                                             }"
                                         >
                                             <div class="leading-tight">
                                                 {{ absence.user.name }}<br>
-                                                <span class="text-gray-500"> Ausente </span>
+                                                <span class="text-gray-500"> Ausente - {{ absence.type }} </span>
                                             </div>
                                         </div>
                                     </div>

@@ -73,12 +73,7 @@ watch(currentDate, (date) => {
         <template v-if="requests.length > 0">
             <PermissionCard
                 v-for="request in requests"
-                :key="request.id"
-                :type="request.type"
-                :startDate="request.start_date"
-                :endDate="request.end_date"
-                :reason="request.reason"
-                :status="request.status"
+                v-bind="request"
             />
         </template>
 

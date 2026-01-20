@@ -1,6 +1,6 @@
 <script setup>
 import { Send } from "lucide-vue-next";
-import { useUserLeaveRequests } from '../../../../composables/Leave/Employee/useUserLeaveRequests';
+import { useUserLeaveRequests } from '@/composables/Leave/Employee/useUserLeaveRequests';
 
 const { request, errors, touched, sendLeaveRequest } = useUserLeaveRequests();
 </script>

@@ -77,6 +77,7 @@ export function useUserLeaveRequests(){
             });
 
             requests.value.push(data.record);
+            clearVariables();
 
             alert('Registrado', 'Solicitud enviada con éxito', 'success');
 
@@ -108,11 +109,30 @@ export function useUserLeaveRequests(){
                 }
             });
             requests.value = data.requests;
+            console.log('Solicitudes obtenidas: ', requests.value);
         }catch(error){
             console.error('Error al obtener las solicitudes: ', error);
         }finally{
             hideLoader();
         }
+    }
+
+    const clearVariables = () => {
+        request.value = {
+            type:      '',
+            startDate: '',
+            endDate:   '',
+            reason:    '',
+        };
+
+        touched.value = {
+            type:      false,
+            startDate: false,
+            endDate:   false,
+            reason:    false,
+        };
+
+
     }
 
     return{

@@ -131,7 +131,7 @@ class LeaveRequestController extends Controller
 
             $sentRequest->status = $request->response;
             $sentRequest->approved_by = $approvedBy;
-            $sentRequest->approved_at = $approvedAt->format('Y-m-d H:i:s');
+            $sentRequest->approved_at = $approvedAt;
 
             if($sentRequest){
                 $sentRequest->comments = $request->comment;
@@ -141,7 +141,7 @@ class LeaveRequestController extends Controller
 
             return response()->json([
                 'message' => 'La respuesta se ha registrado con éxito',
-                'request' => $sentRequest
+                'request' => $sentRequest,
             ], 200);
 
         }catch(Exception $e){
