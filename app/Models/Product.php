@@ -15,25 +15,9 @@ class Product extends Model
         'description',
         'price',
         'tag',
-        'custom_tags',
-        'image_url',
+        'image',
         'recommended'
     ];
-
-    protected $appends = ['image_full_url'];
-
-    protected $casts = [
-        'recommended' => 'boolean',
-    ];
-
-    public function getImageFullUrlAttribute()
-    {
-        if (!$this->image_url) {
-            return null;
-        }
-
-        return asset('storage/' . $this->image_url);
-    }
 
     public function category()
     {
