@@ -47,6 +47,12 @@ class CloseController extends Controller
 
             $logs = $query->orderBy('created_at', 'desc')->get();
 
+            $logs->transform(function ($log) {
+                $cleanPath = str_replace('/storage/', '', $log->image_url);
+                $log->image_url = Storage::disk('public')->url($cleanPath);
+                return $log;
+            });
+
             return response()->json($logs, 200);
 
         } catch (\Exception $e) {
@@ -90,7 +96,7 @@ class CloseController extends Controller
                         'user_id' => $authUser->id,
                         'refrigerator_id' => $request->refrigerator_id,
                         'temperature' => $request->temperature,
-                        'image_url' => Storage::url($path),
+                        'image_url' => Storage::disk('public')->url($path),
                     ]);
                 }
             }
