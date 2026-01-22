@@ -2,8 +2,6 @@
 import { ref } from 'vue';
 import { useUploadClose } from '../../../composables/Pastrie/useUploadClose';
 import { alert } from '../../../composables/Pastrie/alert';
-import Swal from 'sweetalert2';
-import heic2any from "heic2any"
 
 
 const props = defineProps({
@@ -26,7 +24,7 @@ const isSelected = ref(false);
 const { uploadCloseFiles } = useUploadClose();
 
 async function handleFileUpload(file) {
-  if (!file) return null; 
+  if (!file) return null;
 
   if (file.type === "image/heic" || file.type === "image/heif") {
     const convertedBlob = await heic2any({
@@ -51,7 +49,7 @@ const fileSelected = async (event) => {
   if (!selected) return;
   file.value = await handleFileUpload(selected);
   isSelected.value = true;
-  
+
   console.log("Archivo seleccionado:", file.value);
 };
 

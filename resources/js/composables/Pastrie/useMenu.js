@@ -3,7 +3,7 @@ import axios from "axios";
 import { alert } from "./alert";
 import Swal from "sweetalert2";
 
-export function useMenuCategories() {
+export function useMenuCategorie() {
   const categories = ref([]);
   const loading = ref(false);
 
