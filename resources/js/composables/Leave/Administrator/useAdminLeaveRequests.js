@@ -137,7 +137,7 @@ export function useAdminLeaveRequests(){
 
             requestsByDay[createdDate].push(r);
 
-            
+
         });
 
         data.absences.forEach(a => {
@@ -151,6 +151,16 @@ export function useAdminLeaveRequests(){
 
             absencesByDay[dateKey].push(a);
         });
+
+        const firstDayOfMonth = new Date(year, month - 1, 1)
+        let startWeekDay = firstDayOfMonth.getDay() //  0  Domingo
+
+        // Convertimos a semana que empieza en LUNES
+        startWeekDay = startWeekDay === 0 ? 6 : startWeekDay - 1
+
+        for (let j = 0; j < startWeekDay; j++) {
+            mappedRequests.push(['']);
+        }
 
         /* Añadimos los datos indexados al array de solicitudes */
         for(let i = 1; i <= days; i++){
