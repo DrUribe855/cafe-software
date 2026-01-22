@@ -82,8 +82,6 @@ class LeaveRequestController extends Controller
 
             /* Asignación de variables */
             $establishmentExists = Establishment::find($id);
-            $month = $request->month;
-            $year  = $request->year;
 
             /* Validamos que el establecimiento exista */
             if(!$establishmentExists){
@@ -92,21 +90,79 @@ class LeaveRequestController extends Controller
                 ], 404);
             }
 
-            $leaveRequests = Leave::whereHas('user', function($query) use ($id) {
-                $query->where('establishment_id', $id);
-            })
-            ->whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->with('user:id,name',
-                   'approver:id,name')
-            ->get();
+            /* Generamos variables de fechas con formato correcto */
+            $monthStart = Carbon::create($request->year, $request->month, 1)->startOfDay();
+            $monthEnd   = $monthStart->copy()->endOfMonth()->endOfDay();
 
-            return response()->json([
-                'message' => 'Solicitudes obtenidas con éxitos',
-                'requests' => $leaveRequests,
-                'month' => $month,
-                'year' => $year,
-            ], 200);
+            /* Consulta para las peticiones CREADAS en x mes */
+            $createdRequests = Leave::whereHas('user', fn ($q) =>
+                    $q->where('establishment_id', $id)
+                )
+                ->whereBetween('created_at', [$monthStart, $monthEnd])
+                ->with('user:id,name', 'approver:id,name')
+                ->get();
+
+            /* Consulta para las peticiones APROBADAS en un rango de fechas */
+            $approvedLeaves = Leave::whereHas('user', fn ($q) =>
+                    $q->where('establishment_id', $id)
+                )
+                ->where('status', 'Aprobado')
+                ->where(function ($q) use ($monthStart, $monthEnd) {
+                    $q->whereBetween('start_date', [$monthStart, $monthEnd])
+                    ->orWhereBetween('end_date', [$monthStart, $monthEnd])
+                    ->orWhere(function ($sub) use ($monthStart, $monthEnd) {
+                        $sub->where('start_date', '<=', $monthStart)
+                            ->where('end_date', '>=', $monthEnd);
+                    });
+                })
+                ->with('user:id,name')
+                ->get();
+
+        /* ===============================
+           5️⃣ Expansión diaria de ausencias
+        =============================== */
+        $absences = [];
+
+        foreach ($approvedLeaves as $leave) {
+
+            $leaveStart = Carbon::parse($leave->start_date);
+            $leaveEnd   = Carbon::parse($leave->end_date);
+
+            // Ajustamos el rango al mes consultado
+            $start = $leaveStart->greaterThan($monthStart)
+                ? $leaveStart->copy()
+                : $monthStart->copy();
+
+            $end = $leaveEnd->lessThan($monthEnd)
+                ? $leaveEnd->copy()
+                : $monthEnd->copy();
+
+            while ($start->lte($end)) {
+
+                $absences[] = [
+                    'id'   => $leave->id,
+                    'date' => $start->toDateString(),
+                    'user' => $leave->user,
+                    'type' => $leave->type,
+                    'leave' => [
+                        'start_date' => $leave->start_date,
+                        'end_date'   => $leave->end_date,
+                        'status'     => $leave->status,
+                    ],
+                ];
+
+                $start->addDay();
+            }
+        }
+
+        /* ===============================
+           6️⃣ Respuesta
+        =============================== */
+        return response()->json([
+            'message' => 'Solicitudes obtenidas con éxito',
+            'created_requests' => $createdRequests,
+            'absences' => $absences,
+        ], 200);
 
         }catch(\Exception $e){
             return response()->json([

@@ -126,30 +126,30 @@ export function useAdminLeaveRequests(){
         const absencesByDay = {};
         const mappedRequests = [];
 
-        data.requests.forEach(r => {
+        data.created_requests.forEach(r => {
 
             /* Indexamos las solicitudes por fecha de creación */
             const createdDate = r.created_at.split('T')[0];
+
             if(!requestsByDay[createdDate]){
                 requestsByDay[createdDate] = [];
             }
 
             requestsByDay[createdDate].push(r);
 
-            /* Indexamos las solicitudes aprobadas por rango de fechas */
-            if(r.status === 'Aprobado'){
-                const start = new Date(r.start_date);
-                const end = new Date(r.end_date);
+            
+        });
 
-                while(start <= end){
-                    const dateKey = start.toISOString().split('T')[0];
-                    if(!absencesByDay[dateKey]){
-                        absencesByDay[dateKey] = [];
-                    }
-                    absencesByDay[dateKey].push(r);
-                    start.setDate(start.getDate() + 1);
-                }
+        data.absences.forEach(a => {
+
+            /* Indexamos las solicitudes aprobadas por rango de fechas */
+            const dateKey = a.date;
+
+            if (!absencesByDay[dateKey]) {
+                absencesByDay[dateKey] = [];
             }
+
+            absencesByDay[dateKey].push(a);
         });
 
         /* Añadimos los datos indexados al array de solicitudes */
@@ -163,6 +163,8 @@ export function useAdminLeaveRequests(){
             });
 
         }
+
+        console.log('mappedRequests: ', mappedRequests);
 
         return mappedRequests;
 
@@ -196,6 +198,8 @@ export function useAdminLeaveRequests(){
                     year: year,
                 }
             });
+
+            console.log('Datos de solicitudes recibidos: ', data);
 
             leaveRequestStore.setRequests(dataMapping(month, year, data));
 
