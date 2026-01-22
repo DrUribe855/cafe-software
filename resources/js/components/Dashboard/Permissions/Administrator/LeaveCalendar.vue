@@ -85,7 +85,7 @@ const emits = defineEmits(['openModal']);
                                             :key="absence.id"
                                             class="text-xs rounded mb-1 flex p-1 border-l-4 bg-white cursor-default"
                                             :class="{
-                                                'border-gray-400 text-gray-500'  : absence.status === 'Aprobado',
+                                                'border-gray-400 text-gray-500'  : absence.leave.status === 'Aprobado',
                                             }"
                                         >
                                             <div class="leading-tight">
