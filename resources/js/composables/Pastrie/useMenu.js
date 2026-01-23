@@ -70,7 +70,7 @@ export function useMenuCategorie() {
   };
 }
 
-export function useMenuProducts() {
+export function useMenuProduct() {
   const products = ref([]);
   const loading = ref(false);
 
