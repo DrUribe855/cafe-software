@@ -10,6 +10,7 @@ use App\Http\Controllers\Close\CloseController;
 use App\Http\Controllers\EstablishmentController;
 use App\Http\Controllers\Close\RefrigeratorController;
 use App\Http\Controllers\Leave\LeaveRequestController;
+use App\Http\Controllers\Suppliers\SupplierController;
 
 
 /* -------------------------------- Rutas para inicio de sesión -------------------------------- */
@@ -65,6 +66,16 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 });
+
+/* -------------------------------- Rutas de módulo de proveedores -------------------------------- */
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::middleware(['role:employee|admin'])->get('/suppliers', [SupplierController::class, 'fetchSuppliers']);
+
+
+
+});
+
 
 /* -------------------------------- Rutas de establecimientos -------------------------------- */
 Route::get('/establishments', [EstablishmentController::class, 'fetchStores']);
