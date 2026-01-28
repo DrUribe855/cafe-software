@@ -1,13 +1,18 @@
 <script setup>
-import { useUploadImage } from '../../../composables/Pastrie/useUploadImage';
+// import { useUploadImage } from '../../../composables/Pastrie/useUploadImage';
 import { useLoader } from '../../../composables/useLoader.js';
+import { useSuppliers } from '@/composables/Suppliers/useSuppliers.js';
 import Loader from '../../Loader.vue';
 
 const props = defineProps({
-    schedule: { type: String, required: true },
+    supplier: {
+        type: String,
+        required: true
+    },
 });
 
-const { images, uploadImage, removeImage, fileSelected } = useUploadImage();
+const { images, uploadImage, fileSelected, removeImage } = useSuppliers();
+// const { images, uploadImage, removeImage, fileSelected } = useUploadImage();
 const { isLoading } = useLoader();
 
 </script>
@@ -18,7 +23,7 @@ const { isLoading } = useLoader();
     <Loader v-if="isLoading" />
 
     <!-- Dropzone para subida de imagenes -->
-    <form @submit.prevent="uploadImage(props.schedule)">
+    <form @submit.prevent="uploadImage(props.supplier)">
         <div class="flex items-center justify-center w-full mt-5">
             <label
                 for="dropzone-file"

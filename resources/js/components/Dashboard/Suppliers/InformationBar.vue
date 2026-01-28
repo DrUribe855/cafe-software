@@ -2,7 +2,7 @@
 import { useRouter } from 'vue-router';
 
 const props = defineProps({
-    suppliers: String,
+    suppliers: Array,
     supplier: String,
     date: String,
     role: String,
@@ -31,7 +31,7 @@ const goBack = () => {
     <section
         class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 p-4 mt-3 bg-white shadow-sm rounded-lg mb-4"
     >
-    <!-- Columna izquierda -->
+        <!-- Columna izquierda -->
         <h1 class="text-lg md:text-xl font-bold text-slate-800 border-l-4 border-sky-400 pl-3">
             Gestión de proveedores
         </h1>
@@ -41,30 +41,28 @@ const goBack = () => {
             <!-- Select para empleado -->
             <div>
                 <select
-                name="schedule"
-                id="schedule"
-                class="w-full sm:w-auto p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 hover:border-blue-400 transition"
-                :value="schedule"
-                @change="e => emit('update:schedule', e.target.value)"
+                    name="schedule"
+                    id="schedule"
+                    class="w-full sm:w-auto p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 hover:border-blue-400 transition"
+                    :value="supplier"
+                    @change="e => emit('update:supplier', e.target.value)"
                 >
-                <option value="" disabled selected>Seleccione un proveedor</option>
-                <option value="" v-if="props.role == 'admin'">Todos</option>
-                <option value="apertura">Apertura</option>
-                <option value="cambio de turno">Cambio de turno</option>
-                <option value="cierre">Cierre</option>
+                    <option value="" disabled selected>Seleccione un proveedor</option>
+                    <option value="" v-if="props.role == 'admin'">Todos</option>
+                    <option v-for="supplier in suppliers" :key="supplier.id" :value="supplier.id">{{ supplier.name }}</option>
                 </select>
             </div>
 
             <!-- Date para admin -->
             <div v-if="role === 'admin'" class="flex flex-col sm:flex-row sm:items-center gap-2">
                 <label class="text-base font-semibold text-slate-700">
-                Fecha:
+                    Fecha:
                 </label>
                 <input
-                type="date"
-                class="w-full sm:w-auto p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 hover:border-blue-400 transition"
-                :value="date"
-                @change="e => emit('update:date', e.target.value)"
+                    type="date"
+                    class="w-full sm:w-auto p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 hover:border-blue-400 transition"
+                    :value="date"
+                    @change="e => emit('update:date', e.target.value)"
                 >
             </div>
         </div>

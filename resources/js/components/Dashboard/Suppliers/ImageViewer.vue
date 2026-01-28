@@ -1,43 +1,37 @@
 <script setup>
-import { watch, computed } from 'vue';
-import { useUploadImage } from '../../../composables/Pastrie/useUploadImage';
+import { watch, onMounted } from 'vue';
+import { useSuppliers } from '@/composables/Suppliers/useSuppliers';
 import { useEstablishmentStore } from '@/stores/establishmentStore';
 import ImageContainer from './ImageContainer.vue';
 
 const props = defineProps({
     date: {
         String,
+        required: false,
+    },
+    supplier: {
+        String,
         required: true,
     },
-    schedule: {
-        String
+    logs: {
+        Array,
+        required: true,
     }
 });
-
-const { fetchImage, imageData } = useUploadImage();
+const { fetchImages } = useSuppliers();
+// const { fetchImage, imageData } = useUploadImage();
 const establishmentStore = useEstablishmentStore();
 
 /* Vigila cambios en el código del establecimiento y la fecha seleccionada para cargar las imágenes */
 
-watch( [() => establishmentStore.code, () => props.date], 
+watch( [() => establishmentStore.code, () => props.date],
     ([newCode, newDate]) => {
-        if(newCode && newDate){
-            fetchImage(newDate);
-        }
+
+        if(!newCode) return null
+
+        fetchImages(newDate || null);
     },
-    { immediate: true }
 );
-
-/* Función que retorna la información en base a si los valores están filtrados o no */
-
-const filteredImages = computed(() => {
-
-    if (!Array.isArray(imageData.value)) return [];
-
-    if (!props.schedule) return imageData.value; // sin filtro
-
-    return imageData.value.filter(img => img.schedule === props.schedule);
-});
 
 </script>
 
@@ -45,12 +39,12 @@ const filteredImages = computed(() => {
 
 <template>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-        <article v-for="image in filteredImages" class="w-full">
+        <article v-for="log in logs" class="w-full">
             <ImageContainer
-                :schedule="image.schedule"
-                :date="image.created_at"
-                :imageUrl="image.imageUrl"
-                :username="image.username"
+                :supplier="log.supplier"
+                :date="log.created_at"
+                :imageUrl="log.imageUrl"
+                :username="log.username"
             />
         </article>
     </div>
