@@ -2,20 +2,21 @@ import { ref, computed, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useSuppliersStore } from '@/stores/Suppliers/suppliersStore';
 import { useEstablishmentStore } from '@/stores/establishmentStore';
+import { useLoader } from '@/composables/useLoader';
+import { useAlert } from '@/composables/useAlert';
 import { useUserStore } from '@/stores/userStore';
 export function useSuppliers() {
     /* ========== VARIABLES ========== */
     const supplierStore = useSuppliersStore();
     const { suppliersLogs } = storeToRefs(supplierStore);
     const establishmentStore = useEstablishmentStore();
+    const { success, errorAlert, warning } = useAlert();
+    const { showLoader, hideLoader } = useLoader();
     const userStore = useUserStore();
-    const supplier  = ref(null);
+    const supplier  = ref('');
     const images    = ref([]);
 
     const filteredImages = computed( () => {
-        console.log('supplierslog lista: ', suppliersLogs.value);
-        console.log('valor seleccionado: ', supplier.value);
-
         if(!suppliersLogs.value.length) return [];
 
         if(!supplier.value) return suppliersLogs.value;
@@ -35,7 +36,8 @@ export function useSuppliers() {
     }
 
     const fetchImages = async (date) => {
-        console.log("Fetching image for date: ", date);
+        
+        showLoader();
 
         const params = {
             establishment_id: parseInt(establishmentStore.code),
@@ -59,22 +61,24 @@ export function useSuppliers() {
 
         }catch(error){
             console.error("Error al obtener la imagen: ", error);
+        }finally{
+            hideLoader();
         }
     }
 
     const uploadImage = async (supplier) => {
 
         if (images.value.length == 0) {
-            alert("Selecciona un archivo");
+            warning('¡Cuidado!', 'No se ha seleccionado ninguna imagen');
             return;
         }
 
         if (!supplier) {
-            alert("No hay proveedor definido");
+            warning('¡Cuidado!', 'No se ha seleccionado un proveedor');
             return;
         }
 
-        // showLoader();
+        showLoader();
 
         try{
             const formData = new FormData();
@@ -88,12 +92,13 @@ export function useSuppliers() {
 
             supplierStore.addSupplierLog(data.log);
             images.value = [];
+            success('Registro exitoso','La información se ha registrado con éxito en el sistema');
 
         }catch(error){
             console.error("Error al subir la imagen: ", error.response);
-            alert('¡Error!', 'Ocurrió un error desconocido, contacte son soporte.', 'info');
+            errorAlert('Error', 'Ha ocurrido un error inesperado, contacte con soporte');
         }finally{
-            // hideLoader();
+            hideLoader();
         }
 
     }

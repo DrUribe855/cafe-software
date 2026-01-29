@@ -8,10 +8,13 @@ import { useSuppliersStore } from '@/stores/Suppliers/suppliersStore';
 import InformationBar from './InformationBar.vue';
 import UploaderFile from './UploaderImage.vue';
 import ImageViewer from './ImageViewer.vue';
+import Loader from '@/components/Loader.vue';
+import { useLoader } from '@/composables/useLoader';
 
 const store = useUserStore();
 const { supplier, filteredImages, fetchSuppliers, fetchImages } = useSuppliers();
 const supplierStore = useSuppliersStore();
+const { isLoading } = useLoader();
 const { getActualDate } = useDate();
 const isReady = ref(false);
 const role = ref(null);
@@ -32,7 +35,8 @@ onMounted(async () => {
 
 </script>
 <template>
-    <p v-if="!isReady">Cargando información...</p>
+    <!-- <p v-if="!isReady">Cargando información...</p> -->
+    <Loader v-if="isLoading"/>
     <!-- Barra de navegación -->
     <template v-else>
         <InformationBar v-model:supplier="supplier"  v-model:date="date" :role="role" :suppliers="supplierStore.suppliers"/>

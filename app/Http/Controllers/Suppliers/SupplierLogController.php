@@ -27,7 +27,7 @@ class SupplierLogController extends Controller
 
                 foreach ($files as $file) {
 
-                    $path = $file->store('pastrie_logs', 'public');
+                    $path = $file->store('supplier_logs', 'public');
 
                     $supplierLog = SupplierLog::create([
                         'establishment_id' => $request->establishment_id,

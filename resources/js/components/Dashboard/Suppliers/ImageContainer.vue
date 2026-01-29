@@ -1,13 +1,13 @@
 <script setup>
-import { computed } from 'vue';
 
 const props = defineProps({
     supplier: { type: String, required: true },
-    date: { type: String, required: true },
+    date:     { type: String, required: true },
     imageUrl: { type: String, required: true },
     username: { type: String, required: true },
 });
 
+console.log('props', props);
 
 </script>
 
