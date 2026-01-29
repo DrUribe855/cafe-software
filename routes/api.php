@@ -60,6 +60,13 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/establishments', [EstablishmentController::class, 'fetchStores']);
 
 
+/* -------------------------------- Rutas de carta/menu -------------------------------- */
+
+// Categorías
+Route::get('/menu/categories', [\App\Http\Controllers\Menu\CategoryController::class, 'index']);
+
+// Productos
+Route::get('/menu/products', [\App\Http\Controllers\Menu\ProductController::class, 'index']);
 
 Route::middleware(['auth:sanctum'])->prefix('menu')->group(function () {
 
