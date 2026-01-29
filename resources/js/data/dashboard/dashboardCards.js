@@ -41,6 +41,13 @@ export const dashboardCards = [
         route: '/dashboard/close',
         roles: ['admin', 'employee']
     },
+    {
+        title: 'Proveedores',
+        description: 'Gestión de ingresos de proveedores.',
+        icon: MonitorX,
+        route: '/dashboard/suppliers',
+        roles: ['admin', 'employee']
+    },
     //{
     //    title: 'Menú',
     //    description: 'Gestión del menú de productos disponibles.',

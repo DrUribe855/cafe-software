@@ -10,6 +10,8 @@ use App\Http\Controllers\Close\CloseController;
 use App\Http\Controllers\EstablishmentController;
 use App\Http\Controllers\Close\RefrigeratorController;
 use App\Http\Controllers\Leave\LeaveRequestController;
+use App\Http\Controllers\Suppliers\SupplierController;
+use App\Http\Controllers\Suppliers\SupplierLogController;
 
 
 /* -------------------------------- Rutas para inicio de sesión -------------------------------- */
@@ -55,6 +57,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware(['role:admin|employee'])->post('/leave-requests', [LeaveRequestController::class, 'storeLeaveRequest']);
     Route::middleware(['role:admin|employee'])->get('/leave-requests', [LeaveRequestController::class, 'fetchLeaveRequestsPerUser']);
 });
+
+/* -------------------------------- Rutas de módulo de proveedores -------------------------------- */
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::middleware(['role:employee|admin'])->get('/suppliers', [SupplierController::class, 'fetchSuppliers']);
+
+    Route::middleware(['role:employee'])->group(function(){
+        Route::post('/suppliers/{id}/upload-images', [SupplierLogController::class, 'uploadImages']);
+    });
+
+    Route::middleware(['role:admin'])->group(function(){
+        Route::get('/suppliers/fetch-images', [SupplierLogController::class, 'fetchImages']);
+    });
+});
+
 
 /* -------------------------------- Rutas de establecimientos -------------------------------- */
 Route::get('/establishments', [EstablishmentController::class, 'fetchStores']);
