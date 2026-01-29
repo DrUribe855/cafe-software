@@ -42,17 +42,18 @@ export const dashboardCards = [
         roles: ['admin', 'employee']
     },
     {
+        title: 'Gestión de menú',
+        description: 'Gestiona categorías, productos del menú y recomendación del día.',
+        icon: NotebookPen,
+        route: '/dashboard/menu/admin',
+        roles: ['admin']
+    },
+    {
+
         title: 'Proveedores',
         description: 'Gestión de ingresos de proveedores.',
         icon: MonitorX,
         route: '/dashboard/suppliers',
         roles: ['admin', 'employee']
     },
-    //{
-    //    title: 'Menú',
-    //    description: 'Gestión del menú de productos disponibles.',
-    //    icon: MonitorX,
-    //    route: '/dashboard/menu',
-    //    roles: ['admin', 'employee']
-    // }
 ];
