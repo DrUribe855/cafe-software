@@ -50,11 +50,17 @@ class User extends Authenticatable
         return $this->HasMany(PastrieLogs::class);
     }
 
+    /* Relación con modelo de solicitudes de permiso */
+
     public function leaveRequests(): HasMany {
         return $this->HasMany(LeaveRequest::class);
     }
 
+    /* Relación con modelo de logs de proveedor */
 
+    public function supplierLogs(): HasMany {
+        return $this->HasMany(SupplierLog::class);
+    }
 
 
 }
