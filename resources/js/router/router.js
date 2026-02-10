@@ -11,6 +11,7 @@ import PermissionsView from '../views/Dashboard/Permissions/PermissionsView.vue'
 import SuppliersView from '@/views/Dashboard/Suppliers/SuppliersView.vue';
 
 import { useUserStore } from '@/stores/userStore';
+import MenuAdmin from '../views/Dashboard/Menu/MenuAdmin.vue';
 
 
 const routes = [
@@ -31,6 +32,7 @@ const routes = [
            // { path: 'menu', name: 'menu', component: Menu, meta: { roles: ['admin', 'employee'] } },
            { path: 'permissions', name: 'permissions', component: PermissionsView, meta: { roles: ['admin', 'employee'] } },
            { path: 'suppliers', name: 'suppliers', component: SuppliersView, meta: { roles: ['admin', 'employee'] } },
+            { path: 'menu/admin', name: 'menu-admin', component: MenuAdmin, meta: { roles: ['admin'] } }
         ],
         meta: { requiresAuth: true, roles: ['admin', 'employee'] }
     }
