@@ -5,6 +5,7 @@ const props = defineProps({
     weekDays: Array,
     filteredRequests: Array,
     date: Date,
+    role: String,
 });
 
 const formattedDate = computed(() => {
@@ -16,7 +17,7 @@ const formattedDate = computed(() => {
   })
 })
 
-const emits = defineEmits(['openModal']);
+const emits = defineEmits(['openModal', 'openAbsenceModal']);
 </script>
 
 <template>
@@ -59,7 +60,7 @@ const emits = defineEmits(['openModal']);
                                     </div>
 
                                     <!-- Ciclo de permisos/solicitudes -->
-                                    <div class="px-1 mt-1">
+                                    <div class="px-1 mt-1" v-if="role === 'admin'">
                                         <div
                                             v-for="request in day.requests"
                                             @click="$emit('openModal', request)"
@@ -82,8 +83,9 @@ const emits = defineEmits(['openModal']);
                                     <div class="px-1 mt-1">
                                         <div
                                             v-for="absence in day.absences"
+                                            @click="$emit('openAbsenceModal', absence, role)"
                                             :key="absence.id"
-                                            class="text-xs rounded mb-1 flex p-1 border-l-4 bg-white cursor-default"
+                                            class="text-xs rounded mb-1 flex p-1 border-l-4 bg-white cursor-pointer"
                                             :class="{
                                                 'border-gray-400 text-gray-500'  : absence.leave.status === 'Aprobado',
                                             }"

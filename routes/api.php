@@ -60,9 +60,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/leave-requests/{id}', [LeaveRequestController::class, 'fetchLeaveRequestsPerUser']);
     });
 
+    Route::middleware(['role:employee|admin'])->get('/establishments/{id}/leave-requests', [LeaveRequestController::class, 'fetchLeaveRequestsPerEstablishment']);
+    Route::middleware(['role:employee|admin'])->get('/establishments/{id}/leave-requests/sum', [LeaveRequestController::class, 'getRequestSum']);
+
     Route::middleware(['role:admin'])->group(function (){
-        Route::get('/establishments/{id}/leave-requests', [LeaveRequestController::class, 'fetchLeaveRequestsPerEstablishment']);
-        Route::get('/establishments/{id}/leave-requests/sum', [LeaveRequestController::class, 'getRequestSum']);
+        // Route::get('/establishments/{id}/leave-requests', [LeaveRequestController::class, 'fetchLeaveRequestsPerEstablishment']);
         Route::patch('/leave-requests/{id}', [LeaveRequestController::class, 'saveRequestResponse']);
     });
 
