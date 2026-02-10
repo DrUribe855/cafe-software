@@ -7,7 +7,7 @@ const router = useRouter();
 const store = useUserStore();
 
 const goBack = () => {
-    router.push({ name: 'dashboard'});
+    router.push('/dashboard');
 }
 </script>
 
