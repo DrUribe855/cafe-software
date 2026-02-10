@@ -8,27 +8,29 @@ import { storeToRefs } from 'pinia';
 
 const weekDays = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
 
-export function useAdminLeaveRequests(){
+export function useAdminLeaveRequests() {
 
     /* ============================= Declaración de variables ============================= */
 
-    const establishmentStore  = useEstablishmentStore();
+    const establishmentStore = useEstablishmentStore();
     const { code } = storeToRefs(establishmentStore);
     const leaveRequestStore = useLeaveRequestsStore();
     const { requests } = storeToRefs(leaveRequestStore);
     const { showLoader, hideLoader } = useLoader();
     const { currentDate } = useDateFilter();
-    const employeeSearch  = ref('');
-    const statusFilter    = ref('');
+    const employeeSearch = ref('');
+    const statusFilter = ref('');
     const selectedRequest = ref({});
-    const isModalOpen     = ref(false);
+    const isModalOpen = ref(false);
+    const selectedAbsence = ref({});
+    const isAbsenceModalOpen = ref(false);
 
     watch(currentDate, (date) => {
         fetchMonthData(date);
     });
 
-    watch(code, newCode =>{
-        if(!newCode) return
+    watch(code, newCode => {
+        if (!newCode) return
         fetchMonthData(currentDate.value);
     })
 
@@ -39,7 +41,7 @@ export function useAdminLeaveRequests(){
 
         return (requests.value ?? []).map(day => ({
             ...day,
-            requests: (day.requests ?? []).filter(r =>{
+            requests: (day.requests ?? []).filter(r => {
                 const matchName = !search || r.user.name.toLowerCase().includes(search);
 
                 const matchStatus = !statusFilter.value || r.status === statusFilter.value;
@@ -48,7 +50,7 @@ export function useAdminLeaveRequests(){
             }),
             absences: (day.absences ?? []).filter(a => {
 
-                const absenceMatchName   = !search || a.user.name.toLowerCase().includes(search);
+                const absenceMatchName = !search || a.user.name.toLowerCase().includes(search);
                 const absenceMatchStatus = !statusFilter.value || statusFilter.value === 'Aprobado';
                 return absenceMatchName && absenceMatchStatus;
             })
@@ -58,17 +60,29 @@ export function useAdminLeaveRequests(){
 
     /* Funciones para manejar el comportamiento del modal */
 
-    const openRequestModal = ( request ) => {
+    const openRequestModal = (request) => {
         selectedRequest.value = request;
         isModalOpen.value = true;
-        console.log('Solicitud seleccionada: ', selectedRequest.value);
-        console.log('Modal abierto: ', isModalOpen.value);
     }
 
-    const closeRequestModal = () =>{
+    const closeRequestModal = () => {
         selectedRequest.value = {};
         isModalOpen.value = false;
-        console.log('Modal abierto: ', isModalOpen.value);
+    }
+
+    /* Funciones para manejar el comportamiento del modal de ausencias */
+
+    const openAbsenceModal = (absence, role) => {
+        if (role !== 'admin') {
+            return;
+        }
+        selectedAbsence.value = absence;
+        isAbsenceModalOpen.value = true;
+    }
+
+    const closeAbsenceModal = () => {
+        selectedAbsence.value = {};
+        isAbsenceModalOpen.value = false;
     }
 
     /* Función para envio de respuesta de la solicitud */
@@ -76,17 +90,17 @@ export function useAdminLeaveRequests(){
     const sendRequestResponse = async (comment, response, id) => {
         showLoader();
 
-        if(response === '' || response === null){
+        if (response === '' || response === null) {
             console.log('Error, ocurrió un error al cargar la respuesta de la solicitud');
             return;
         }
 
-        if(!id){
+        if (!id) {
             console.log('Error, ocurrió un error al cargar el ID de la solicitud');
             return;
         }
 
-        try{
+        try {
             const { data } = axios.patch(`/api/leave-requests/${id}`, {
                 response: response,
                 comment: comment
@@ -94,9 +108,9 @@ export function useAdminLeaveRequests(){
 
             closeRequestModal();
             await fetchMonthData(currentDate.value);
-        }catch(error){
+        } catch (error) {
             console.log('Se ha producido un error', error.message);
-        }finally{
+        } finally {
             hideLoader();
         }
 
@@ -105,7 +119,7 @@ export function useAdminLeaveRequests(){
     /* Función para obtener la suma de solicitudes por mes */
 
     const getRequestSum = async (month, year) => {
-        try{
+        try {
             const { data } = await axios.get(`/api/establishments/${code.value}/leave-requests/sum`, {
                 params: {
                     month: month,
@@ -114,7 +128,7 @@ export function useAdminLeaveRequests(){
             });
 
             leaveRequestStore.setSumRequests(data.sumRequest);
-        }catch(error){
+        } catch (error) {
             console.log('Ocurrió un error al traer la suma de las peticiones', error);
         }
     }
@@ -131,7 +145,7 @@ export function useAdminLeaveRequests(){
             /* Indexamos las solicitudes por fecha de creación */
             const createdDate = r.created_at.split('T')[0];
 
-            if(!requestsByDay[createdDate]){
+            if (!requestsByDay[createdDate]) {
                 requestsByDay[createdDate] = [];
             }
 
@@ -163,7 +177,7 @@ export function useAdminLeaveRequests(){
         }
 
         /* Añadimos los datos indexados al array de solicitudes */
-        for(let i = 1; i <= days; i++){
+        for (let i = 1; i <= days; i++) {
             const currentDate = `${year}-${String(month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
             mappedRequests.push({
                 day: i,
@@ -173,8 +187,6 @@ export function useAdminLeaveRequests(){
             });
 
         }
-
-        console.log('mappedRequests: ', mappedRequests);
 
         return mappedRequests;
 
@@ -186,12 +198,12 @@ export function useAdminLeaveRequests(){
     const fetchMonthData = async (date) => {
         showLoader();
 
-        if(!date){
+        if (!date) {
             console.log('Ocurrió un error con la fecha suministrada, contacte con soporte');
             return;
         }
 
-        if(!code){
+        if (!code) {
             console.log('Ocurrio un error con el ID del establecimiento, contacte con soporte');
             return;
         }
@@ -201,7 +213,7 @@ export function useAdminLeaveRequests(){
 
         getRequestSum(month, year);
 
-        try{
+        try {
             const { data } = await axios.get(`/api/establishments/${code.value}/leave-requests`, {
                 params: {
                     month: month,
@@ -209,18 +221,17 @@ export function useAdminLeaveRequests(){
                 }
             });
 
-            console.log('Datos de solicitudes recibidos: ', data);
 
             leaveRequestStore.setRequests(dataMapping(month, year, data));
 
-        }catch(error){
+        } catch (error) {
             console.error('Error al obtener las solicitudes para el establecimiento: ', error);
-        }finally{
+        } finally {
             hideLoader();
         }
     }
 
-    return{
+    return {
         weekDays,
         employeeSearch,
         statusFilter,
@@ -231,6 +242,10 @@ export function useAdminLeaveRequests(){
         closeRequestModal,
         isModalOpen,
         selectedRequest,
+        openAbsenceModal,
+        closeAbsenceModal,
+        isAbsenceModalOpen,
+        selectedAbsence,
     }
 
 }
