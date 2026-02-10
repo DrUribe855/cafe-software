@@ -7,6 +7,7 @@ import UsersView from '../views/Dashboard/Users/UsersView.vue';
 import BakeryView from '../views/Dashboard/Pastrie/PastriesView.vue';
 import CloseView from '../views/Dashboard/Close/PastriesCloseView.vue';
 import PermissionsView from '../views/Dashboard/Permissions/PermissionsView.vue';
+import PermissionsForm from '@/views/Dashboard/Permissions/FormView.vue';
 import SuppliersView from '@/views/Dashboard/Suppliers/SuppliersView.vue';
 import MenuAdmin from '../views/Dashboard/Menu/MenuAdmin.vue';
 
@@ -28,9 +29,11 @@ const routes = [
             { path: 'users', name: 'users', component: UsersView, meta: { roles: 'admin' } },
             { path: 'bakery', name: 'bakery', component: BakeryView, meta: { roles: ['admin', 'employee'] } },
             { path: 'close', name: 'close', component: CloseView, meta: { roles: ['admin', 'employee'] } },
-            { path: 'menu/admin', name: 'menu-admin', component: MenuAdmin, meta: { roles: ['admin'] } },
+            // { path: 'menu', name: 'menu', component: Menu, meta: { roles: ['admin', 'employee'] } },
             { path: 'permissions', name: 'permissions', component: PermissionsView, meta: { roles: ['admin', 'employee'] } },
+            { path: 'permissions-form', name: 'permissions-form', component: PermissionsForm, meta: { roles: ['admin', 'employee'] } },
             { path: 'suppliers', name: 'suppliers', component: SuppliersView, meta: { roles: ['admin', 'employee'] } },
+            { path: 'menu/admin', name: 'menu-admin', component: MenuAdmin, meta: { roles: ['admin'] } }
         ],
         meta: { requiresAuth: true, roles: ['admin', 'employee'] }
     }
@@ -43,8 +46,8 @@ const router = createRouter({
 
 router.beforeEach(async (to, from) => {
     const userStore = useUserStore();
-    if(to.meta.requiresAuth){
-        try{
+    if (to.meta.requiresAuth) {
+        try {
             const { data } = await axios.get('/api/user');
 
             if (to.meta.roles) {
@@ -58,7 +61,7 @@ router.beforeEach(async (to, from) => {
                 }
             }
 
-        }catch(error){
+        } catch (error) {
             userStore.clearUser();
             return { path: "/" }
         }
@@ -66,14 +69,14 @@ router.beforeEach(async (to, from) => {
 
 
 
-    }else{
-        if(to.path === '/'){
+    } else {
+        if (to.path === '/') {
             console.log(to.path);
             return true
         }
 
         userStore.clearUser();
-        return { path: '/'}
+        return { path: '/' }
     }
 })
 
