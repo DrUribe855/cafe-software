@@ -18,7 +18,10 @@ use App\Http\Controllers\Suppliers\SupplierLogController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    $user = $request->user();
+    /* Se cargan los roles explicitamente para que el objeto `user` los
+       incluya de forma determinista (el frontend lee data.user.roles);
+       los campos de nivel raiz se conservan (el router lee data.roles). */
+    $user = $request->user()->load('roles');
     return [
         'user' => $user,
         'roles' => $user->roles,

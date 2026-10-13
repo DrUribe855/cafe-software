@@ -79,7 +79,7 @@ class UserController
                 'user' => $user->load('roles')
             ], 200);
 
-        }catch(Exception $e){
+        }catch(\Exception $e){
             
             Log::error('Error creando usuario: ' . $e->getMessage());
 
@@ -120,7 +120,7 @@ class UserController
     
             }
 
-        }catch(Exception $e){
+        }catch(\Exception $e){
             
             Log::error('Error modificando usuario: ' . $e->getMessage());
 
@@ -148,7 +148,7 @@ class UserController
                 'message' => 'Usuario eliminado con éxito',
             ], 200);
 
-        }catch(Exception $e){
+        }catch(\Exception $e){
             Log::error('Error eliminando usuario: ' . $e->getMessage());
 
             return response()->json([

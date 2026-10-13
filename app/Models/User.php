@@ -47,7 +47,7 @@ class User extends Authenticatable
     /* Relación con modelo de logs de bolleria */
 
     public function pastrieLogs(): HasMany {
-        return $this->HasMany(PastrieLogs::class);
+        return $this->HasMany(PastrieLog::class);
     }
 
     /* Relación con modelo de solicitudes de permiso */

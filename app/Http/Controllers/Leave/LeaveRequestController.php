@@ -211,7 +211,7 @@ class LeaveRequestController extends Controller
             ], 200);
 
         }
-        catch (Exception $e) {
+        catch (\Exception $e) {
             Log::error('Error registrando respuesta de solicitud de permiso: ' . $e->getMessage());
 
             return response()->json([
@@ -253,7 +253,7 @@ class LeaveRequestController extends Controller
             ], 200);
 
         }
-        catch (Exception $e) {
+        catch (\Exception $e) {
             Log::error('Error generando la suma de las solicitudes: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error generando la suma de las solicitudes',

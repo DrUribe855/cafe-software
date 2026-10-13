@@ -16,14 +16,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Establishment::factory()->create();
+        $establishment = Establishment::factory()->create();
 
         $this->call(RolesAndPermissionsSeeder::class);
 
         $admin = User::factory()->create([
             'name' => 'Joaquin',
             'email' => 'test@example.com',
-            'establishment_id' => 1,
+            'establishment_id' => $establishment->id,
             'document' => '123456789',
             'status' => 'Activo',
             "password" => bcrypt('password'),
@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
         $employee = User::factory()->create([
             'name' => 'Paco',
             'email' => 'tester@example.com',
-            'establishment_id' => 1,
+            'establishment_id' => $establishment->id,
             'document' => '987654321',
             'status' => 'Inactivo',
             "password" => bcrypt('password'),
