@@ -4,6 +4,7 @@ import { useEstablishmentStore } from '../../../stores/establishmentStore';
 import { useDateFilter } from '../../DateFilters/useDateFilter';
 import { useLeaveRequestsStore } from '../../../stores/LeaveRequests/Administrator/useLeaveRequestStore';
 import { useLoader } from '../../useLoader';
+import { isAdminLike } from '@/utils/roles';
 import { storeToRefs } from 'pinia';
 
 const weekDays = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
@@ -73,7 +74,7 @@ export function useAdminLeaveRequests() {
     /* Funciones para manejar el comportamiento del modal de ausencias */
 
     const openAbsenceModal = (absence, role) => {
-        if (role !== 'admin') {
+        if (!isAdminLike(role)) {
             return;
         }
         selectedAbsence.value = absence;

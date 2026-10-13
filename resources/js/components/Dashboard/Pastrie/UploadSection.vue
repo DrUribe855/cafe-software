@@ -3,6 +3,7 @@
 import { ref, onMounted } from 'vue';
 import { useDate } from '../../../composables/useDate';
 import { useUserStore } from '../../../stores/userStore';
+import { isAdminLike } from '../../../utils/roles';
 import InformationBar from './InformationBar.vue';
 import UploaderFile from './UploaderImage.vue';
 import ImageViewer from './ImageViewer.vue';
@@ -31,7 +32,7 @@ onMounted(async () => {
     <template v-else>
         <InformationBar v-model:schedule="schedule"  v-model:date="date" :role="role"/>
         <UploaderFile v-if="role == 'employee'" :schedule="schedule"/>
-        <ImageViewer v-if="role == 'admin'" :date="date" :schedule="schedule"/>
+        <ImageViewer v-if="isAdminLike(role)" :date="date" :schedule="schedule"/>
     </template>
 
 </template>

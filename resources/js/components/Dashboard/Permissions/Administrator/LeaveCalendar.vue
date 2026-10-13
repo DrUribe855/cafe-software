@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue';
+import { isAdminLike } from '@/utils/roles';
 
 const props = defineProps({
     weekDays: Array,
@@ -60,7 +61,7 @@ const emits = defineEmits(['openModal', 'openAbsenceModal']);
                                     </div>
 
                                     <!-- Ciclo de permisos/solicitudes -->
-                                    <div class="px-1 mt-1" v-if="role === 'admin'">
+                                    <div class="px-1 mt-1" v-if="isAdminLike(role)">
                                         <div
                                             v-for="request in day.requests"
                                             @click="$emit('openModal', request)"

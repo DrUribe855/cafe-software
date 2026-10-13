@@ -31,7 +31,9 @@ export const useUserStore = defineStore('user', {
                 this.setUser(user);
 
                 const establishmentStore = useEstablishmentStore();
-                if (user.establishment_id && user.role !== 'admin') {
+                /* admin y employee quedan fijados a su establecimiento;
+                   super_admin conserva el que seleccione en el NavBar. */
+                if (user.establishment_id && user.role !== 'super_admin') {
                     establishmentStore.setCode(user.establishment_id);
                     console.log('Establecimiento sincronizado con el usuario:', user.establishment_id);
                 }

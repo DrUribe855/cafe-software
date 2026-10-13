@@ -47,7 +47,7 @@ onMounted( async () => {
 
             <select 
                 @change="changeStore"
-                v-if="userStore.user.role === 'admin'"
+                v-if="userStore.user.role === 'super_admin'"
                 class="border rounded-lg px-3 py-1.5 text-sm shadow-sm max-w-[120px] truncate"
                 name="store" 
                 id="store"

@@ -1,5 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router';
+import { isAdminLike } from '../../../utils/roles';
 
 const props = defineProps({
     suppliers: Array,
@@ -48,13 +49,13 @@ const goBack = () => {
                     @change="e => emit('update:supplier', e.target.value)"
                 >
                     <option value="" disabled selected>Seleccione un proveedor</option>
-                    <option value="" v-if="props.role == 'admin'">Todos</option>
+                    <option value="" v-if="isAdminLike(props.role)">Todos</option>
                     <option v-for="supplier in suppliers" :key="supplier.id" :value="supplier.id">{{ supplier.name }}</option>
                 </select>
             </div>
 
             <!-- Date para admin -->
-            <div v-if="role === 'admin'" class="flex flex-col sm:flex-row sm:items-center gap-2">
+            <div v-if="isAdminLike(props.role)" class="flex flex-col sm:flex-row sm:items-center gap-2">
                 <label class="text-base font-semibold text-slate-700">
                     Fecha:
                 </label>

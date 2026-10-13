@@ -26,16 +26,16 @@ const routes = [
         component: DashboardView,
         children: [
             { path: '', name: 'dashboard-home', component: DashboardMenu },
-            { path: 'users', name: 'users', component: UsersView, meta: { roles: 'admin' } },
-            { path: 'bakery', name: 'bakery', component: BakeryView, meta: { roles: ['admin', 'employee'] } },
-            { path: 'close', name: 'close', component: CloseView, meta: { roles: ['admin', 'employee'] } },
-            // { path: 'menu', name: 'menu', component: Menu, meta: { roles: ['admin', 'employee'] } },
-            { path: 'permissions', name: 'permissions', component: PermissionsView, meta: { roles: ['admin', 'employee'] } },
-            { path: 'permissions-form', name: 'permissions-form', component: PermissionsForm, meta: { roles: ['admin', 'employee'] } },
-            { path: 'suppliers', name: 'suppliers', component: SuppliersView, meta: { roles: ['admin', 'employee'] } },
-            { path: 'menu/admin', name: 'menu-admin', component: MenuAdmin, meta: { roles: ['admin'] } }
+            { path: 'users', name: 'users', component: UsersView, meta: { roles: ['admin', 'super_admin'] } },
+            { path: 'bakery', name: 'bakery', component: BakeryView, meta: { roles: ['admin', 'super_admin', 'employee'] } },
+            { path: 'close', name: 'close', component: CloseView, meta: { roles: ['admin', 'super_admin', 'employee'] } },
+            // { path: 'menu', name: 'menu', component: Menu, meta: { roles: ['admin', 'super_admin', 'employee'] } },
+            { path: 'permissions', name: 'permissions', component: PermissionsView, meta: { roles: ['admin', 'super_admin', 'employee'] } },
+            { path: 'permissions-form', name: 'permissions-form', component: PermissionsForm, meta: { roles: ['admin', 'super_admin', 'employee'] } },
+            { path: 'suppliers', name: 'suppliers', component: SuppliersView, meta: { roles: ['admin', 'super_admin', 'employee'] } },
+            { path: 'menu/admin', name: 'menu-admin', component: MenuAdmin, meta: { roles: ['admin', 'super_admin'] } }
         ],
-        meta: { requiresAuth: true, roles: ['admin', 'employee'] }
+        meta: { requiresAuth: true, roles: ['admin', 'super_admin', 'employee'] }
     }
 ];
 

@@ -1,6 +1,7 @@
 <script setup>
 import { ChevronLeft, ChevronRight } from 'lucide-vue-next';
 import { useRouter } from  'vue-router';
+import { isAdminLike } from '@/utils/roles';
 
 const props = defineProps({
     search: String,
@@ -24,7 +25,7 @@ const router  = useRouter();
         </div>
         
         <!-- Admin filters -->
-        <div v-if="role === 'admin'" class="flex flex-wrap gap-3 w-full md:w-auto">
+        <div v-if="isAdminLike(role)" class="flex flex-wrap gap-3 w-full md:w-auto">
             <input
                 type="text"
                 placeholder="Buscar empleado..."
@@ -48,7 +49,7 @@ const router  = useRouter();
         <button 
             class="w-full md:w-auto md:ml-auto bg-sky-400 hover:bg-sky-500 transition-colors rounded-lg px-4 py-2 text-white font-medium" 
             @click="router.push('permissions-form')"
-            v-if="role !== 'admin'"
+            v-if="role === 'employee'"
         >
             Formulario de permisos
         </button>

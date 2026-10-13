@@ -2,6 +2,8 @@
 
 import { useUsers } from '../../../composables/Users/useUsers';
 import { useEstablishmentStore } from '../../../stores/establishmentStore';
+import { useUserStore } from '../../../stores/userStore';
+import { isSuperAdmin } from '../../../utils/roles';
 import { ref } from 'vue';
 
 /* Cargado de props */
@@ -22,6 +24,10 @@ const emits = defineEmits(['close','addUser']);
 const establishmentStore = useEstablishmentStore();
 const userComposable = useUsers();
 const { errors } = userComposable;
+
+/* Solo un super_admin puede asignar el rol super_admin */
+const userStore = useUserStore();
+const canAssignSuperAdmin = isSuperAdmin(userStore.user.role);
 const user = ref({
     id: props.user?.id ?? '',
     document: props.user?.document ?? '',
@@ -118,6 +124,7 @@ const save = async () => {
                         >
                             <option value="employee" selected >Empleado</option>
                             <option value="admin">Administrador</option>
+                            <option value="super_admin" v-if="canAssignSuperAdmin">Super Administrador</option>
                         </select>
                         <p class="pt-2 text-red-500 text-center text-xs" v-if="errors.role">¡{{ errors.role[0] }}!</p>
                     </div>

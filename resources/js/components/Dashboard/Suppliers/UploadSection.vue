@@ -5,6 +5,7 @@ import { useDate } from '../../../composables/useDate';
 import { useSuppliers } from '@/composables/Suppliers/useSuppliers';
 import { useUserStore } from '../../../stores/userStore';
 import { useSuppliersStore } from '@/stores/Suppliers/suppliersStore';
+import { isAdminLike } from '../../../utils/roles';
 import InformationBar from './InformationBar.vue';
 import UploaderFile from './UploaderImage.vue';
 import ImageViewer from './ImageViewer.vue';
@@ -26,7 +27,7 @@ onMounted(async () => {
     await store.fetchUser();
     await fetchSuppliers();
     role.value = store.user.role;
-    if(role.value === 'admin'){
+    if(isAdminLike(role.value)){
         await fetchImages();
     }
     isReady.value = true;
@@ -41,7 +42,7 @@ onMounted(async () => {
     <template v-else>
         <InformationBar v-model:supplier="supplier"  v-model:date="date" :role="role" :suppliers="supplierStore.suppliers"/>
         <UploaderFile v-if="role == 'employee'" :supplier="supplier"/>
-        <ImageViewer v-if="role == 'admin'" :date="date" :supplier="supplier" :logs="filteredImages"/>
+        <ImageViewer v-if="isAdminLike(role)" :date="date" :supplier="supplier" :logs="filteredImages"/>
     </template>
 
 </template>

@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useDate } from '../../../composables/useDate';
 import { useUserStore } from '../../../stores/userStore';
+import { isAdminLike } from '../../../utils/roles';
 import CloseBar from './CloseBar.vue'; 
 import CloseUploaderImage from './CloseUploaderImage.vue'; 
 import CloseImageViewer from './CloseImageViewer.vue'; 
@@ -43,7 +44,7 @@ onMounted(async () => {
     />
     
     <CloseImageViewer
-      v-if="role === 'admin'"
+      v-if="isAdminLike(role)"
       :date="closeDate"
       :refrigerator-id="selectedFridge" 
     />

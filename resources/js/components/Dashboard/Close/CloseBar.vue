@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { useEstablishmentStore } from '../../../stores/establishmentStore'
 import { alert } from '../../../composables/Pastrie/alert'
+import { isAdminLike } from '../../../utils/roles'
 
 const props = defineProps({
   date: String,
@@ -88,7 +89,7 @@ const goBack = () => router.back()
       </h1>
 
       <div class="flex flex-col sm:flex-row sm:items-center gap-2 mt-3 md:mt-0">
-        <div v-if="role === 'admin'">
+        <div v-if="isAdminLike(role)">
           <label class="text-base font-semibold text-slate-700">Fecha:</label>
           <input
             type="date"
@@ -129,7 +130,7 @@ const goBack = () => router.back()
         <div v-if="selectedFridge" class="w-full">
 
           <div
-            v-if="role === 'admin'"
+            v-if="isAdminLike(role)"
             class="flex flex-col gap-2 bg-white border-l-4 border-sky-400 p-3 rounded w-full"
           >
             <label class="text-sm font-semibold text-gray-700">Nota para esta nevera:</label>

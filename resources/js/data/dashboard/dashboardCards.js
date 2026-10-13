@@ -6,14 +6,14 @@ export const dashboardCards = [
         description: 'Gestiona los empleados de la empresa.',
         icon: Users,
         route: '/dashboard/users',
-        roles: ['admin']
+        roles: ['admin', 'super_admin']
     },
     {
         title: 'Vacaciones',
         description: 'Gestion de vacaciones y permisos.',
         icon: BookOpen,
         route: '/dashboard/permissions',
-        roles: ['admin', 'employee']
+        roles: ['admin', 'super_admin', 'employee']
     },
     // {
     //     title: 'Horarios',
@@ -32,21 +32,21 @@ export const dashboardCards = [
         description: 'Estado de la bolleria en apertura, mediodía y cierre.',
         icon: Coffee,
         route: '/dashboard/bakery',
-        roles: ['admin', 'employee']
+        roles: ['admin', 'super_admin', 'employee']
     },
     {
         title: 'Cierre',
         description: 'Temperaturas, actividades, lista de cierre.',
         icon: MonitorX,
         route: '/dashboard/close',
-        roles: ['admin', 'employee']
+        roles: ['admin', 'super_admin', 'employee']
     },
     {
         title: 'Gestión de menú',
         description: 'Gestiona categorías, productos del menú y recomendación del día.',
         icon: NotebookPen,
         route: '/dashboard/menu/admin',
-        roles: ['admin']
+        roles: ['admin', 'super_admin']
     },
     {
 
@@ -54,6 +54,6 @@ export const dashboardCards = [
         description: 'Gestión de ingresos de proveedores.',
         icon: MonitorX,
         route: '/dashboard/suppliers',
-        roles: ['admin', 'employee']
+        roles: ['admin', 'super_admin', 'employee']
     },
 ];

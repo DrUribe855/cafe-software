@@ -1,5 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router';
+import { isAdminLike } from '../../../utils/roles';
 
 const props = defineProps({
     schedule: String,
@@ -47,7 +48,7 @@ const goBack = () => {
           @change="e => emit('update:schedule', e.target.value)"
         >
           <option value="" disabled selected>Seleccione un horario</option>
-          <option value="" v-if="props.role == 'admin'">Todos</option>
+          <option value="" v-if="isAdminLike(props.role)">Todos</option>
           <option value="apertura">Apertura</option>
           <option value="cambio de turno">Cambio de turno</option>
           <option value="cierre">Cierre</option>
@@ -55,7 +56,7 @@ const goBack = () => {
       </div>
 
       <!-- Date para admin -->
-      <div v-if="role === 'admin'" class="flex flex-col sm:flex-row sm:items-center gap-2">
+      <div v-if="isAdminLike(props.role)" class="flex flex-col sm:flex-row sm:items-center gap-2">
         <label class="text-base font-semibold text-slate-700">
           Fecha:
         </label>

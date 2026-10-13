@@ -13,6 +13,7 @@ import { useLoader } from '../../../../composables/useLoader';
 import { useLeaveRequestsStore } from '../../../../stores/LeaveRequests/Administrator/useLeaveRequestStore';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/stores/userStore';
+import { isAdminLike } from '@/utils/roles';
 
 const {
     fetchMonthData,
@@ -49,10 +50,10 @@ onMounted(() => {
 
         <!-- Titulo y descripcion -->
         <h1 class="text-2xl font-bold mb-2">Gestión de Permisos</h1>
-        <p class="text-gray-600 mb-6" v-if="user.role === 'admin'">Administra las solicitudes de vacaciones y permisos</p>
+        <p class="text-gray-600 mb-6" v-if="isAdminLike(user.role)">Administra las solicitudes de vacaciones y permisos</p>
 
         <!-- Seccion de tarjetas -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6" v-if="user.role === 'admin'">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6" v-if="isAdminLike(user.role)">
           <SummaryCard title="Total Solicitudes" :icon="Calendar"    :value="parseInt(sumRequests.total)"    :type="1" />
           <SummaryCard title="Pendientes"        :icon="Clock"       :value="parseInt(sumRequests.pendings)" :type="2" />
           <SummaryCard title="Aprobadas"         :icon="CircleCheck" :value="parseInt(sumRequests.approved)" :type="3" />
