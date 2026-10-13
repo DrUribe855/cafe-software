@@ -17,7 +17,6 @@ class EstablishmentFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => 1,
             'name' => fake()->company(),
         ];
     }
