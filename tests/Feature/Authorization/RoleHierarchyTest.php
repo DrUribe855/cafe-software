@@ -59,4 +59,25 @@ class RoleHierarchyTest extends TestCase
         $this->getJson('/api/closing-logs?establishment_id='.$est2->id.'&date='.now()->toDateString())
             ->assertStatus(403);
     }
+
+    public function test_admin_cannot_assign_super_admin_role(): void
+    {
+        $est1 = Establishment::factory()->create();
+
+        $this->actingAsRole('admin', $est1);
+
+        $this->postJson('/api/users', [
+            'document' => '12345678',
+            'name' => 'Nuevo Usuario',
+            'email' => 'nuevo-super@example.com',
+            'role' => 'super_admin',
+            'status' => 'Activo',
+            'password' => 'secret123',
+            'establishmentId' => $est1->id,
+        ])->assertStatus(403);
+
+        $this->assertDatabaseMissing('users', [
+            'email' => 'nuevo-super@example.com',
+        ]);
+    }
 }

@@ -59,6 +59,13 @@ class UserController
 
         try{
 
+            /* Solo un super_admin puede asignar el rol super_admin */
+            if ($request->role === 'super_admin' && !auth()->user()->isSuperAdmin()) {
+                return response()->json([
+                    'message' => 'Solo un super_admin puede asignar el rol super_admin',
+                ], 403);
+            }
+
             $user = User::create([
                 'document' => $request->document,
                 'name'     => $request->name,
@@ -97,6 +104,17 @@ class UserController
 
         try{
             $user = User::find($id);
+
+            /* Solo un super_admin puede asignar el rol super_admin o
+               modificar a otro super_admin */
+            if (
+                ($request->role === 'super_admin' || ($user && $user->hasRole('super_admin')))
+                && !auth()->user()->isSuperAdmin()
+            ) {
+                return response()->json([
+                    'message' => 'Solo un super_admin puede gestionar el rol super_admin',
+                ], 403);
+            }
     
             if($user){
                 $user->document = $request->document;
@@ -136,6 +154,13 @@ class UserController
 
         try{
             $user = User::find($id);
+
+            /* Un admin no puede eliminar a un super_admin */
+            if ($user && $user->hasRole('super_admin') && !auth()->user()->isSuperAdmin()) {
+                return response()->json([
+                    'message' => 'Solo un super_admin puede eliminar a otro super_admin',
+                ], 403);
+            }
     
             if($user){
                 $user->isDeleted = 1;
