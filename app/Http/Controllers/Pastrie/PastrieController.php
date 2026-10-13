@@ -23,6 +23,10 @@ class PastrieController extends Controller
             'establishment_id' => 'required|integer',
         ]);
 
+        if (!auth()->user()->canAccessEstablishment($request->establishment_id)) {
+            return response()->json(['message' => 'No autorizado'], 403);
+        }
+
         $images = PastrieLog::with('user')
                             ->where('establishment_id', $request->establishment_id)
                             ->whereDate('created_at', $request->date)
@@ -46,6 +50,10 @@ class PastrieController extends Controller
 
         try{
 
+            if (!auth()->user()->canAccessEstablishment($request->establishment_id)) {
+                return response()->json(['message' => 'No autorizado'], 403);
+            }
+
             $today = Carbon::today()->toDateString();
             $findLog = PastrieLog::where('establishment_id', $request->establishment_id)
                                 ->where('schedule', $request->schedule)
@@ -62,7 +70,7 @@ class PastrieController extends Controller
 
                     PastrieLog::create([
                         'establishment_id' => $request->establishment_id,
-                        'user_id' => $request->user_id,
+                        'user_id' => auth()->id(),
                         'schedule' => $request->schedule,
                         'image_url' => Storage::url($path),
                     ]);

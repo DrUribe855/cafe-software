@@ -32,11 +32,13 @@ class QualifiedExceptionHandlingTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function actingAsAdmin(): User
+    private function actingAsAdmin(?Establishment $establishment = null): User
     {
         Role::findOrCreate('admin');
 
-        $admin = User::factory()->create();
+        $admin = User::factory()->create([
+            'establishment_id' => ($establishment ?? Establishment::factory()->create())->id,
+        ]);
         $admin->assignRole('admin');
 
         Sanctum::actingAs($admin);
@@ -102,8 +104,10 @@ class QualifiedExceptionHandlingTest extends TestCase
 
     public function test_save_request_response_returns_controller_error_response_on_invalid_status(): void
     {
-        $this->actingAsAdmin();
-        $leave = LeaveRequest::factory()->create();
+        $establishment = Establishment::factory()->create();
+        $this->actingAsAdmin($establishment);
+        $employee = User::factory()->create(['establishment_id' => $establishment->id]);
+        $leave = LeaveRequest::factory()->create(['user_id' => $employee->id]);
 
         $response = $this->patchJson("/api/leave-requests/{$leave->id}", [
             'response' => 'EstadoInvalido',

@@ -29,11 +29,12 @@ class DatabaseSmokeTest extends TestCase
     {
         $this->seed();
 
-        $this->assertSame(2, Role::count());
+        $this->assertSame(3, Role::count());
+        $this->assertTrue(Role::where('name', 'super_admin')->exists());
         $this->assertTrue(Role::where('name', 'admin')->exists());
         $this->assertTrue(Role::where('name', 'employee')->exists());
         $this->assertSame(1, Establishment::count());
-        $this->assertSame(2, User::count());
+        $this->assertSame(3, User::count());
     }
 
     public function test_every_model_factory_creates_a_valid_record(): void

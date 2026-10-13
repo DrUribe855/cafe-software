@@ -62,5 +62,19 @@ class User extends Authenticatable
         return $this->HasMany(SupplierLog::class);
     }
 
+    /* ==============================
+       Autorización de 3 niveles (S1)
+       ============================== */
+
+    public function isSuperAdmin(): bool {
+        return $this->hasRole('super_admin');
+    }
+
+    /* Un super_admin puede acceder a cualquier establecimiento; el resto
+       (admin/employee) queda limitado a su propio establecimiento. */
+
+    public function canAccessEstablishment($establishmentId): bool {
+        return $this->isSuperAdmin() || (int) $this->establishment_id === (int) $establishmentId;
+    }
 
 }

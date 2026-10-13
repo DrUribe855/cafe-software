@@ -29,12 +29,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         'establishment_name' => $user->establishment->name ?? null,
     ];
 });
-Route::post('/logout', [AuthController::class, 'logout']);
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
 
 /* -------------------------------- Rutas de usuarios -------------------------------- */
 
-Route::middleware(['role:admin'])->group(function () {
+Route::middleware(['role:super_admin|admin'])->group(function () {
     Route::get('/users', [UserController::class, 'fetchUsers']);
     Route::post('/users', [UserController::class, 'createUser']);
     Route::put('/users/{id}', [UserController::class, 'editUser']);
@@ -43,16 +43,16 @@ Route::middleware(['role:admin'])->group(function () {
 
 
 /* -------------------------------- Rutas de bolleria -------------------------------- */
-Route::middleware(['role:admin|employee'])->post('/upload-image', [PastrieController::class, 'uploadPhoto']);
-Route::middleware(['role:admin'])->get('/get-image', [PastrieController::class, 'getImage']);
+Route::middleware(['role:super_admin|admin|employee'])->post('/upload-image', [PastrieController::class, 'uploadPhoto']);
+Route::middleware(['role:super_admin|admin'])->get('/get-image', [PastrieController::class, 'getImage']);
 
 /* -------------------------------- Rutas de cierre -------------------------------- */
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/closing-logs', [CloseController::class, 'index']);
     Route::post('/closing-logs', [CloseController::class, 'store']);
     Route::get('/refrigerators/establishment/{id}', [CloseController::class, 'getByEstablishment']);
-    Route::middleware(['role:admin'])->delete('/closing-logs/{id}', [CloseController::class, 'destroy']);
-    Route::middleware(['role:admin'])->put('/refrigerators/{id}/note', [RefrigeratorController::class, 'updateNote']);
+    Route::middleware(['role:super_admin|admin'])->delete('/closing-logs/{id}', [CloseController::class, 'destroy']);
+    Route::middleware(['role:super_admin|admin'])->put('/refrigerators/{id}/note', [RefrigeratorController::class, 'updateNote']);
 });
 
 /* -------------------------------- Rutas de permisos y vacaciones -------------------------------- */
@@ -63,11 +63,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/leave-requests/{id}', [LeaveRequestController::class, 'fetchLeaveRequestsPerUser']);
     });
 
-    Route::middleware(['role:employee|admin'])->get('/establishments/{id}/leave-requests', [LeaveRequestController::class, 'fetchLeaveRequestsPerEstablishment']);
-    Route::middleware(['role:employee|admin'])->get('/establishments/{id}/leave-requests/sum', [LeaveRequestController::class, 'getRequestSum']);
+    Route::middleware(['role:super_admin|admin|employee'])->get('/establishments/{id}/leave-requests', [LeaveRequestController::class, 'fetchLeaveRequestsPerEstablishment']);
+    Route::middleware(['role:super_admin|admin|employee'])->get('/establishments/{id}/leave-requests/sum', [LeaveRequestController::class, 'getRequestSum']);
 
-    Route::middleware(['role:admin'])->group(function (){
-        // Route::get('/establishments/{id}/leave-requests', [LeaveRequestController::class, 'fetchLeaveRequestsPerEstablishment']);
+    Route::middleware(['role:super_admin|admin'])->group(function (){
         Route::patch('/leave-requests/{id}', [LeaveRequestController::class, 'saveRequestResponse']);
     });
 
@@ -76,39 +75,39 @@ Route::middleware('auth:sanctum')->group(function () {
 /* -------------------------------- Rutas de módulo de proveedores -------------------------------- */
 Route::middleware('auth:sanctum')->group(function () {
 
-    Route::middleware(['role:employee|admin'])->get('/suppliers', [SupplierController::class, 'fetchSuppliers']);
+    Route::middleware(['role:super_admin|admin|employee'])->get('/suppliers', [SupplierController::class, 'fetchSuppliers']);
 
     Route::middleware(['role:employee'])->group(function(){
         Route::post('/suppliers/{id}/upload-images', [SupplierLogController::class, 'uploadImages']);
     });
 
-    Route::middleware(['role:admin'])->group(function(){
+    Route::middleware(['role:super_admin|admin'])->group(function(){
         Route::get('/suppliers/fetch-images', [SupplierLogController::class, 'fetchImages']);
     });
 });
 
 
 /* -------------------------------- Rutas de establecimientos -------------------------------- */
-Route::get('/establishments', [EstablishmentController::class, 'fetchStores']);
+Route::middleware('auth:sanctum')->get('/establishments', [EstablishmentController::class, 'fetchStores']);
 
 
 /* -------------------------------- Rutas de carta/menu -------------------------------- */
 
 // Categorías
-Route::get('/menu/categories', [\App\Http\Controllers\Menu\CategoryController::class, 'index']);
+Route::middleware(['auth:sanctum', 'role:super_admin|admin'])->get('/menu/categories', [\App\Http\Controllers\Menu\CategoryController::class, 'index']);
 
 // Productos
-Route::get('/menu/products', [\App\Http\Controllers\Menu\ProductController::class, 'index']);
+Route::middleware(['auth:sanctum', 'role:super_admin|admin'])->get('/menu/products', [\App\Http\Controllers\Menu\ProductController::class, 'index']);
 
 Route::middleware(['auth:sanctum'])->prefix('menu')->group(function () {
 
     // Categorías
-    Route::middleware(['role:admin'])->post('/categories', [\App\Http\Controllers\Menu\CategoryController::class, 'store']);
-    Route::middleware(['role:admin'])->put('/categories/{id}', [\App\Http\Controllers\Menu\CategoryController::class, 'update']);
-    Route::middleware(['role:admin'])->delete('/categories/{id}', [\App\Http\Controllers\Menu\CategoryController::class, 'destroy']);
+    Route::middleware(['role:super_admin|admin'])->post('/categories', [\App\Http\Controllers\Menu\CategoryController::class, 'store']);
+    Route::middleware(['role:super_admin|admin'])->put('/categories/{id}', [\App\Http\Controllers\Menu\CategoryController::class, 'update']);
+    Route::middleware(['role:super_admin|admin'])->delete('/categories/{id}', [\App\Http\Controllers\Menu\CategoryController::class, 'destroy']);
 
     // Productos
-    Route::middleware(['role:admin'])->post('/products', [\App\Http\Controllers\Menu\ProductController::class, 'store']);
-    Route::middleware(['role:admin'])->put('/products/{id}', [\App\Http\Controllers\Menu\ProductController::class, 'update']);
-    Route::middleware(['role:admin'])->delete('/products/{id}', [\App\Http\Controllers\Menu\ProductController::class, 'destroy']);
+    Route::middleware(['role:super_admin|admin'])->post('/products', [\App\Http\Controllers\Menu\ProductController::class, 'store']);
+    Route::middleware(['role:super_admin|admin'])->put('/products/{id}', [\App\Http\Controllers\Menu\ProductController::class, 'update']);
+    Route::middleware(['role:super_admin|admin'])->delete('/products/{id}', [\App\Http\Controllers\Menu\ProductController::class, 'destroy']);
 });

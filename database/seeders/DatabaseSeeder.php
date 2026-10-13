@@ -20,6 +20,18 @@ class DatabaseSeeder extends Seeder
 
         $this->call(RolesAndPermissionsSeeder::class);
 
+        /* Primer super_admin del sistema (provisión vía BD, L7). Los
+           super_admin posteriores se asignan desde la UI de permisos. */
+        $superAdmin = User::factory()->create([
+            'name' => 'Super Admin',
+            'email' => 'superadmin@example.com',
+            'establishment_id' => $establishment->id,
+            'document' => '1122334455',
+            'status' => 'Activo',
+            "password" => bcrypt('password'),
+        ]);
+        $superAdmin->assignRole('super_admin');
+
         $admin = User::factory()->create([
             'name' => 'Joaquin',
             'email' => 'test@example.com',

@@ -24,6 +24,11 @@ class RefrigeratorController extends Controller
         ]);
 
         $refrigerator = Refrigerator::findOrFail($id);
+
+        if (!auth()->user()->canAccessEstablishment($refrigerator->establishment_id)) {
+            return response()->json(['message' => 'No autorizado'], 403);
+        }
+
         $refrigerator->note = $request->note;
         $refrigerator->save();
 

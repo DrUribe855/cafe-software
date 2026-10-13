@@ -22,12 +22,10 @@ class UserController
 
         $authUser = auth()->user();
 
-        if(!$authUser->hasRole('admin')){
-            if($authUser->establishment_id != $request->establishmentId){
-                return response()->json([
-                    'message' => 'No tienes permiso para ver los usuarios de este establecimiento',
-                ], 403);
-            }
+        if(!$authUser->canAccessEstablishment($request->establishmentId)){
+            return response()->json([
+                'message' => 'No tienes permiso para ver los usuarios de este establecimiento',
+            ], 403);
         }
 
         if(!$establishmentId){

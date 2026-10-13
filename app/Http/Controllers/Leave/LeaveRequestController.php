@@ -59,6 +59,13 @@ class LeaveRequestController extends Controller
                 ]);
             }
 
+            /* Un empleado solo puede leer sus propias solicitudes */
+            if ((int) Auth::id() !== (int) $id) {
+                return response()->json([
+                    'message' => 'No tienes permiso para ver estas solicitudes',
+                ], 403);
+            }
+
             $leaveRequests = Leave::where('user_id', $id)
                 ->whereYear('created_at', $year)
                 ->whereMonth('created_at', $month)
@@ -93,6 +100,12 @@ class LeaveRequestController extends Controller
                 return response()->json([
                     'message' => 'El establecimiento suministrado no existe',
                 ], 404);
+            }
+
+            if (!Auth::user()->canAccessEstablishment($id)) {
+                return response()->json([
+                    'message' => 'No tienes permiso para ver las solicitudes de este establecimiento',
+                ], 403);
             }
 
             /* Generamos variables de fechas con formato correcto */
@@ -195,6 +208,13 @@ class LeaveRequestController extends Controller
                 ], 404);
             }
 
+            /* super_admin responde cualquiera; admin solo las de su establecimiento */
+            if (!Auth::user()->canAccessEstablishment($sentRequest->user->establishment_id)) {
+                return response()->json([
+                    'message' => 'No tienes permiso para responder solicitudes de este establecimiento',
+                ], 403);
+            }
+
             $sentRequest->status = $request->response;
             $sentRequest->approved_by = $approvedBy;
             $sentRequest->approved_at = $approvedAt;
@@ -232,6 +252,12 @@ class LeaveRequestController extends Controller
                 return response()->json([
                     'message' => 'Ocurrió un error con el ID del establecimiento'
                 ]);
+            }
+
+            if (!Auth::user()->canAccessEstablishment($id)) {
+                return response()->json([
+                    'message' => 'No tienes permiso para ver las solicitudes de este establecimiento',
+                ], 403);
             }
 
             $leaveStats = Leave::whereHas('user', function ($query) use ($id) {

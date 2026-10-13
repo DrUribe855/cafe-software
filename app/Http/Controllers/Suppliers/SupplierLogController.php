@@ -21,6 +21,10 @@ class SupplierLogController extends Controller
                 ], 404);
             }
 
+            if (!auth()->user()->canAccessEstablishment($request->establishment_id)) {
+                return response()->json(['message' => 'No autorizado'], 403);
+            }
+
             if($request->hasFile('images')){
 
                 $files = $request->file('images');
@@ -31,7 +35,7 @@ class SupplierLogController extends Controller
 
                     $supplierLog = SupplierLog::create([
                         'establishment_id' => $request->establishment_id,
-                        'user_id' => $request->user_id,
+                        'user_id' => auth()->id(),
                         'supplier_id' => $id,
                         'image_url' => Storage::url($path),
                     ]);
@@ -61,6 +65,10 @@ class SupplierLogController extends Controller
             'date'             => 'nullable|date',
             'establishment_id' => 'required|integer',
         ]);
+
+        if (!auth()->user()->canAccessEstablishment($request->establishment_id)) {
+            return response()->json(['message' => 'No autorizado'], 403);
+        }
 
         $query = DB::table('supplier_logs as sl')
                     ->join('users as u', 'u.id', '=', 'sl.user_id')

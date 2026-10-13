@@ -23,10 +23,7 @@ class CloseController extends Controller
 
             $authUser = Auth::user();
 
-            if (
-                !$authUser->hasRole('admin') &&
-                $authUser->establishment_id != $validated['establishment_id']
-            ) {
+            if (!$authUser->canAccessEstablishment($validated['establishment_id'])) {
                 return response()->json([
                     'message' => 'No tienes permiso para ver los cierres de este establecimiento',
                 ], 403);
@@ -70,10 +67,7 @@ class CloseController extends Controller
 
             $authUser = Auth::user();
 
-            if (
-                !$authUser->hasRole('admin') &&
-                $authUser->establishment_id != $request->establishment_id
-            ) {
+            if (!$authUser->canAccessEstablishment($request->establishment_id)) {
                 return response()->json([
                     'message' => 'No tienes permiso para registrar cierres en este establecimiento',
                 ], 403);
@@ -116,10 +110,13 @@ class CloseController extends Controller
 
             $authUser = Auth::user();
 
-            if (
-                !$authUser->hasRole('admin') &&
-                $authUser->id !== $closingLog->user_id
-            ) {
+            /* super_admin elimina cualquiera; admin, solo los de su
+               establecimiento; employee, solo los suyos. */
+            $canDelete = $authUser->isSuperAdmin()
+                || ($authUser->hasRole('admin') && $authUser->canAccessEstablishment($closingLog->establishment_id))
+                || $authUser->id === $closingLog->user_id;
+
+            if (!$canDelete) {
                 return response()->json(['message' => 'No autorizado'], 403);
             }
 
@@ -145,6 +142,12 @@ class CloseController extends Controller
     public function getByEstablishment($id)
     {
         try {
+            $authUser = Auth::user();
+
+            if (!$authUser->canAccessEstablishment($id)) {
+                return response()->json(['message' => 'No autorizado'], 403);
+            }
+
             $refrigerators = Refrigerator::where('establishment_id', $id)
                 ->get(['id as value', 'name as label', 'note']);
 
