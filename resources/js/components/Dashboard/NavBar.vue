@@ -21,7 +21,9 @@ const fetchStores = async () => {
 
 onMounted( async () => {
     await fetchStores();
-    establishmentStore.setCode(stores.value[0].id);
+    /* El establecimiento ya queda sincronizado con el del usuario real
+       (useAuth.login al entrar y userStore.fetchUser al recargar). No se
+       fuerza el primero de la lista, que pisaba el del usuario. */
 })
 
 </script>

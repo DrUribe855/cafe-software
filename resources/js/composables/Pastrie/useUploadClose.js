@@ -1,6 +1,5 @@
 import { ref } from 'vue';
 import axios from 'axios';
-import { useUserStore } from '../../stores/userStore';
 import { useEstablishmentStore } from '../../stores/establishmentStore';
 import { alert } from './alert';
 import Swal from 'sweetalert2';
@@ -8,7 +7,6 @@ import { useLoader } from '../useLoader';
 
 export function useUploadClose() {
   const { showLoader, hideLoader } = useLoader();
-  const store = useUserStore();
   const establishmentStore = useEstablishmentStore();
   const closeData = ref([]);
 
@@ -30,12 +28,7 @@ export function useUploadClose() {
       const establishmentId = establishmentStore.getCode();
       formData.append('establishment_id', establishmentId);
 
-      const response = await axios.post('/api/closing-logs', formData, {
-        headers: {
-          Authorization: `Bearer ${store.token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await axios.post('/api/closing-logs', formData);
 
       alert(
         'Cierre subido exitosamente',
@@ -71,9 +64,6 @@ export function useUploadClose() {
       };
 
       const response = await axios.get('/api/closing-logs', {
-        headers: {
-          Authorization: `Bearer ${store.token}`,
-        },
         params,
       });
 
