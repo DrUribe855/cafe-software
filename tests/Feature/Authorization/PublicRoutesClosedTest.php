@@ -19,13 +19,13 @@ class PublicRoutesClosedTest extends TestCase
         $this->getJson('/api/establishments')->assertStatus(401);
     }
 
-    public function test_menu_categories_requires_authentication(): void
+    public function test_menu_categories_remains_public(): void
     {
-        $this->getJson('/api/menu/categories')->assertStatus(401);
+        $this->getJson('/api/menu/categories')->assertStatus(200);
     }
 
-    public function test_menu_products_requires_authentication(): void
+    public function test_menu_products_remains_public(): void
     {
-        $this->getJson('/api/menu/products')->assertStatus(401);
+        $this->getJson('/api/menu/products')->assertStatus(200);
     }
 }

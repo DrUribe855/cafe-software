@@ -94,10 +94,10 @@ Route::middleware('auth:sanctum')->get('/establishments', [EstablishmentControll
 /* -------------------------------- Rutas de carta/menu -------------------------------- */
 
 // Categorías
-Route::middleware(['auth:sanctum', 'role:super_admin|admin'])->get('/menu/categories', [\App\Http\Controllers\Menu\CategoryController::class, 'index']);
+Route::get('/menu/categories', [\App\Http\Controllers\Menu\CategoryController::class, 'index']);
 
 // Productos
-Route::middleware(['auth:sanctum', 'role:super_admin|admin'])->get('/menu/products', [\App\Http\Controllers\Menu\ProductController::class, 'index']);
+Route::get('/menu/products', [\App\Http\Controllers\Menu\ProductController::class, 'index']);
 
 Route::middleware(['auth:sanctum'])->prefix('menu')->group(function () {
 
